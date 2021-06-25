@@ -1,0 +1,17 @@
+interfaces: Tetris, Pendu, Flappy
+
+opti Tetris
+
+changer les rêgles dans tous les jeux avec des labels
+
+afficher les lettres déjà entréees Pendu ~
+
+Faire le changement du minesweeper au niveau du score
+
+Space invaders/ arkanoid/ asteroid/ doodle jump/ tron/
+
+mettre tous les jeux 1vs1
+
+future lointain: faire les jeux 1vs1 en réseau avec requette d'ami exemple
+
+augmenter le nombre de possibilités dans les questions et l'accès plus simple aux différents scoreboard
