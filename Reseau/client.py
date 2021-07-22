@@ -63,7 +63,7 @@ def get_player_score(User_name):
     try:
         s.connect((Host, Port)) #on lie l'adresse ip et le port
     except:
-        return {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0}
+        return {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0}
     s.send("player_score {}".format(User_name).encode("utf-8")) #on demande la liste
     response = s.recv(1024)
     response = pickle.loads(response) #on désérialise la réponse pour récupérer un dictionnaire
@@ -89,10 +89,9 @@ def get_statistics():
         response += packet
         if len(packet) < 4096:
             break
-        
+
     response = pickle.loads(response) #on désérialise la réponse pour récupérer un dictionnaire
 
     s.close()
 
     return response
-

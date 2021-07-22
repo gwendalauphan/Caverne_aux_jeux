@@ -134,17 +134,17 @@ class tetris:
         self.Frame_main2_wind2.after(1500, lambda: first_image.place(x = 380, y = 57))
 
         second_label = Label(self.Frame_main2_wind2, text = "La flèche du haut fait tourner la pièce\n et les autres dirigent la pièce suivant la direction")
-        self.Frame_main2_wind2.after(2000, lambda: second_label.place(x = 20, y = 170))
+        self.Frame_main2_wind2.after(2500, lambda: second_label.place(x = 20, y = 170))
 
         self.image3 = PhotoImage(file = "Tetris/Images/rules2.png")
         third_image = Label(self.Frame_main2_wind2, image = self.image3)
-        self.Frame_main2_wind2.after(2500, lambda: third_image.place(x = 380, y = 200))
+        self.Frame_main2_wind2.after(3000, lambda: third_image.place(x = 380, y = 200))
 
         third_label = Label(self.Frame_main2_wind2, text = "Tu gagnes des points lorsque tu complètes des lignes")
-        self.Frame_main2_wind2.after(3000, lambda: third_label.place(x = 20, y = 230))
+        self.Frame_main2_wind2.after(4000, lambda: third_label.place(x = 20, y = 230))
 
         fourth_label = Label(self.Frame_main2_wind2, text = "Mais attention, si le tas atteints le haut,\n tu as perdu!!!")
-        self.Frame_main2_wind2.after(3500, lambda: fourth_label.place(x = 200, y = 300))
+        self.Frame_main2_wind2.after(4500, lambda: fourth_label.place(x = 200, y = 300))
 
         self.Button_Skip = Button(self.Frame_main2_wind2, text = "-Skip-", cursor ='hand2', command = self.quit_rules)
         self.Button_Skip.place(x = 30, y = 370)

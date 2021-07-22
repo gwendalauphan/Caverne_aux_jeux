@@ -70,16 +70,16 @@ class pendu:
         self.Frame_main2_wind2.after(1500, lambda: first_image.place(x = 350, y = 75))
 
         second_label = Label(self.Frame_main2_wind2, text = "Pour ce faire, tu peux proposer des lettres \n en espérant qu'elle appartient au mot")
-        self.Frame_main2_wind2.after(2000, lambda: second_label.place(x = 20, y = 170))
+        self.Frame_main2_wind2.after(2500, lambda: second_label.place(x = 20, y = 170))
 
         third_image = Label(self.Frame_main2_wind2, image = self.image3)
-        self.Frame_main2_wind2.after(2500, lambda: third_image.place(x = 365, y = 150))
+        self.Frame_main2_wind2.after(3000, lambda: third_image.place(x = 365, y = 150))
 
         third_label = Label(self.Frame_main2_wind2, text = "Mais attention, tu rentre une mauvaise lettre,\n le pendu apparait\n et tu perds au bout de 11 fautes")
-        self.Frame_main2_wind2.after(3000, lambda: third_label.place(x = 20, y = 290))
+        self.Frame_main2_wind2.after(4000, lambda: third_label.place(x = 20, y = 290))
 
         fourth_image = Label(self.Frame_main2_wind2, image = self.image4)
-        self.Frame_main2_wind2.after(3500, lambda: fourth_image.place(x = 345, y = 253))
+        self.Frame_main2_wind2.after(4500, lambda: fourth_image.place(x = 345, y = 253))
 
         self.Button_Skip = Button(self.Frame_main2_wind2, text = "-Skip-", cursor ='hand2', command = self.quit_rules)
         self.Button_Skip.place(x = 100, y = 380)

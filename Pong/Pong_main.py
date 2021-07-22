@@ -42,16 +42,16 @@ class pong:
         self.Frame_main2_wind2.after(1500, lambda: first_image.place(x = 360, y = 57))
 
         second_label = Label(self.Frame_main2_wind2, text = "La balle peut aussi rebondir sur les murs, \n il te faut alors prévoir sa trajectoire")
-        self.Frame_main2_wind2.after(2000, lambda: second_label.place(x = 20, y = 190))
+        self.Frame_main2_wind2.after(2500, lambda: second_label.place(x = 20, y = 190))
 
         third_image = Label(self.Frame_main2_wind2, image = self.image2)
-        self.Frame_main2_wind2.after(2500, lambda: third_image.place(x = 360, y = 180))
+        self.Frame_main2_wind2.after(3500, lambda: third_image.place(x = 360, y = 180))
 
         third_label = Label(self.Frame_main2_wind2, text = "Tu dois donc tenir le plus longtemps \n avec la balle qui change de directions")
-        self.Frame_main2_wind2.after(3000, lambda: third_label.place(x = 20, y = 290))
+        self.Frame_main2_wind2.after(4000, lambda: third_label.place(x = 20, y = 290))
 
         fourth_image = Label(self.Frame_main2_wind2, image = self.image3)
-        self.Frame_main2_wind2.after(3500, lambda: fourth_image.place(x = 325, y = 305))
+        self.Frame_main2_wind2.after(4500, lambda: fourth_image.place(x = 325, y = 305))
 
         self.Button_Skip = Button(self.Frame_main2_wind2, text = "-Skip-", cursor ='hand2', command = self.quit_rules)
         self.Button_Skip.place(x = 150, y = 370)

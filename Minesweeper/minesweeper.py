@@ -55,21 +55,31 @@ class demineur:
         self.Rules = Label(self.Frame_main2_wind2, text = 'Les règles:', font = ("Berlin Sans FB", 23), relief = GROOVE)
         self.Rules.place(x = 200, y =5)
 
-        Label(self.Frame_main2_wind2, text = "Le but du jeu est de décourvrir toutes les mines,\nSans se faire exploser...").place(x = 20, y = 80)
+        first_label = Label(self.Frame_main2_wind2, text = "Le but du jeu est de décourvrir toutes les mines,\nSans se faire exploser...")
+        self.Frame_main2_wind2.after(1000, lambda: first_label.place(x = 20, y = 80))
         self.image1 = PhotoImage(file = "Minesweeper/Images/explode.png")
-        Label(self.Frame_main2_wind2, image = self.image1).place(x = 450, y = 80)
+        first_image = Label(self.Frame_main2_wind2, image = self.image1)
+        self.Frame_main2_wind2.after(1500, lambda: first_image.place(x = 450, y = 80))
 
-        Label(self.Frame_main2_wind2, text = "il faut donc révéler les cases avec le clique gauche\n Le nombre affiché sur la case renseigne sur\n le nombre de bombres adjascentes à celle-ci").place(x = 20, y = 150)
+        second_label = Label(self.Frame_main2_wind2, text = "il faut donc révéler les cases avec le clique gauche\n Le nombre affiché sur la case renseigne sur\n le nombre de bombres adjascentes à celle-ci")
+        self.Frame_main2_wind2.after(2500, lambda: second_label.place(x = 20, y = 150))
 
-        Label(self.Frame_main2_wind2, text = "Il faut donc placer des drapeaux (clique droit) sur les cases\n contenant des bombes afin de les sécuriser").place(x = 20, y = 220)
+        second_label_bis = Label(self.Frame_main2_wind2, text = "Il faut donc placer des drapeaux (clique droit) sur les cases\n contenant des bombes afin de les sécuriser")
+        self.Frame_main2_wind2.after(3000, lambda: second_label_bis.place(x = 20, y = 220))
+
         self.image3 = PhotoImage(file = "Minesweeper/Images/flag.png")
-        Label(self.Frame_main2_wind2, image = self.image3).place(x = 425, y = 180)
+        third_image = Label(self.Frame_main2_wind2, image = self.image3)
+        self.Frame_main2_wind2.after(3500, lambda: third_image.place(x = 380, y = 180))
 
-        Label(self.Frame_main2_wind2, text = "Pour gagner, il faut marquer toutes les bombes avec un drapeau.").place(x = 20, y = 275)
+        third_label = Label(self.Frame_main2_wind2, text = "Pour gagner, il faut marquer toutes les bombes avec un drapeau.")
+        self.Frame_main2_wind2.after(4500, lambda: third_label.place(x = 20, y = 275))
+
         self.image4 = PhotoImage(file = "Minesweeper/Images/win.png")
-        Label(self.Frame_main2_wind2, image = self.image4).place(x = 425, y = 275)
+        fourth_image = Label(self.Frame_main2_wind2, image = self.image4)
+        self.Frame_main2_wind2.after(5000, lambda: fourth_image.place(x = 425, y = 275))
 
-        Label(self.Frame_main2_wind2, text = "Il y a trois difficultés, la taille de la grille\n ainsi que le nombre de mines change entre les niveaux.").place(x = 20, y = 310)
+        fourth_label = Label(self.Frame_main2_wind2, text = "Il y a trois difficultés, la taille de la grille\n ainsi que le nombre de mines change entre les niveaux.")
+        self.Frame_main2_wind2.after(6000, lambda: fourth_label.place(x = 20, y = 310))
 
         self.Button_Skip = Button(self.Frame_main2_wind2, text = "-Skip-", cursor ='hand2', command = self.quit_rules)
         self.Button_Skip.place(x = 50, y = 370)
