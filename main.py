@@ -2,7 +2,6 @@ from tkinter import *
 from Reseau.client import *
 from tkinter import font
 sys.path.append('../')
-from Reseau.client import *
 
 from Tete_chercheuse.tete_chercheuse import *
 from Snake.Snake_main import *
@@ -12,6 +11,7 @@ from Pendu.pendu import *
 from Tetris.tetris import *
 from Pong.Pong_main import*
 from Flappy_Bird.Flappy_Bird_main import*
+from Stats.Page_selection import*
 
 class BoutonS: #classe pour gérer les boutons interactifs
     def __init__(self, x, y, jeux, run, name): # a besoin de ligne, colone, ne nom du jeux et la commande our executer le jeu
@@ -25,8 +25,8 @@ class BoutonS: #classe pour gérer les boutons interactifs
     def command(self, event = None): #fonction executée lors du clique sur le boutton
         global label_pseudo, label_score, score
         root_main.withdraw() #on masque l'interface principale
-        result = self.run(User_name) #on execute le jeu
-        push_score(User_name, self.jeux, result) #on envois au serveur le score de la partie
+        max_score, score, Average_Time, count, death_pos = self.run(User_name) #on execute le jeu
+        push_score(User_name, self.jeux, max_score, score, count, Average_Time, death_pos) #on envois au serveur le score de la partie
         root_main.deiconify() #on fait réapparaite la fenetre principale
         Frame_main['yscrollcommand'] = scrollY.set #rappel de la bare de scroll
 
@@ -58,7 +58,7 @@ with open('Data/mots.txt', 'r') as file:
 def valider(event = None):
     global User_name
     temp = entry.get().replace(" ", "_")
-    if temp == "" or len(temp) > 20:
+    if temp == "" or len(temp) > 12:
         alert.place(x = 50, y = 100)
         return
     for elt in mots_interdits[:-1]:
@@ -70,14 +70,17 @@ def valider(event = None):
     root_user.quit()
 
 def para():
-    playground = Frame(root_main, width = 800, height = 500, bg = "#111111")
+    playground = Canvas(root_main, highlightthickness = 0,width = 800, height = 500, bg = "#111111")
     playground.place(x = 200, y = 100)
     Button_para.config( image = door, command = lambda: leave_para(playground))
-
     text = "Le but de cette application est de s'ammuser en jouant a des jeux.\nTu peux défier tes amis en comparant leur score au tien\nsur différents jeux et essayer de faire le meilleur score possible."
     Label(playground, text = "Aide", font = ("Helvetica", 25), bg = "#111111", fg = "#888888").place(x = 300, y = 20)
     Label(playground, text = text, font = ("Helvetica", 10), bg = "#111111", fg = "#888888").place(x = 100, y = 60)
 
+def execute(event = None):
+    root_main.withdraw()
+    app = Stats(User_name)
+    root_main.deiconify()
 
 def leave_para(playground):
     playground.destroy()
@@ -104,6 +107,7 @@ root_user.mainloop()
 root_main = Tk()
 root_main.geometry('1020x600')
 root_main.title("Menu")
+root_main.resizable(False,False)
 root_main.focus_force()
 #########################-----Création de la forme de la page----------------------#######################################
 Frame_top = Frame(root_main, bg ='#111111') #création des pannels
@@ -136,9 +140,11 @@ Frame_ranking.place(x = 2, y = 70)
 
 gearImg = PhotoImage(file = 'Parametters/gear.png')
 door = PhotoImage(file = "Parametters/door.png")
+image_stat = PhotoImage(file = "Parametters/image_stat.png")
 Button_para = Button(Frame_top, image = gearImg, bg = "#111111", borderwidth = 0, highlightthickness = 0, cursor = "hand2", command = para)
-Button_para.place(x = 900, y = 30)
-
+Button_para.place(x = 860, y = 25)
+Button_stats = Button(Frame_top,image = image_stat, bg = "#111111", borderwidth = 0, highlightthickness = 0, cursor = "hand2", command = execute)
+Button_stats.place(x = 930, y = 20)
 score = get_score_list() #récupération du scoreboard
 
 #############---------Création des labels et autres au contour du Frame_main-------#########################
@@ -177,5 +183,8 @@ bouton_4 = BoutonS(2, 5, "Pendu", Pendu, "Pendu")
 bouton_5 = BoutonS(5, 1, "Tetris", Tetris, "Tetris")
 bouton_6 = BoutonS(5, 7, "Pong", Pong, "Pong")
 bouton_7 = BoutonS(2, 7, "Flappy", Flappy_Bird, "Flappy")
+
+#data__ = get_statistics()
+#print(data__)
 
 root_main.mainloop()
