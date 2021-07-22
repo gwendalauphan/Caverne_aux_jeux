@@ -1,10 +1,10 @@
-# -*- mode: python -*-
+# -*- mode: python ; coding: utf-8 -*-
 
 block_cipher = None
 
 
 a = Analysis(['main.py'],
-             pathex=['C:\\Users\\Dogasp\\github\\ISN_Projet_Final'],
+             pathex=['C:\\Users\\AUPHAN GWENDAL\\github\\ISN_Projet_Final'],
              binaries=[],
              datas=[],
              hiddenimports=[],
