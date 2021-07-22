@@ -1,6 +1,6 @@
 from tkinter import * #@UnusedWildImport
 from tkinter.messagebox import *
-from time import sleep
+from time import sleep, time
 sys.path.append('../Reseau')
 from Reseau.client import *
 sys.path.append('../Scoreboard')
@@ -22,17 +22,17 @@ class ghost:
         self.show_rules.protocol("WM_DELETE_WINDOW", self.quit_ranking)
         self.level = 1
         self.score = 0
+        self.count = 1
 
         self.Jerry_1 = PhotoImage(file = "Fantome/Ressources/Images/Jerry_1.png")
         self.keyboard_fantome = PhotoImage(file = "Fantome/Ressources/Images/keyboard_fantome.png")
         self.Jerry_3 = PhotoImage(file = "Fantome/Ressources/Images/Jerry_3.png")
         self.Jerry_2 = PhotoImage(file = "Fantome/Ressources/Images/Jerry_2.png")
 
-
-        self.main = PhotoImage(file = "Parametters/main3.png")
-        self.next = PhotoImage(file = "Parametters/next3.png")
-        self.fond_ecran = PhotoImage(file = "Parametters/fond_ecran2.png")
-        self.replay = PhotoImage(file = "Parametters/replay3.png")
+        self.main = PhotoImage(file = "Parametters/main2.png")
+        self.next_image = PhotoImage(file = "Parametters/next2.png")
+        self.fond_ecran = PhotoImage(file = "Parametters/fond_ecran.png")
+        self.replay = PhotoImage(file = "Parametters/replay2.png")
 
         self.Frame_main1_wind2 = Canvas(self.show_rules, bg = 'red', relief = GROOVE)
         self.Frame_main1_wind2.pack(ipadx = 670, ipady = 526)
@@ -137,6 +137,7 @@ class ghost:
 
 
         self.start()
+        self.time_start = time()
         self.time_num()
 
         self.root.mainloop()
@@ -164,6 +165,7 @@ class ghost:
         self.time_game = 0
         self.move = 0
         self.control_variable = 0
+        self.control_variable2 = 0
         self.grid = [[(0) for i in range(self.nbcases[self.level - 1])] for j in range((self.nbcases[self.level - 1]))]
 
         ########------------Frames Pricipaux-------------########################################
@@ -308,11 +310,12 @@ class ghost:
 
     def command_user(self, x):
         if x=="exit_menu":
-            self.question.destroy()
+            self.canvas_question.destroy()
             self.exit()
 
         elif x=="next":
-            self.question.destroy()
+            self.canvas_show_score.destroy()
+            self.canvas_question.destroy()
             self.level += 1
             if self.level == len(level_map)+1:  # si le joueur a atteint la fin de la liste des niveaux
                 self.exit()
@@ -321,44 +324,57 @@ class ghost:
             self.start()
 
         elif x=="dead":
-            question = askquestion("RESTART", "Perdu!\nVeux-tu recommencer")
-            if question == "yes":                        # si l'utilisateur veut recommencer, on regenère l'affichage
-                self.score -= 50*(self.level)
-                self.Frame_right.destroy()               # destruction des frames
-                self.start()                             # reconstruction de la fenètre
-            else:
-                self.exit()
+            try:
+                self.table.destroy()
+            except: pass
+            self.score_temp = 0
+            self.canvas_question = Canvas(self.Frame_right, width = 482, height = 300, highlightthickness=0)
+            self.canvas_question.place(x=9,y=100)
+            self.canvas_question.create_image(241, 150, image = self.fond_ecran)
+            self.canvas_question.create_text(232, 100, text ='Perdu !! \n Veux-tu recommencer ?', font = ("Berlin Sans FB", 14))
+            answer1 = Button(self.canvas_question, text = " Oui ",command = lambda: self.command_user("restart2"),cursor ='hand2',fg = 'white', bg = 'black', font = ("Helvetica", 12)).place(x = 120, y = 150)
+            answer2 = Button(self.canvas_question, text = " Non ",command = self.exit,cursor ='hand2',fg = 'white', bg = 'black', font = ("Helvetica", 12)).place(x = 300, y = 150)
 
         elif x=="win":
             try:
-                self.question2.destroy()
+                self.canvas_question.destroy()
+            except: pass
+            try:
+                self.table.destroy()
             except: pass
             self.control_variable +=1
             if self.control_variable == 1:
                 self.score_temp = (10000/(self.move*0.8 + self.time_game*0.2)) * self.level
                 self.score += self.score_temp
+            self.control_variable2 +=1
+            if self.control_variable2 == 1:
                 self.show_score["text"] = "Score: %s"%str(int(self.score))
-                self.question = Toplevel()
-                self.question.geometry("482x300")
-                self.canvas_question = Canvas(self.question, width = 482, height = 300)
-                self.canvas_question.place(x=0,y=0)
+                self.canvas_question = Canvas(self.Frame_right, width = 482, height = 300, highlightthickness=0)
+                self.canvas_question.place(x=9,y=100)
                 self.canvas_question.create_image(241, 150, image = self.fond_ecran)
-                self.canvas_question.create_text(90, 110, text = 'Restart', font = ("Berlin Sans FB", 23))
-                self.canvas_question.create_text(241, 110, text = 'Next', font = ("Berlin Sans FB", 23))
-                self.canvas_question.create_text(390, 110, text = 'Menu', font = ("Berlin Sans FB", 23))
-                Button(self.canvas_question,image = self.replay, highlightthickness=0, borderwidth = 1, command = lambda: self.command_user("restart_question"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 60, y = 150)
-                Button(self.canvas_question,image = self.main,highlightthickness=0, borderwidth = 1,command = lambda: self.command_user("exit_menu"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 360, y = 150)
-                Button(self.canvas_question,image = self.next,highlightthickness=0, borderwidth = 1,command = lambda: self.command_user("next"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 211, y = 150)
+                self.canvas_question.create_text(90, 110, text = 'Recommencer', font = ("Berlin Sans FB", 20))
+                self.canvas_question.create_text(241, 110, text = 'Suivant', font = ("Berlin Sans FB", 20))
+                self.canvas_question.create_text(390, 110, text = 'Menu', font = ("Berlin Sans FB", 20))
+                Button(self.canvas_question,image = self.replay, highlightthickness=0, borderwidth = 0, command = lambda: self.command_user("restart_question"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 60, y = 150)
+                Button(self.canvas_question,image = self.main,highlightthickness=0, borderwidth = 0,command = lambda: self.command_user("exit_menu"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 360, y = 150)
+                Button(self.canvas_question,image = self.next_image,highlightthickness=0, borderwidth = 0,command = lambda: self.command_user("next"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 211, y = 150)
 
         elif x=="restart_question":
-            self.question.destroy()
-            self.question2 = Toplevel()
-            self.question2.geometry("300x125")
-            Button(self.question2, text = "Yes",command = lambda: self.command_user("restart2"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 210, y = 45)
-            Button(self.question2, text = "No",command = lambda: self.command_user("win"),cursor ='hand2', font = ("Helvetica", 10)).place(x = 110, y = 45)
-
+            self.count += 1
+            self.control_variable2 = 0
+            self.canvas_question.destroy()
+            self.canvas_question = Canvas(self.Frame_right, width = 482, height = 300, highlightthickness = 0)
+            self.canvas_question.place(x=9,y=100)
+            self.canvas_question.create_image(241, 150, image = self.fond_ecran)
+            self.canvas_question.create_text(232, 100, text = 'Perdu !! \n Veux-tu recommencer ?', font = ("Berlin Sans FB", 14))
+            answer1 = Button(self.canvas_question, text = " Oui ",command = lambda: self.command_user("restart2"),cursor ='hand2',fg = 'white', bg = 'black', font = ("Helvetica", 12)).place(x = 120, y = 150)
+            answer2 = Button(self.canvas_question, text = " Non ",command = lambda: self.command_user("win"),cursor ='hand2',fg = 'white', bg = 'black', font = ("Helvetica", 12)).place(x = 300, y = 150)
         elif x=="restart2":
-            self.question2.destroy()
+            self.canvas_show_score.destroy()
+            try:
+                self.canvas_question.destroy()
+            except: pass
+            self.Table = Canvas(self.Frame_right,width = 500, height = 500, bg ='white', highlightthickness=0)
             self.score -= 50*(self.level) + self.score_temp
             self.update()
 
@@ -368,4 +384,4 @@ class ghost:
 
 def Ghost(User):
   jeux = ghost(User)
-  return jeux.score
+  return (jeux.score, jeux.score, (time()-jeux.time_start), jeux.count, [])

@@ -1,6 +1,6 @@
 from tkinter import * #@UnusedWildImport
 from tkinter.messagebox import *
-from time import sleep
+from time import sleep, time
 sys.path.append('../Reseau')
 from Reseau.client import *
 sys.path.append('../Scoreboard')
@@ -12,6 +12,9 @@ class bird:
     def __init__(self,user):
         self.User_name = user
         self.Best_Score = 0
+        self.count = 0
+        self.average_score = []
+        self.death_pos = []
         self.show_rules = Toplevel()
         self.show_rules.title('Règles')
         self.show_rules.geometry('670x530')
@@ -28,21 +31,28 @@ class bird:
         self.Rules = Label(self.Frame_main2_wind2, text = 'Les règles:', font = ("Berlin Sans FB", 23), relief = GROOVE)
         self.Rules.place(x = 200, y =5)
 
-        Label(self.Frame_main2_wind2, text = "Le but du jeu est de faire avancer l'oiseau\n entre des tuyaux").place(x = 20, y = 80)
+        first_label = Label(self.Frame_main2_wind2, text = "Le but du jeu est de faire avancer l'oiseau\n entre les tuyaux")
+        self.Frame_main2_wind2.after(1000, lambda: first_label.place(x = 20, y = 80))
         self.image1 = PhotoImage(file = "Flappy_Bird/Ressources/rules1.png")
-        Label(self.Frame_main2_wind2, image = self.image1).place(x = 400, y = 60)
+        first_image = Label(self.Frame_main2_wind2, image = self.image1)
+        self.Frame_main2_wind2.after(1500, lambda: first_image.place(x = 380, y = 57))
 
-        Label(self.Frame_main2_wind2, text = "Pour ce faire, tu peux utiliser la bar espace\n ou le clic souris\n pour que l'oiseau fasse un bond").place(x = 20, y = 150)
+        second_label = Label(self.Frame_main2_wind2, text = "Pour ce faire, tu peux utiliser la bar espace\n ou le clic souris\n pour que l'oiseau fasse un bond")
+        self.Frame_main2_wind2.after(2000, lambda: second_label.place(x = 20, y = 190))
 
-        Label(self.Frame_main2_wind2, text = "Mais attention, si tu touche un tuyau ou le sol,\n l'oiseau meurt").place(x = 20, y = 220)
         self.image3 = PhotoImage(file = "Flappy_Bird/Ressources/rules2.png")
-        Label(self.Frame_main2_wind2, image = self.image3).place(x = 400, y = 200)
+        third_image = Label(self.Frame_main2_wind2, image = self.image3)
+        self.Frame_main2_wind2.after(2500, lambda: third_image.place(x = 380, y = 200))
+
+        third_label = Label(self.Frame_main2_wind2, text = "Mais attention, si tu touche un tuyau ou le sol,\n l'oiseau meurt")
+        self.Frame_main2_wind2.after(3000, lambda: third_label.place(x = 20, y = 290))
 
         self.image4 = PhotoImage(file = "Flappy_Bird/Ressources/rules3.png")
-        Label(self.Frame_main2_wind2, image = self.image4).place(x = 350, y = 300)
+        fourth_image = Label(self.Frame_main2_wind2, image = self.image4)
+        self.Frame_main2_wind2.after(3500, lambda: fourth_image.place(x = 350, y = 300))
 
         self.Button_Skip = Button(self.Frame_main2_wind2, text = "-Skip-", cursor ='hand2', command = self.quit_rules)
-        self.Button_Skip.place(x = 50, y = 370)
+        self.Button_Skip.place(x = 150, y = 370)
         self.show_rules.mainloop()
 
         """#################----------------- début du jeu ----------------#################### """
@@ -52,6 +62,8 @@ class bird:
         self.root.resizable(False,False)
         self.root.title('Flappy Bird')
         self.root.focus_force()
+
+        self.time_start = time()
 
         self.liste_image = []                      #Import des photos du Bird pour les différents angles
         for i in range(2,31):
@@ -84,9 +96,7 @@ class bird:
         self.show_rules.quit()
 
     def exit(self):
-        try:
-            self.question.destroy()
-        except: pass
+
         self.root.destroy()
         self.root.quit()
 
@@ -99,6 +109,7 @@ class bird:
 
     def build_game(self):          #Fonction servant au lancement du jeu (appellée à chaque restart) #Création de la map
         self.root.focus_force()
+        self.root.protocol("WM_DELETE_WINDOW", self.exit)
         self.root.bind("<space>", self.test_press)
         self.root.bind("<Button-1>", self.test_press)
 
@@ -250,7 +261,6 @@ class bird:
             self.bird_move()            #Déplacement de l'oiseau
             self.root.after(48,self.update)
 
-
     """
     La fonction Bird_move sert à déplacer l'oiseau de bas en haut ou de haut en bas. Elle sert aussi à changer l'inclinaison
     de la tête de l'oiseau en fonction de la vitesse de descente. Tout d'abord, on place toute la fonction dans une boucle qui
@@ -274,7 +284,6 @@ class bird:
     on place l'oiseau à y = 475 afin d'être sûr qu'il touche bien sans dépasser le sol, on appelle la fonction vérif qui nous
     sert à afficher le Game Over et self.verite = False afin d'arrêter la boucle de la fonction update.
     """
-
 
     def bird_move(self): #Fonction servant à déplacer le sol et l'oiseau pendant le jeu
         x, y =  self.Canvas_ground.coords(self.ground)      ############################
@@ -332,7 +341,7 @@ class bird:
         if self.verite == True: #Cette condition sert à n'executer qu'une fois cette fonction car après l'appel de celle-ci, self.verite = False
             self.y_pipe_down = y_pipe_center_down - 250 #Valeur du haut du tuyau bas
             self.y_pipe_top = y_pipe_center_top + 250   #Valeur du bas du tuyau haut
-            if self.y_pipe_down<self.y_center_bird + 25 or self.y_center_bird - 25< self.y_pipe_top or b == True: #Si il y a touche du sol ou du tuyau
+            if self.y_pipe_down<self.y_center_bird + 24 or self.y_center_bird - 24< self.y_pipe_top or b == True: #Si il y a touche du sol ou du tuyau
                 self.root.unbind("<Button-1>")          #On évite que le joueur click ce qui peut faire bugger le programme
                 self.root.unbind("<space>")
                 self.verite = False                     #On réinitialise self.verite = False pour éviter de refaire la fonction
@@ -371,7 +380,15 @@ class bird:
             self.Canvas_world.coords(self.image_Bird_true, x, 475)#On replace l'oiseau
 
     def dead(self):
-        if (self.compte)*40 > self.Best_Score: # si on a fait un meilleur score que l'ancien on l'enregistre
+        #send_statistics(self.User_name, "Flappy", (self.compte)*100)
+        self.count += 1
+        self.average_score.append((self.compte)*100)
+        x, y =  self.Canvas_world.coords(self.image_Bird_true)
+        if self.y_center_bird < 0: a = 0
+        else: a = self.y_center_bird/475
+        self.death_pos.append((0, a))
+        self.root.protocol("WM_DELETE_WINDOW", print)
+        if (self.compte)*100 > self.Best_Score: # si on a fait un meilleur score que l'ancien on l'enregistre
             self.Best_Score = (self.compte)*100
 
         self.question = askquestion("RESTART", "Perdu!\nVeux-tu recommencer")
@@ -437,4 +454,7 @@ class Pipe:                     #Creéation de la classe Pipe
 
 def Flappy_Bird(User):    # fonction pour commencer le jeu
   jeux = bird(User)       # création de l'instance
-  return jeux.Best_Score  #renvois du meilleur score
+  if jeux.count != 0:
+    return (jeux.Best_Score, sum(jeux.average_score)/jeux.count, (time()-jeux.time_start)/jeux.count, jeux.count, jeux.death_pos)   #renvois des données
+  else:
+      return (0, 0, 0, 0, [])
