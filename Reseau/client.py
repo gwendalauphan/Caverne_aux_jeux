@@ -2,7 +2,8 @@ import socket #imports
 import pickle
 from time import sleep
 
-Host = "92.91.130.103" #création des variables 0 au lieu de 5
+#Host = "92.91.130.103" #création des variables 0 au lieu de 5
+Host = "localhost"
 Port = 1243
 
 def push_score(pseudo, game, score_max, score, count, time, pos = []):

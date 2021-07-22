@@ -4,7 +4,8 @@ import pickle
 import os
 
 ###################--------------Initialisation du serveur---------------###################################
-Host = "192.168.1.30" #ip locale sinon "90.91.3.228"
+#Host = "192.168.1.30" #ip locale sinon "90.91.3.228"
+Host = "localhost"
 Port = 1243
 
 if os.path.isfile("./data"): #si le fichier est créé, on charge ce qu'il y a dessus
