@@ -1,7 +1,7 @@
 from tkinter import * #@UnusedWildImport
 from tkinter.messagebox import *
 from tkinter.font import Font
-from time import sleep
+from time import sleep, time
 sys.path.append('../Reseau')
 from Reseau.client import *
 sys.path.append('../Scoreboard')
@@ -106,9 +106,11 @@ class tetris:
     def __init__(self, user):
         self.user = user
         self.Best_score = 0
-        self.height = 420
+        self.height = 420 #modulable
         self.width = 220
         self.paused = False
+        self.average_score = []
+        self.count = 0
 
         self.show_rules = Toplevel()
         self.show_rules.title('Règles')
@@ -119,25 +121,41 @@ class tetris:
 
         self.Frame_main1_wind2 = Canvas(self.show_rules, bg = 'red', relief = GROOVE) #premier frame, celui en dessous
         self.Frame_main1_wind2.pack(ipadx = 670, ipady = 530)
-        #self.Fond_Frame_main1_wind2 = PhotoImage(file = "thumbnail/Tete2.png")
-        #self.Frame_main1_wind2.create_image(335,265,image =Fond_Frame_main1_wind2)
+        self.Fond_Frame_main1_wind2 = PhotoImage(file = "thumbnail/Tetris2.png")
+        self.Frame_main1_wind2.create_image(335,265,image = self.Fond_Frame_main1_wind2)
         self.Frame_main2_wind2 = Frame(self.Frame_main1_wind2,width = 550, height = 425, relief = GROOVE) #second frame, au dessus
         self.Frame_main2_wind2.place(x = 60, y = 45)
-        self.Rules = Label(self.Frame_main2_wind2, text = 'Les règles:', font = ("Berlin Sans FB", 23), relief = GROOVE)
-        self.Rules.place(x = 200, y =5)
 
+        first_label = Label(self.Frame_main2_wind2, text = "Tu disposes de pièces qui descendent du ciel\n pour intéragir, tu peux utiliser\n les touches directionelles")
+        self.Frame_main2_wind2.after(1000, lambda: first_label.place(x = 20, y = 80))
 
-        self.explanation = Label(self.Frame_main2_wind2, text = "Le but du jeu est de compléter des lignes\n\
-        La sute arrivera un jour")
-        self.explanation.place(x = 20, y = 100)
+        self.image1 = PhotoImage(file = "Tetris/Images/rules1.png")
+        first_image = Label(self.Frame_main2_wind2, image = self.image1)
+        self.Frame_main2_wind2.after(1500, lambda: first_image.place(x = 380, y = 57))
+
+        second_label = Label(self.Frame_main2_wind2, text = "La flèche du haut fait tourner la pièce\n et les autres dirigent la pièce suivant la direction")
+        self.Frame_main2_wind2.after(2000, lambda: second_label.place(x = 20, y = 170))
+
+        self.image3 = PhotoImage(file = "Tetris/Images/rules2.png")
+        third_image = Label(self.Frame_main2_wind2, image = self.image3)
+        self.Frame_main2_wind2.after(2500, lambda: third_image.place(x = 380, y = 200))
+
+        third_label = Label(self.Frame_main2_wind2, text = "Tu gagnes des points lorsque tu complètes des lignes")
+        self.Frame_main2_wind2.after(3000, lambda: third_label.place(x = 20, y = 230))
+
+        fourth_label = Label(self.Frame_main2_wind2, text = "Mais attention, si le tas atteints le haut,\n tu as perdu!!!")
+        self.Frame_main2_wind2.after(3500, lambda: fourth_label.place(x = 200, y = 300))
+
         self.Button_Skip = Button(self.Frame_main2_wind2, text = "-Skip-", cursor ='hand2', command = self.quit_rules)
-        self.Button_Skip.place(x = 50, y = 350)
+        self.Button_Skip.place(x = 30, y = 370)
+
         self.show_rules.mainloop()
 
         self.root = Toplevel()
         self.root.geometry("420x420")
         self.root.protocol("WM_DELETE_WINDOW", self.exit)
         self.root.title('Tetris')
+        self.root.configure(background = "#31363b")
         self.root.resizable(False,False)
         self.root.focus_force()
         self.image_tiles = {"I": PhotoImage(file = "Tetris/Images/I.png"), "L": PhotoImage(file = "Tetris/Images/L.png"), "O": PhotoImage(file = "Tetris/Images/O.png"),\
@@ -154,6 +172,7 @@ class tetris:
         self.best_label = Label(self.root, text = "Meilleur joueur:\n{} avec {} points".format(bestplayer[0], int(bestplayer[1]))) #je te laisse la mise en forme
         self.best_label.place(x = 245, y = 350)
 
+        self.time_start = time()
         self.start()
 
         self.root.mainloop()
@@ -172,9 +191,10 @@ class tetris:
         Scoreboard(self.Frame_main1_wind2, self.show_rules, "Tetris", self.user)
 
     def start(self):
+        self.count += 1
         self.root.bind("<Key>", self.KeyPressed)
-        self.canvas = Canvas(self.root, width = 220, height = 420, bg = "grey", highlightthickness=0)
-        self.next_Canvas = Canvas(self.root, width = 4*self.width/10, height = 4*self.height/22, bg = "lightgrey")
+        self.canvas = Canvas(self.root, width = self.width, height = self.height, bg = "grey", highlightthickness=0)
+        self.next_Canvas = Canvas(self.root, width = 4*self.width/10, height = 4*self.height/22, bg = "#31363b")
         self.next_Canvas.place(x = 270, y = 230)
         self.canvas.place(x=0, y=0)
         self.grid = [["" for i in range(22)] for j in range(10)]
@@ -201,7 +221,7 @@ class tetris:
             self.current.update(2, self)
             self.next.update(1, self)
             self.root.after(40, self.update)
-        
+
     def ghost(self): #fonction pour afficher l'apperçus en bas de la fenetre
         offset = 0
         search = True
@@ -244,6 +264,7 @@ class tetris:
                 if self.current.check(self) == True:
                     self.current.index = (self.current.index +1)%len(self.current.pattern)
     def end(self):
+        self.average_score.append(self.score)
         self.root.unbind("<Key>")
         question = askquestion("RESTART", "La partie est finie\n veux-tu recommencer?")
         if question == "yes":
@@ -255,4 +276,7 @@ class tetris:
 
 def Tetris(user):
     jeux = tetris(user)
-    return jeux.Best_score
+    if jeux.count != 0:
+        return (jeux.Best_score, sum(jeux.average_score)/jeux.count, (time()-jeux.time_start)/jeux.count, jeux.count, [])   #renvois les données
+    else:
+      return (0, 0, 0, 0, [])

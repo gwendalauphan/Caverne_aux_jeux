@@ -1,6 +1,6 @@
 from tkinter import * #@UnusedWildImport
 from tkinter.messagebox import *
-from time import sleep
+from time import sleep, time
 sys.path.append('../Reseau')
 from Reseau.client import *
 sys.path.append('../Scoreboard')
@@ -23,6 +23,9 @@ class snake:
     def __init__(self, user):
         self.User_name = user  # pseudo du joueur actuel
         self.Best_Score = 0    # meilleur score de la session
+        self.average_score = [0]
+        self.count = 0
+        self.death_pos = []
         self.show_rules = Toplevel()
         self.show_rules.title('Règles')
         self.show_rules.geometry('670x530')
@@ -63,7 +66,7 @@ class snake:
 
     #------------------3------------------------------------------------------------------
         self.Rules4 = Label(self.Frame_main2_wind2, text = "Cependant attention tu peux mourir en rencontrant \n\
-        en mourir, ou en te retournant sur toi même.",font = ("Berlin Sans FB", 12))
+        le mur, ou en te retournant sur toi même.",font = ("Berlin Sans FB", 12))
         self.Frame_main2_wind2.after(3500, lambda: self.Rules4.place(x = 20, y = 300))
 
         self.CANVAS3 = Canvas(self.Frame_main2_wind2, width = 90, height = 62)
@@ -96,10 +99,14 @@ class snake:
         PhotoImage(file = "Snake/images/Angle_Right_Top.png"),PhotoImage(file = "Snake/images/Angle_Right_Down.png"),PhotoImage(file = "Snake/images/Angle_Left_Down.png"),PhotoImage(file = "Snake/images/Angle_Left_Top.png")]
         self.Queue_Image = [PhotoImage(file = "Snake/images/Queue_Right.png"), PhotoImage(file = "Snake/images/Queue_Down.png"), PhotoImage(file = "Snake/images/Queue_Left.png"), PhotoImage(file = "Snake/images/Queue_Up.png")]
 
+        self.main = PhotoImage(file = "Parametters/main2.png")
+        self.next_image = PhotoImage(file = "Parametters/next2.png")
+        self.fond_ecran = PhotoImage(file = "Parametters/fond_ecran.png")
+        self.replay = PhotoImage(file = "Parametters/replay2.png")
 
+        self.time_start = time()
         self.start() #fonction pour initialiser l'interface
         self.root.mainloop()
-
 
     def quit_rules(self): #fonction pour quiter les rêgles et passer au classement
         self.Frame_main2_wind2.destroy()
@@ -110,6 +117,12 @@ class snake:
         self.show_rules.quit()
 
     def start(self): #fonction d'initialisation
+        try:
+            self.Frame_right.destroy()               # destruction des frames
+            self.Frame_left.destroy()
+            self.Frame_top.destroy()
+        except: pass
+        self.root.protocol("WM_DELETE_WINDOW", self.exit)
         self.root.bind("<Return>", self.start_game)
         self.root.bind("<Key>", self.rotate)
         self.root.focus_force()
@@ -304,23 +317,23 @@ class snake:
                 self.dir = convert_dir(dir) #conversion de la nouvelle direction en matrice
         self.root.unbind("<Key>")
 
-
-
     def dead(self):
+        self.Frame_right.config(cursor='arrow')
+        self.count += 1
+        self.death_pos.append((self.pos.x/20, self.pos.y/20))
         self.start_button["state"] = "disabled"                                  # si le joueur est mort
         self.Pause_Button["state"] = "disabled"      # on désactive le bouton de la pause
         self.pause = True                            # on arrête la boucle du update
         if (self.length_max-2)*40 > self.Best_Score: # si on a fait un meilleur score que l'ancien on l'enregistre
             self.Best_Score = (self.length_max-2)*40
-        self.question = askquestion("RESTART", "Perdu!\nVeux-tu recommencer")
-        if self.question == "yes":                        # si l'utilisateur veut recommencer, on regenère l'affichage
-            self.Frame_right.destroy()               # destruction des frames
-            self.Frame_left.destroy()
-            self.Frame_top.destroy()
-            self.start()                             # reconstruction de la fenètre
-        else:
-            self.exit()                              #sinon, on quitte l'application
-
+        self.average_score.append((self.length_max-2)*40)
+        self.canvas_question = Canvas(self.Frame2, width = 196, height = 325, highlightthickness = 0, bg = 'black')
+        self.canvas_question.place(x =2, y = 0)
+        self.canvas_question.create_image(100, 163, image = self.fond_ecran)
+        self.canvas_question.create_text(93, 100, text ='             Perdu !! \n Veux-tu recommencer ?', font = ("Berlin Sans FB", 12))
+        answer1 = Button(self.canvas_question, text = " Oui ",command = self.start,cursor ='hand2',fg = 'white', bg = 'black', font = ("Helvetica", 12)).place(x = 30 , y = 150)
+        answer2 = Button(self.canvas_question, text = " Non ",command = self.exit,cursor ='hand2',fg = 'white', bg = 'black', font = ("Helvetica", 12)).place(x = 120, y = 150)
+                            #sinon, on quitte l'application
 
 def convert_dir(dir, mat = False): #dir correspond à l'entrée et mat, si c'est une matrice ou non qui est entrée
     if mat == True: #série de ifs pour faire la conversion
@@ -344,4 +357,7 @@ def convert_dir(dir, mat = False): #dir correspond à l'entrée et mat, si c'est
 
 def Snake(User):           # fonction pour commencer le jeu
   jeux = snake(User)       # création de l'instance
-  return jeux.Best_Score   #renvois du meilleur score
+  if jeux.count !=0:
+    return (jeux.Best_Score, sum(jeux.average_score)/jeux.count, (time()-jeux.time_start)/jeux.count, jeux.count, jeux.death_pos)   #renvois les données
+  else:
+      return (0, 0, 0, 0, [])
