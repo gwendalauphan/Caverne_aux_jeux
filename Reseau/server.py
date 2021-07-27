@@ -61,6 +61,7 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
         print("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
         try:
+            print(yes0)
             if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
                 players[player][jeu] = score_max
         except:
