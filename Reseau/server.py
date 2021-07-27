@@ -70,26 +70,19 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
 
 
-        try: #incrémentation du nombre de parties jouées par joueur dans un jeu
-            #la moyenne du joueur = nb_parties*moyenne + score
-            print(yes1)
-            statistics[0][jeu]["player_count"][player][0] += count
-            print(yes2)
-            statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0] + count)
-        except:
-            statistics[0][jeu]["player_count"][player] = [1, list[3]]
+        #incrémentation du nombre de parties jouées par joueur dans un jeu
+        #la moyenne du joueur = nb_parties*moyenne + score
+        print(yes1)
+        statistics[0][jeu]["player_count"][player][0] += count
+        print(yes2)
+        statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0] + count)
+
         #calcul de la nouvelle moyenne et du nouveau compte total
         statistics[0][jeu]["moyenne"][0] = (statistics[0][jeu]["moyenne"][0] * statistics[0][jeu]["moyenne"][1] + score*count)/(statistics[0][jeu]["moyenne"][1]+count)
 
         #partie sur le temps joué
-        try:
-            statistics[2][jeu]["player_count"][player]
-        except: statistics[2][jeu]["player_count"][player] = {}
+        statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player]-count) + time*count)/(statistics[0][jeu]["player_count"][player])
 
-        try:
-            statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player]-count) + time*count)/(statistics[0][jeu]["player_count"][player])
-        except:
-            statistics[2][jeu]["player_count"][player] = time
 
         statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"] + time*count)/(statistics[0][jeu]["moyenne"][1] + count)
 
@@ -136,10 +129,6 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
         """##################----------------Envois du score d'un joueur------------------------#############################"""
     elif command == "player_score":
-        try:
-            players[list[1]]["Tete"] < 0
-        except:
-            players[list[1]] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #création d'un nouveau joueur
         return pickle.dumps(players[list[1]])
 
     elif command == "statistics_get":
@@ -148,10 +137,15 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
         """##################----------------Ajout d'un nouveau joueur------------------------#############################"""
     elif command == "check_new_player":
-        if (list[1] in players):
-            print('yep')
-        else:
-            print('nop')
+        if (list[1] not in players):
+            players[list[1]] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #création d'un nouveau joueur
+            for mode in range(len(statistics)):
+                for jeu in statistics[mode]:
+                    if mode = 0:
+                        statistics[mode][jeu]['player_count'][list[1]] = [0 , 0]
+                    if mode = 2:
+                        statistics[mode][jeu]['player_count'][list[1]] = 0
+
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #création du socket
 s.bind((Host, Port)) #on lie l'adresse ip et le ports
