@@ -72,19 +72,18 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
         #incrémentation du nombre de parties jouées par joueur dans un jeu
         #la moyenne du joueur = nb_parties*moyenne + score
-        print(yes1)
+
         statistics[0][jeu]["player_count"][player][0] += count
-        print(yes2)
-        statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0] + count)
+
+        statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]-count) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0])
 
         #calcul de la nouvelle moyenne et du nouveau compte total
         statistics[0][jeu]["moyenne"][0] = (statistics[0][jeu]["moyenne"][0] * statistics[0][jeu]["moyenne"][1] + score*count)/(statistics[0][jeu]["moyenne"][1]+count)
+        #temps moyen du joueur
+        statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player]-count) + time)/(statistics[0][jeu]["player_count"][player])
 
-        #partie sur le temps joué
-        statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player]-count) + time*count)/(statistics[0][jeu]["player_count"][player])
 
-
-        statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"] + time*count)/(statistics[0][jeu]["moyenne"][1] + count)
+        statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"]*(statistics[0][jeu]["moyenne"][1] + time)/(statistics[0][jeu]["moyenne"][1] + count)
 
         #nombre de parties par jeu
         statistics[0][jeu]["moyenne"][1] += count
@@ -141,9 +140,9 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
             players[list[1]] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #création d'un nouveau joueur
             for mode in range(len(statistics)):
                 for jeu in statistics[mode]:
-                    if mode = 0:
+                    if mode == 0:
                         statistics[mode][jeu]['player_count'][list[1]] = [0 , 0]
-                    if mode = 2:
+                    if mode == 2:
                         statistics[mode][jeu]['player_count'][list[1]] = 0
 
 
