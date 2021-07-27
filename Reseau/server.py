@@ -68,7 +68,9 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
             players[player][jeu] = score_max
         try: #incrémentation du nombre de parties jouées par joueur dans un jeu
             #la moyenne du joueur = nb_parties*moyenne + score
+            print(yes1)
             statistics[0][jeu]["player_count"][player][0] += count
+            print(yes2)
             statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0] + count)
         except:
             statistics[0][jeu]["player_count"][player] = [1, list[3]]
