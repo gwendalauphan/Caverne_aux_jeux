@@ -32,6 +32,7 @@ def save(): #fonction pour sauvegarder les scores des joueurs dans le fichier
     with open("statistics", "wb") as f:
         pickle.dump(statistics, f)
 
+
 ####################----------------Fonction Process--------------------------###################################
 
 def process(msg): #fonction pour décider de ce qu'il faut retourner au client
@@ -59,14 +60,16 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         #allo Snake 160      100.0    2              9.517096400260925 [(9, 19), (17, 19)]
         #nom jeu score max  moyen   nb parties             time
 
-        print("player nul{} scored {} in {} with {} parties".format(player, score_max, jeu, count))
-        try:
-            print(yes0)
-            if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
-                players[player][jeu] = score_max
-        except:
-            players[player] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #
+        print("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
+        print(players)
+
+        if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
             players[player][jeu] = score_max
+
+        #players[player] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #
+
+
+
         try: #incrémentation du nombre de parties jouées par joueur dans un jeu
             #la moyenne du joueur = nb_parties*moyenne + score
             print(yes1)
@@ -141,6 +144,11 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
     elif command == "statistics_get":
         return pickle.dumps(statistics)
+
+
+        """##################----------------Ajout d'un nouveau joueur------------------------#############################"""
+    elif command == "check_new_player":
+        print(players)
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #création du socket
 s.bind((Host, Port)) #on lie l'adresse ip et le ports

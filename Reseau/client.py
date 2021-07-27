@@ -96,3 +96,12 @@ def get_statistics():
     s.close()
 
     return response
+
+def check_add_player(User_name):
+    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #création du socket
+    s.settimeout(0.4)
+    try:
+        s.connect((Host, Port)) #on lie l'adresse ip et le property
+    except:
+        return
+    s.send("check_new_player ".encode("utf-8")) #on demande la liste

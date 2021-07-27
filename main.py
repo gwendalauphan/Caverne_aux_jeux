@@ -66,6 +66,7 @@ def valider(event = None):
             alert.place(x = 50, y = 100)
             return
     User_name = temp
+    check_add_player(User_name)
     root_user.destroy()
     root_user.quit()
 
