@@ -50,6 +50,7 @@ class Stats:
         self.data = get_statistics()
         for games in self.data[0] :
             self.games.append(games)
+        print(self.data)
 
         dict_games = {'Tete': [1,0,0,0,5,1,0,0,0,5], 'Pendu': [1,0,0,0,5,1,0,0,0,5], 'Ghost': [1,0,0,0,5,1,0,0,0,5],
         'Snake': [1,2,3,0,5,1,2,3,0,5],'Minesweeper': [1,2,3,0,5,1,2,3,0,5], 'Tetris': [1,0,0,0,5,1,0,0,0,5], 'Pong': [1,2,3,0,5,1,2,3,0,5],  'Flappy': [1,2,3,0,5,1,2,3,0,5]}
@@ -69,7 +70,6 @@ class Stats:
         1, 0, 0, 4, 5, 1, 0, 0, 4, 5,  #Score moyen
         1, 0, 0, 4, 5, 1, 0, 0, 4, 5])#Temps
         self.select_graph_liste_stat.resize((4,2,5))
-        print(self.select_graph_liste_stat)
         """
         Reset_button = Button(self.Canvas_stat, text = "Reset", command = self.Reset)
         Reset_button.place(x = 700, y = 300)"""
@@ -240,12 +240,12 @@ class Stats:
                         x1.append(0)
 
                     moyenne_max = []     #moyenne des maximums
-                    moyenne_parties = [self.data[0][lequel]["moyenne"][1]] #moyenne des parties
+                    moyenne_parties = [self.data[0][lequel]["moyenne"][0]] #moyenne des parties
 
                     for joueur in self.data[0][lequel]["player_count"].keys():
                         if joueur != self.user:
                             moyenne_max.append(get_player_score(joueur)[lequel])
-                    x1.append(self.data[0][lequel]["moyenne"][0])
+                    x1.append(self.data[0][lequel]["moyenne"][1])
 
                     if len(moyenne_max) == 0: x0.append(0)
                     else: x0.append(sum(moyenne_max)/len(moyenne_max))

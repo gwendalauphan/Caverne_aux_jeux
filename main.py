@@ -184,7 +184,7 @@ bouton_5 = BoutonS(5, 1, "Tetris", Tetris, "Tetris")
 bouton_6 = BoutonS(5, 7, "Pong", Pong, "Pong")
 bouton_7 = BoutonS(2, 7, "Flappy", Flappy_Bird, "Flappy")
 
-#data__ = get_statistics()
-#print(data__)
+data__ = get_statistics()
+print(data__)
 
 root_main.mainloop()

@@ -35,6 +35,7 @@ class App_stat:
 
 class Graph_1_exe(App_stat):
     def __init__(self, master,user_name,x0,y0, x1,title, Legend1, Legend2,name_y_axe):
+        print(x0,y0, x1)
         ind = np.arange(len(x0))  # the x locations for the groups
         width = 0.35  # the width of the bars
 

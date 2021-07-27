@@ -6,7 +6,7 @@ import os
 ###################--------------Initialisation du serveur---------------###################################
 #Host = "192.168.1.30" #ip locale sinon "90.91.3.228"
 Host = "localhost"
-Port = 1243
+Port = 8000
 
 if os.path.isfile("./data"): #si le fichier est créé, on charge ce qu'il y a dessus
     with open("data", "rb") as f:
@@ -59,7 +59,7 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         #allo Snake 160      100.0    2              9.517096400260925 [(9, 19), (17, 19)]
         #nom jeu score max  moyen   nb parties             time
 
-        print("player {} scored {} in {}".format(player, score_max, jeu))
+        print("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
         try:
             if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
                 players[player][jeu] = score_max
