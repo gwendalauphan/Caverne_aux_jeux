@@ -104,4 +104,4 @@ def check_add_player(User_name):
         s.connect((Host, Port)) #on lie l'adresse ip et le property
     except:
         return
-    s.send("check_new_player ".encode("utf-8")) #on demande la liste
+    s.send("check_new_player {}".format(User_name).encode("utf-8")) #on demande la liste
