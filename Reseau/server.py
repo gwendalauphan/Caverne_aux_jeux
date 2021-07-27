@@ -59,7 +59,7 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         #allo Snake 160      100.0    2              9.517096400260925 [(9, 19), (17, 19)]
         #nom jeu score max  moyen   nb parties             time
 
-        print("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
+        print("player nul{} scored {} in {} with {} parties".format(player, score_max, jeu, count))
         try:
             print(yes0)
             if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
