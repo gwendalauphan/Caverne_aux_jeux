@@ -149,9 +149,9 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         """##################----------------Ajout d'un nouveau joueur------------------------#############################"""
     elif command == "check_new_player":
         if (list[1] in players):
-            print(yep)
+            print('yep')
         else:
-            print(nop)
+            print('nop')
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM) #création du socket
 s.bind((Host, Port)) #on lie l'adresse ip et le ports
