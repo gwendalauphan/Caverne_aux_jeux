@@ -1,6 +1,7 @@
+import sys
 from tkinter import *
 sys.path.append('../')
-from Reseau.client import * 
+from Reseau.client import *
 
 class Scoreboard:
     def __init__(self, parent, root, jeux, User_name, posx = 60, posy = 45):

@@ -1,3 +1,4 @@
+import sys
 from tkinter import * #@UnusedWildImport
 from tkinter.messagebox import *
 from Tete_chercheuse.data import *

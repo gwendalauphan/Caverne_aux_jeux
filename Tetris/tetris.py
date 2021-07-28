@@ -1,4 +1,5 @@
 from tkinter import * #@UnusedWildImport
+import sys
 from tkinter.messagebox import *
 from tkinter.font import Font
 from time import sleep, time

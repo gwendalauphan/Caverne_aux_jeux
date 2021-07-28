@@ -1,3 +1,4 @@
+import sys
 from tkinter import *
 import tkinter as tk
 import matplotlib

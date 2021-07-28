@@ -1,5 +1,5 @@
 from tkinter import *
-
+import sys
 sys.path.append("../Reseau")
 from Stats.Page_stat import *
 from Reseau.client import *
