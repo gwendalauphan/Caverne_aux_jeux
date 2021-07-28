@@ -63,6 +63,7 @@ class Graph_1_exe(App_stat):
 
 class Graph_2_exe(App_stat):
     def __init__(self, master, user_name, x0, title,Legend1,lequel): #, user_name, grille)
+        print(x0)
 
         grille = np.zeros((20, 20), dtype = int)
         for elt in x0:
@@ -88,9 +89,10 @@ class Graph_3_exe(App_stat):
                 y.append(abs(key[1]-19))
 
         fig, ax = plt.subplots(figsize=(5, 10), dpi= 100)
-        if lequel == 'Snake' or lequel == 'Minesweeper':
+        if lequel == 'Snake':
             ax.set_xlim(-0.25, 19.25)
             ax.set_ylim(-0.25, 19.25)
+            ax.set_aspect('equal')
         fig.suptitle(title, weight = 'bold')
         # Create the Scatter Plot
         ax.scatter(x, y, color="blue", s=500, alpha=0.1, linewidths=1)
@@ -142,13 +144,12 @@ class Graph_5_exe(App_stat):
             x_att3.append(max(x_att2))
 
         plt.xlim(-0.1, len(x_att2)-1)
-        plt.ylabel(label_y,fontsize=12, weight = 'bold')
-        plt.xlabel(label_x,fontsize=12, weight = 'bold')
+        plt.ylabel(label_y,fontsize=12)
+        plt.xlabel(label_x,fontsize=12)
         #plt.yscale('symlog', nonposy='clip')
         tick_val = [0,int((3/4)*(max(x_att3))),int((max(x_att3))/2),int((3/4)*(max(x_att3))),int(max(x_att3))]
         plt.yticks(tick_val)
-        plt.title(title, fontsize=22, weight = 'bold')
-
+        plt.title(title, fontsize=20, weight = 'bold')
         plt.gca().spines["top"].set_alpha(0.0)
         plt.gca().spines["bottom"].set_alpha(0.5)
         plt.gca().spines["right"].set_alpha(0.0)

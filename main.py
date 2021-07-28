@@ -145,7 +145,7 @@ image_stat = PhotoImage(file = "Parametters/image_stat.png")
 Button_para = Button(Frame_top, image = gearImg, bg = "#111111", borderwidth = 0, highlightthickness = 0, cursor = "hand2", command = para)
 Button_para.place(x = 860, y = 25)
 Button_stats = Button(Frame_top,image = image_stat, bg = "#111111", borderwidth = 0, highlightthickness = 0, cursor = "hand2", command = execute)
-Button_stats.place(x = 930, y = 20)
+Button_stats.place(x = 930, y = 20) 
 score = get_score_list() #récupération du scoreboard
 
 #############---------Création des labels et autres au contour du Frame_main-------#########################

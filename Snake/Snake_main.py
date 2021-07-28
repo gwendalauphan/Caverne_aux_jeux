@@ -320,7 +320,8 @@ class snake:
     def dead(self):
         self.Frame_right.config(cursor='arrow')
         self.count += 1
-        self.death_pos.append((self.pos.x/20, self.pos.y/20))
+        print(self.pos.x, self.pos.y)
+        self.death_pos.append((self.pos.x, self.pos.y))
         self.start_button["state"] = "disabled"                                  # si le joueur est mort
         self.Pause_Button["state"] = "disabled"      # on désactive le bouton de la pause
         self.pause = True                            # on arrête la boucle du update

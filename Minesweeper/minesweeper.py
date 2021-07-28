@@ -267,9 +267,8 @@ class demineur:
         self.canvas.unbind("<Button>")
         #send_statistics(self.User, "Minesweeper", count*50)
         self.average_score.append(count * 50)
-        if win == False:
-            self.death_pos.append((pos[0]/self.dims[0], pos[1]/self.dims[1]))
         if win == False: #si le joueur a perdus, on affiche toutes les bombes
+            self.death_pos.append((int((pos[0]/self.dims[0])*20), int((pos[1]/self.dims[1])*20)))
             for x in range(self.dims[0]):
                 for y in range(self.dims[1]):
                     if self.grid[x][y] == -1:

@@ -237,7 +237,8 @@ class pong:
         self.start_button.configure(state = "normal")
         self.paused = True
         self.average_score.append(self.touch * 50)
-        self.death_pos.append((0, self.player.pos.y/self.height))
+        print(self.ball.pos.y)
+        self.death_pos.append((9, int((self.ball.pos.y/self.height)*20)))
         self.launch = looser
         if self.touch > self.score:
             self.score = self.touch

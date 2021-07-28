@@ -69,24 +69,32 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         #players[player] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #
 
 
-
+        print(statistics)
         #incrémentation du nombre de parties jouées par joueur dans un jeu
         #la moyenne du joueur = nb_parties*moyenne + score
 
         statistics[0][jeu]["player_count"][player][0] += count
-
-        statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]-count) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0])
-
-        #calcul de la nouvelle moyenne et du nouveau compte total
-        statistics[0][jeu]["moyenne"][0] = (statistics[0][jeu]["moyenne"][0] * statistics[0][jeu]["moyenne"][1] + score*count)/(statistics[0][jeu]["moyenne"][1]+count)
-        #temps moyen du joueur
-        statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player]-count) + time)/(statistics[0][jeu]["player_count"][player])
+        statistics[0][jeu]["moyenne"][1] += count
 
 
-        statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"]*(statistics[0][jeu]["moyenne"][1] + time)/(statistics[0][jeu]["moyenne"][1] + count)
+        if statistics[0][jeu]["player_count"][player][0] != 0:
+            #moyenne de scorer du joueur
+            statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]-count) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0])
+
+            #temps moyen du joueur
+            statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player][0]-count) + time)/(statistics[0][jeu]["player_count"][player][0])
+
+
+
+        if statistics[0][jeu]["moyenne"][1]+count != 0:
+            #calcul de la nouvelle moyenne et du nouveau compte total
+            statistics[0][jeu]["moyenne"][0] = (statistics[0][jeu]["moyenne"][0] * (statistics[0][jeu]["moyenne"][1]-count) + score*count)/(statistics[0][jeu]["moyenne"][1])
+
+            #Temps en moyenne par partie
+            statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"]*(statistics[0][jeu]["moyenne"][1]-count) + time)/(statistics[0][jeu]["moyenne"][1])
 
         #nombre de parties par jeu
-        statistics[0][jeu]["moyenne"][1] += count
+
 
 
         if jeu in ["Snake", "Pong", "Minesweeper", "Flappy"]: #compte des emplacements de mort dans le jeu Snake

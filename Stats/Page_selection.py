@@ -245,15 +245,15 @@ class Stats:
                     for joueur in self.data[0][lequel]["player_count"].keys():
                         if joueur != self.user:
                             moyenne_max.append(get_player_score(joueur)[lequel])
-                    x1.append(self.data[0][lequel]["moyenne"][1])
+                    x1.append(round(sum(moyenne_parties)/len(moyenne_parties)))
 
                     if len(moyenne_max) == 0: x0.append(0)
                     else: x0.append(sum(moyenne_max)/len(moyenne_max))
                     if len(moyenne_parties) == 0: moyenne_parties.append(0)
-                    y = ["{}   Parties: {}".format(self.user,parties), "Reste des joueurs   Parties: {}".format(round(sum(moyenne_parties)/len(moyenne_parties)))]
+                    y = ["{}   Parties: {}".format(self.user,parties), "Reste des joueurs   Parties: {}".format(self.data[0][lequel]["moyenne"][1]- parties)]
                     #Score max et moyen de l'utilisateur pour un jeu donné + nombre de parties avec x0 et x1 dans yo[0]
                     #Score max du jeu, moyenne de scores des gens sur le jeu + nombre moyen de parties jouées x0 et x1 dans yo[1]
-                    title = "Statistiques de {} en comparaison au reste des joueurs".format(self.user)
+                    title = "Statistiques de {} en comparaison au reste des joueurs sur {}".format(self.user, lequel)
                 elif lequel == 'tous les jeux': #sur tous les jeux
                     #Le meilleur score de l'utilsateur dans chaque jeu avec x0
                     #Avec sa moyenne de score dans chaque jeu avec x1
@@ -339,7 +339,7 @@ class Stats:
                         y.append(game)
                         try: x0.append(self.data[2][game]['player_count'][self.user])
                         except: x0.append(0)
-                        try: x1.append(self.data[2][game]['player_count'][get_game_score_list(game)[0][0]])
+                        try: x1.append(self.data[2][game]["moyenne"])
                         except: x1.append(0)
         #x0 =[5000, 4000]
         #x1 =[2500, 2000]
@@ -363,7 +363,8 @@ class Stats:
 
             elif sur_qui == "Statistiques sur toi": #si la personne veut un graphique sur ses données
                 title = "Disposition des morts de {} dans {}".format(self.user,lequel)
-                x0 = self.data[1][lequel][self.user]
+                try: x0 = self.data[1][lequel][self.user]
+                except : pass
 
         elif sur_quoi == "Statistiques sur Application":
 
