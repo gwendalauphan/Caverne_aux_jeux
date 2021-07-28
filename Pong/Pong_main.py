@@ -147,6 +147,8 @@ class pong:
         self.start_button.configure(state = "normal")
 
     def resume(self, event = None):
+        if self.launch == looser:
+            self.count += 1
         if self.paused == True:
             self.paused = False
             self.root.bind("<KeyPress>", self.start_move)
@@ -237,7 +239,6 @@ class pong:
         self.start_button.configure(state = "normal")
         self.paused = True
         self.average_score.append(self.touch * 50)
-        print(self.ball.pos.y)
         self.death_pos.append((9, int((self.ball.pos.y/self.height)*20)))
         self.launch = looser
         if self.touch > self.score:
