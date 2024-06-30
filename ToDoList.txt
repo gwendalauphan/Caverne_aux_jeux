@@ -15,3 +15,55 @@ mettre tous les jeux 1vs1
 future lointain: faire les jeux 1vs1 en réseau avec requette d'ami exemple
 
 augmenter le nombre de possibilités dans les questions et l'accès plus simple aux différents scoreboard
+
+
+#########################################################
+
+Faire les scrollars savoir si on veut des graphes perso ou général pour le jeu, type de graphes, axes, (dans cet ordre)
+
+liste arguments:
+
+_________________________________
+#donnees pour la temperature
+grille = np.zeros((20, 20), dtype = int)
+
+for cle,valeur in a[1].items():
+    #for i in range(valeur):
+    grille[abs(cle[1]-19)][cle[0]]+= valeur
+
+_________________________________
+# données pour les bulles
+x = []
+y = []
+a = get_statistics()
+
+for cle,valeur in a[1].items():
+    for i in range(valeur):
+        x.append(cle[0]+1)
+        y.append(abs(cle[1]-20))
+
+for cle,valeur in a[0].items():
+    print(cle, valeur)
+
+____________________________________
+
+players = []
+for player in get_score_list():
+    players.append(player[0])
+
+max_score = []
+for player in get_score_list():
+    max_score.append(player[1])
+____________________________________
+
+x = []
+y = []
+for players in get_game_score_list('Flappy'):
+    x.append(players[0])
+    y.append(players[1])
+
+{'Temps moyen pass� par dodo': {'Minesweeper': [14, 182.0], 'Snake': [3, 266.6666666666667], 'Tete': 0, 'Tetris': [2, 428.0], 'Flappy': 0, 'Ghost': 0, 'Pendu': 0, 'Pong': [1, 0]}, 'Temps pass� par dodo (Meilleur partie)': {}, 'Temps pass� en moyenne': {'Minesweeper': [169.86666666666667, 15], 'Snake': [200.0, 5], 'Tete': [0.0, 1], 'Tetris': [171.2, 5], 'Flappy': [300.0, 1], 'Ghost': [0, 0], 'Pendu': [0, 0], 'Pong': [86.0, 25]}, 'Temps pass� par le meilleur du jeu': {}}
+
+{'Nb parties moyenne': {'Minesweeper': 8.0, 'Snake': 2.5, 'Tete': 1.0, 'Tetris': 1.6666666666666667, 'Flappy': 1.0, 'Ghost': 0, 'Pendu': 0, 'Pong': 2.0833333333333335}, 'Nb parties dodo': {'Minesweeper': [15, 183.2], 'Snake': [3, 266.6666666666667], 'Tete': 0, 'Tetris': [2, 428.0], 'Flappy': 0, 'Ghost': 0, 'Pendu': 0, 'Pong': [1, 0]}, 'Nb parties du meilleur joueur du jeu': {'Minesweeper': 0, 'Snake': [3, 266.6666666666667], 'Tete': 0, 'Tetris': [2, 428.0], 'Flappy': [1, 300], 'Ghost': 0, 'Pendu': 0, 'Pong': [1, 0]}}
+
+Refaire regles flappy
