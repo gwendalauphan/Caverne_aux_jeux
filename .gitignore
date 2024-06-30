@@ -1,0 +1,13 @@
+*__pycache__
+*.pyc
+app/Reseau/data
+app/Reseau/statistics
+
+game_env/
+
+.venv/
+
+build/
+dist/
+
+*.spec

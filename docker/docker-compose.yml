@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  app:
+    build:
+      context: ../ # Le contexte est défini relativement à l'emplacement du fichier docker-compose.yml
+      dockerfile: docker/Dockerfile
+    image: caverne-aux-jeux
+
+    entrypoint: python main.py
+    container_name: app-caverne-aux-jeux
+    environment:
+      - DISPLAY=${DISPLAY}
+      - HOST_ENV=server-caverne-aux-jeux
+
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    networks:
+      - caverne-aux-jeux
+
+  server:
+    image: caverne-aux-jeux
+    container_name: server-caverne-aux-jeux
+
+    entrypoint: python Reseau/server.py
+    ports:
+    - "8000:8000"
+
+    expose:
+      - 8000
+
+    networks:
+      - caverne-aux-jeux
+
+    volumes:
+      - data_players:/app/data_players
+
+volumes:
+  data_players:
+
+networks:
+  caverne-aux-jeux:
+    driver: bridge
+
+
