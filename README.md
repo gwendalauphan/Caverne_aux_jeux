@@ -114,14 +114,8 @@ ajout de la barre de scroll dans le menus principal pour faire défiler les jeux
 
 Début de Flappy Bird
 
-## Luni 28 Avril 2019:
+## Lundi 28 Avril 2019:
 
 Fin du jeu Flappy Bird avec commentaires détaillés
 
 Début de la partie aide dans le menu
-
-
-
-C'est moi qui est tout pensé sur comment on allait agencer les jeux, le score board, les regles, la disposition des element, le titre, les couleurs
-
-et je suis 100% daccord que t as fait le reseau
