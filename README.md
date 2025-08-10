@@ -120,7 +120,17 @@ Fin du jeu Flappy Bird avec commentaires détaillés
 
 Début de la partie aide dans le menu
 
+## CI/CD
 
+This project uses GitHub Actions for continuous integration:
+
+- On every push and pull request, the workflow:
+  - Installs dependencies and runs a test command to ensure the project starts without errors.
+  - Builds and tests the Docker container.
+  - Builds standalone executables for Linux and Windows using PyInstaller.
+
+- On release, the workflow:
+  - Uploads the built executables as release artifacts for both Linux and Windows.
 
 C'est moi qui est tout pensé sur comment on allait agencer les jeux, le score board, les regles, la disposition des element, le titre, les couleurs
 
