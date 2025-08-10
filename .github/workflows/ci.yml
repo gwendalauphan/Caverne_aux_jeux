@@ -184,7 +184,7 @@ jobs:
 
   release-artifacts:
     if: github.event_name == 'release'
-    needs: [build-linux, build-windows]
+    needs: [build-linux-debug, build-windows-debug]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/download-artifact@v4
