@@ -21,7 +21,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
       - name: Install xvfb
-        run: sudo apt-get update && sudo apt-get install -y xvfb
+        run: sudo apt update && sudo apt install -y xvfb
       - name: Run main.py (test run)
         run: |
           if timeout 5s stdbuf -oL xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
@@ -37,19 +37,9 @@ jobs:
             exit 1
           fi
 
-  docker:
-    if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build Docker image
-        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
-
   build-linux:
     if: github.event_name == 'pull_request'
-    runs-on: ubuntu-latest
+    runs-on: alpine-latest
     needs: [test]
     steps:
       - uses: actions/checkout@v3
@@ -71,12 +61,14 @@ jobs:
 
   build-windows:
     if: github.event_name == 'pull_request'
-    runs-on: windows-latest
+    runs-on: alpine-latest
     needs: [test]
     steps:
       - uses: actions/checkout@v3
       - name: Build executables (Windows)
-        run: /bin/sh -c "cd / && make build-windows"
+        run: |
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
+            /bin/sh -c "cd / && make build-windows"
       - name: Upload Windows executables
         uses: actions/upload-artifact@v4
         with:
@@ -98,6 +90,8 @@ jobs:
           path: dist
       - name: Make executables runnable
         run: chmod +x dist/main dist/server
+      - name: Install xvfb
+        run: sudo apt update && sudo apt install -y xvfb
       - name: Test Linux client executable
         run: |
           if timeout 5s stdbuf -oL xvfb-run -a ./dist/main  2>&1 | grep -q "The client app is running"; then
