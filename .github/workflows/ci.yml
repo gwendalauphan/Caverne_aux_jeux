@@ -60,7 +60,7 @@ jobs:
       - name: Build executables (Linux)
         run: |
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
-            make build-linux
+            /bin/sh -c "cd / && make build-linux"
       - name: Upload Linux executables
         uses: actions/upload-artifact@v4
         with:
@@ -76,7 +76,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Build executables (Windows)
-        run: make build-windows
+        run: /bin/sh -c "cd / && make build-windows"
       - name: Upload Windows executables
         uses: actions/upload-artifact@v4
         with:
