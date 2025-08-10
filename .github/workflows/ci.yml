@@ -51,15 +51,14 @@ jobs:
         run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
       - name: Build executables (Linux)
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
+          docker run --rm -v ${{ github.workspace }}/dist:/dist caverne-aux-jeux \
             /bin/sh -c "cd / && make build-linux"
       - name: Upload Linux executables
         uses: actions/upload-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: |
-            /dist/main
-            /dist/server
+
 
   build-windows:
     if: github.event_name == 'pull_request'
@@ -75,7 +74,7 @@ jobs:
         run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
       - name: Build executables (Windows)
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
+          docker run --rm -v ${{ github.workspace }}/dist:/dist caverne-aux-jeux \
             /bin/sh -c "cd / && make build-windows"
       - name: Upload Windows executables
         uses: actions/upload-artifact@v4
