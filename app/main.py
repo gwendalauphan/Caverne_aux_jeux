@@ -18,7 +18,7 @@ from Utils.utils import *
 
 # Setup logger
 logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger("CaverneAuxJeux")
+logger = logging.getLogger("CaverneAuxJeuxClient")
 
 logger.info("The client app is running.")
 
