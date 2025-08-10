@@ -2,6 +2,7 @@ from tkinter import *
 from Reseau.client import *
 from tkinter import font
 import sys
+import logging
 sys.path.append('../')
 
 from Tete_chercheuse.tete_chercheuse import *
@@ -14,6 +15,12 @@ from Pong.Pong_main import*
 from Flappy_Bird.Flappy_Bird_main import*
 from Stats.Page_selection import*
 from Utils.utils import *
+
+# Setup logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("CaverneAuxJeuxClient")
+
+logger.info("The client app is running.")
 
 
 

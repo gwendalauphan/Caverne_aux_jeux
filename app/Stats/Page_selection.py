@@ -51,7 +51,6 @@ class Stats:
         self.data = get_statistics()
         for games in self.data[0] :
             self.games.append(games)
-        #print(self.data)
 
         dict_games = {'Tete': [1,0,0,0,5,1,0,0,0,5], 'Pendu': [1,0,0,0,5,1,0,0,0,5], 'Ghost': [1,0,0,0,5,1,0,0,0,5],
         'Snake': [1,2,3,0,5,1,2,3,0,5],'Minesweeper': [1,2,3,0,5,1,2,3,0,5], 'Tetris': [1,0,0,0,5,1,0,0,0,5], 'Pong': [1,2,3,0,5,1,2,3,0,5],  'Flappy': [1,2,3,0,5,1,2,3,0,5]}
@@ -77,7 +76,6 @@ class Stats:
         self.root.mainloop()
 
     def exit(self):
-        #print("stat exit")
         self.Canvas_stat.destroy()
         self.root.destroy()
         self.root.quit()

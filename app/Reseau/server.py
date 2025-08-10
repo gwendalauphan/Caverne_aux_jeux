@@ -5,8 +5,15 @@ import signal
 import socket
 import sys
 import os
+import logging
 
 from pathlib import Path
+
+# Setup logger
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger("CaverneAuxJeuxServer")
+
+logger.info("The server app is running.")
 
 def resource_path(relative_path):
     try:
@@ -40,9 +47,9 @@ if getattr(sys, 'frozen', False):
 
 else:
     # Exécuté sous forme de script Python
-    data_directory = Path(__file__).resolve().parent 
+    data_directory = Path(__file__).resolve().parent
 
-data_directory.mkdir(exist_ok=True)  # Crée le répertoire s'il n'existe pas
+data_directory.mkdir(parents=True,exist_ok=True)  # Crée le répertoire s'il n'existe pas
 
 data_players_directory = "{}/data_players".format(data_directory)
 #créer le dossier data_players s'il n'existe pas
@@ -52,7 +59,7 @@ if not os.path.isdir(resource_path(data_players_directory)):
 # Chemin vers le fichier
 data_file_path = resource_path("{}/data".format(data_players_directory))
 statistics_file_path = resource_path("{}/statistics".format(data_players_directory))
-print(data_file_path)
+logger.info(data_file_path)
 
 # Vérifiez si le fichier existe
 if os.path.isfile(data_file_path):
@@ -76,7 +83,6 @@ else:
 #########################-----------Fonction Save-------------------####################################
 def save(): #fonction pour sauvegarder les scores des joueurs dans le fichier
     with open(data_file_path, "wb") as f:
-        print(data_file_path)
         pickle.dump(players, f)
     with open(statistics_file_path, "wb") as f:
         pickle.dump(statistics, f)
@@ -109,8 +115,7 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         #allo Snake 160      100.0    2              9.517096400260925 [(9, 19), (17, 19)]
         #nom jeu score max  moyen   nb parties             time
 
-        print("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
-        print(players)
+        logger.debug("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
 
         if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
             players[player][jeu] = score_max
@@ -118,7 +123,6 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         #players[player] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #
 
 
-        print(statistics)
         #incrémentation du nombre de parties jouées par joueur dans un jeu
         #la moyenne du joueur = nb_parties*moyenne + score
 
@@ -204,25 +208,35 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
 
 
 def handle_sigint(sig, frame):
-    print('Interrupt signal received. Shutting down the server...')
+    logger.info('Interrupt signal received. Shutting down the server...')
     save()
     sys.exit(0)
 
 def handle_sigtstp(sig, frame):
-    print('Stop signal received (Ctrl+Z). Shutting down the server...')
+    logger.info('Stop signal received (Ctrl+Z). Shutting down the server...')
     save()
     sys.exit(0)
 
 # Configurer les gestionnaires de signaux
-signal.signal(signal.SIGINT, handle_sigint)  # Ctrl+C
-signal.signal(signal.SIGTSTP, handle_sigtstp)  # Ctrl+Z
+signal.signal(signal.SIGINT, handle_sigint)  # Ctrl+C everywhere
+# Termination from OS / runner
+if hasattr(signal, "SIGTERM"):
+    signal.signal(signal.SIGTERM, handle_sigint)
+
+# Ctrl+Break on Windows
+if hasattr(signal, "SIGBREAK"):
+    signal.signal(signal.SIGBREAK, handle_sigint)
+
+# POSIX-only job control (Ctrl+Z)
+if hasattr(signal, "SIGTSTP"):
+    signal.signal(signal.SIGTSTP, handle_sigtstp)
 
 def start_server(host, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((host, port))
     s.listen(5)
-    print(f"Server is listening on port {port}")
+    logger.info(f"Server is listening on port {port}")
 
     launched = True
     client_list = []  # liste des clients connectés
@@ -234,7 +248,7 @@ def start_server(host, port):
 
             for connection in connection_asked:
                 client_socket, addr = connection.accept()
-                print(f"Connected to {addr[0]}")
+                logger.info(f"Connected to {addr[0]}")
                 client_list.append(client_socket)
 
             # Gérer les messages entrants des clients connectés
@@ -260,7 +274,7 @@ def start_server(host, port):
         for client in client_list:
             client.close()
         s.close()
-        print("Server socket closed.")
+        logger.info("Server socket closed.")
 
 if __name__ == '__main__':
     start_server(HOST, PORT)

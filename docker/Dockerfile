@@ -7,8 +7,6 @@ RUN apt update && apt install -y \
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
-COPY Makefile .
-
 #Copier le repertoire app
 WORKDIR /app
 COPY app .

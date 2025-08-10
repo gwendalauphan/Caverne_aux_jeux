@@ -97,22 +97,22 @@ class snake:
         self.Fruit_Image = PhotoImage(file = resource_path("Snake/images/Fruit.png"))
 
         self.Head_Image = [PhotoImage(file = resource_path("Snake/images/Head_Right.png")),
-                            PhotoImage(file = resource_path("Snake/images/Head_Down.png")), 
-                            PhotoImage(file = resource_path("Snake/images/Head_Left.png")), 
+                            PhotoImage(file = resource_path("Snake/images/Head_Down.png")),
+                            PhotoImage(file = resource_path("Snake/images/Head_Left.png")),
                             PhotoImage(file = resource_path("Snake/images/Head_Up.png"))]
         
-        self.Body_Image = [PhotoImage(file = resource_path("Snake/images/Horizontal.png")), 
-                           PhotoImage(file = resource_path("Snake/images/Vertical.png")), 
-                           PhotoImage(file = resource_path("Snake/images/Horizontal.png")), 
+        self.Body_Image = [PhotoImage(file = resource_path("Snake/images/Horizontal.png")),
+                           PhotoImage(file = resource_path("Snake/images/Vertical.png")),
+                           PhotoImage(file = resource_path("Snake/images/Horizontal.png")),
                            PhotoImage(file = resource_path("Snake/images/Vertical.png")),
                            PhotoImage(file = resource_path("Snake/images/Angle_Right_Top.png")),
                            PhotoImage(file = resource_path("Snake/images/Angle_Right_Down.png")),
                            PhotoImage(file = resource_path("Snake/images/Angle_Left_Down.png")),
                            PhotoImage(file = resource_path("Snake/images/Angle_Left_Top.png"))]
         
-        self.Queue_Image = [PhotoImage(file = resource_path("Snake/images/Queue_Right.png")), 
-                            PhotoImage(file = resource_path("Snake/images/Queue_Down.png")), 
-                            PhotoImage(file = resource_path("Snake/images/Queue_Left.png")), 
+        self.Queue_Image = [PhotoImage(file = resource_path("Snake/images/Queue_Right.png")),
+                            PhotoImage(file = resource_path("Snake/images/Queue_Down.png")),
+                            PhotoImage(file = resource_path("Snake/images/Queue_Left.png")),
                             PhotoImage(file = resource_path("Snake/images/Queue_Up.png"))]
 
         self.main = PhotoImage(file = resource_path("Parametters/main2.png"))
@@ -336,7 +336,6 @@ class snake:
     def dead(self):
         self.Frame_right.config(cursor='arrow')
         self.count += 1
-        print(self.pos.x, self.pos.y)
         self.death_pos.append((self.pos.x, self.pos.y))
         self.start_button["state"] = "disabled"                                  # si le joueur est mort
         self.Pause_Button["state"] = "disabled"      # on désactive le bouton de la pause

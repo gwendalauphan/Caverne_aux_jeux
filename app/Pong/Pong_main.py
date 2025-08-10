@@ -149,7 +149,6 @@ class pong:
         self.start_button.configure(state = "normal")
 
     def resume(self, event = None):
-        print("resume")
         if self.launch != 0:
             self.count += 1
         if self.paused == True:
@@ -227,7 +226,6 @@ class pong:
             self.root.after(25, self.update)
 
     def pause_command(self, event = None):
-        print("resume")
         if self.launch != 0:
             self.count += 1
         if self.paused == False:
@@ -328,5 +326,4 @@ def mapping(value, istart, iend, ostart, oend):
 
 def Pong(user):
     jeux = pong(user)
-    print("jeux.count", jeux.count)
     return (jeux.score*50, sum(jeux.average_score)/jeux.count, (time()-jeux.time_start)/jeux.count, jeux.count, jeux.death_pos)   #renvois les données

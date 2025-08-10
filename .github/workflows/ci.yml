@@ -11,116 +11,349 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
       - name: Set up Python
-        uses: actions/setup-python@v4
+        uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'                          # <-- enable pip cache
+          cache-dependency-path: requirements.txt
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+
+      - name: Install xvfb
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
+
       - name: Run main.py (test run)
         run: |
-          python app/main.py --help || true  # Replace with a real test if available
+          if timeout 10s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
+            echo "Client output OK"
+          else
+            echo "Client output missing"
+            exit 1
+          fi
+          if timeout 10s python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
+            echo "Server output OK"
+          else
+            echo "Server output missing"
+            exit 1
+          fi
 
-  docker:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build Docker image
-        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
-      - name: Run Docker container (test)
-        run: docker run --rm caverne-aux-jeux --help || true  # Replace with a real test if available
 
-  build-linux:
-    if: github.ref == 'refs/heads/main'
+  build-linux-debug:
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     needs: [test]
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-      - name: Build Docker image
-        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
-      - name: Build executables (Linux)
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+      # Uses prebuilt CPython; enables pip cache keyed to requirements.txt
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
+
+      - name: Install system packages (make, patchelf, tk, etc.)
         run: |
-          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
-            make build-linux
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            make patchelf tk
+
+      - name: Clean dist directory
+        run: rm -rf dist && mkdir -p dist
+
+      - name: Build executables (Linux debug)
+        run: make build-linux-debug
+
+      - name: List artifacts (debug)
+        run: ls -lah dist || true
+
       - name: Upload Linux executables
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
+        with:
+          name: caverne-aux-jeux-linux-debug
+          path: |
+            dist/main
+            dist/server
+          if-no-files-found: error
+
+
+  build-windows-debug:
+    if: github.event_name == 'pull_request'
+    runs-on: windows-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Install GNU Make
+        run: choco install make --no-progress -y
+
+      - name: Clean dist directory
+        shell: pwsh
+        run: |
+          if (Test-Path dist) { Remove-Item dist -Recurse -Force }
+          New-Item -ItemType Directory -Path dist | Out-Null
+
+      - name: Build executables (Windows)
+        shell: bash
+        run: make build-windows-debug
+
+      - name: List artifacts (debug)
+        shell: pwsh
+        run: Get-ChildItem -Recurse dist | Format-List
+
+      - name: Upload Windows executables
+        uses: actions/upload-artifact@v4
+        with:
+          name: caverne-aux-jeux-windows-debug
+          path: |
+            dist/main.exe
+            dist/server.exe
+          if-no-files-found: error
+
+
+  test-exec-linux-debug:
+    if: github.event_name == 'pull_request'
+    runs-on: ubuntu-latest
+    needs: [build-linux-debug]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Linux executables
+        uses: actions/download-artifact@v4
+        with:
+          name: caverne-aux-jeux-linux-debug
+          path: dist
+
+      - name: Verify files exist
+        run: |
+          if [ ! -f dist/main ]; then
+            echo "dist/main not found"
+            exit 1
+          fi
+          if [ ! -f dist/server ]; then
+            echo "dist/server not found"
+            exit 1
+          fi
+
+      - name: Make executables runnable
+        run: chmod +x dist/main dist/server
+
+      - name: Install xvfb
+        run: sudo apt update && sudo apt install -y xvfb
+
+      - name: Test Linux client executable
+        run: |
+          if timeout 10s xvfb-run -a ./dist/main 2>&1 | grep -q "The client app is running"; then
+            echo "Client output OK"
+          else
+            echo "Client output missing"
+            exit 1
+          fi
+
+      - name: Test Linux server executable
+        run: |
+          if timeout 10s ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then
+            echo "Server output OK"
+          else
+            echo "Server output missing"
+            exit 1
+          fi
+
+
+  test-exec-windows-debug:
+    if: github.event_name == 'pull_request'
+    runs-on: windows-latest
+    needs: [build-windows-debug]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Windows executables
+        uses: actions/download-artifact@v4
+        with:
+          name: caverne-aux-jeux-windows-debug
+          path: dist
+          
+      - name: Verify files exist
+        shell: pwsh
+        run: |
+          if (!(Test-Path "dist/main.exe"))   { throw "dist/main.exe not found" }
+          if (!(Test-Path "dist/server.exe")) { throw "dist/server.exe not found" }
+
+      - name: Test Windows client executable (redirect + timeout)
+        shell: pwsh
+        run: |
+          Remove-Item -ErrorAction SilentlyContinue client.out.log, client.err.log
+          $p = Start-Process -FilePath ".\dist\main.exe" -NoNewWindow `
+              -RedirectStandardOutput client.out.log -RedirectStandardError client.err.log -PassThru
+          Start-Sleep -Seconds 10
+          if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          if (Select-String -Path @("client.out.log","client.err.log") -Pattern 'The client app is running' -Quiet) {
+            Write-Host "Client output OK"
+          } else {
+            Write-Host "Client output missing"
+            Get-ChildItem *.log | ForEach-Object {
+              Write-Host "----- $($_.Name) -----"
+              Get-Content $_.FullName -ErrorAction SilentlyContinue
+            }
+            exit 1
+          }
+
+      - name: Test Windows server executable (redirect + timeout)
+        shell: pwsh
+        run: |
+          Remove-Item -ErrorAction SilentlyContinue server.out.log, server.err.log
+          $p = Start-Process -FilePath ".\dist\server.exe" -NoNewWindow `
+              -RedirectStandardOutput server.out.log -RedirectStandardError server.err.log -PassThru
+          Start-Sleep -Seconds 10
+          if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          if (Select-String -Path @("server.out.log","server.err.log") -Pattern 'Server is listening on port 8000' -Quiet) {
+            Write-Host "Server output OK"
+          } else {
+            Write-Host "Server output missing"
+            Get-ChildItem *.log | ForEach-Object {
+              Write-Host "----- $($_.Name) -----"
+              Get-Content $_.FullName -ErrorAction SilentlyContinue
+            }
+            exit 1
+          }
+
+
+  build-linux:
+    if: github.event_name == 'release'
+    runs-on: ubuntu-latest
+    needs: [test]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+      # Uses prebuilt CPython; enables pip cache keyed to requirements.txt
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
+
+      - name: Install system packages (make, patchelf, tk, etc.)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            make patchelf tk
+
+      - name: Clean dist directory
+        run: rm -rf dist && mkdir -p dist
+
+      - name: Build executables (Linux)
+        run: make build-linux
+
+      - name: List artifacts
+        run: ls -lah dist || true
+
+      - name: Upload Linux executables
+        uses: actions/upload-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: |
             dist/main
             dist/server
+          if-no-files-found: error
+
 
   build-windows:
-    if: github.ref == 'refs/heads/main'
+    if: github.event_name == 'release'
     runs-on: windows-latest
     needs: [test]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~\AppData\Local\pip\Cache
+          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
+          restore-keys: ${{ runner.os }}-pip-
+
+      - name: Install GNU Make
+        run: choco install make --no-progress -y
+
+      - name: Clean dist directory
+        shell: pwsh
+        run: |
+          if (Test-Path dist) { Remove-Item dist -Recurse -Force }
+          New-Item -ItemType Directory -Path dist | Out-Null
+
       - name: Build executables (Windows)
+        shell: bash
         run: make build-windows
+
+      - name: List artifacts
+        shell: pwsh
+        run: Get-ChildItem -Recurse dist | Format-List
+
       - name: Upload Windows executables
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: caverne-aux-jeux-windows
           path: |
             dist/main.exe
             dist/server.exe
+          if-no-files-found: error
 
-  test-exec-linux:
-    if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
-    needs: [build-linux]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download Linux executables
-        uses: actions/download-artifact@v3
-        with:
-          name: caverne-aux-jeux-linux
-          path: dist
-      - name: Make executables runnable
-        run: chmod +x dist/main dist/server
-      - name: Test Linux executables
-        run: make run-linux
-
-  test-exec-windows:
-    if: github.ref == 'refs/heads/main'
-    runs-on: windows-latest
-    needs: [build-windows]
-    steps:
-      - uses: actions/checkout@v3
-      - name: Download Windows executables
-        uses: actions/download-artifact@v3
-        with:
-          name: caverne-aux-jeux-windows
-          path: dist
-      - name: Test Windows executables
-        run: make run-windows
 
   release-artifacts:
     if: github.event_name == 'release'
     needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-linux
-          path: ./linux
-      - uses: actions/download-artifact@v3
+          path: dist
+      - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-windows
-          path: ./windows
+          path: dist
       - name: Upload release assets
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./linux/main
-            ./linux/server
-            ./windows/main.exe
-            ./windows/server.exe
+            ./dist/main
+            ./dist/server
+            ./dist/main.exe
+            ./dist/server.exe
+
+
+  delete-artifacts:
+    if: always()
+    runs-on: ubuntu-latest
+    needs: [test-exec-linux-debug, test-exec-windows-debug]
+    steps:
+      - name: Delete artifacts from this run
+        uses: geekyeggo/delete-artifact@v4
+        with:
+          name: |
+            caverne-aux-jeux-linux
+            caverne-aux-jeux-windows
+          failOnError: false
+
