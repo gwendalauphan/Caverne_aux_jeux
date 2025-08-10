@@ -159,10 +159,6 @@ jobs:
       - name: Install xvfb
         run: sudo apt update && sudo apt install -y xvfb
 
-      - name: Display server output
-        run: |
-          timeout 10s ./dist/server
-
       - name: Test Linux server executable
         run: |
           if timeout 10s ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then

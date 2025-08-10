@@ -218,8 +218,18 @@ def handle_sigtstp(sig, frame):
     sys.exit(0)
 
 # Configurer les gestionnaires de signaux
-signal.signal(signal.SIGINT, handle_sigint)  # Ctrl+C
-signal.signal(signal.SIGTSTP, handle_sigtstp)  # Ctrl+Z
+signal.signal(signal.SIGINT, handle_sigint)  # Ctrl+C everywhere
+# Termination from OS / runner
+if hasattr(signal, "SIGTERM"):
+    signal.signal(signal.SIGTERM, handle_sigint)
+
+# Ctrl+Break on Windows
+if hasattr(signal, "SIGBREAK"):
+    signal.signal(signal.SIGBREAK, handle_sigint)
+
+# POSIX-only job control (Ctrl+Z)
+if hasattr(signal, "SIGTSTP"):
+    signal.signal(signal.SIGTSTP, handle_sigtstp)
 
 def start_server(host, port):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
