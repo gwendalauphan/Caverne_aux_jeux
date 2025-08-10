@@ -58,8 +58,8 @@ jobs:
         with:
           name: caverne-aux-jeux-linux
           path: |
-            dist/main
-            dist/server
+            /dist/main
+            /dist/server
 
   build-windows:
     if: github.event_name == 'pull_request'
@@ -82,8 +82,8 @@ jobs:
         with:
           name: caverne-aux-jeux-windows
           path: |
-            dist/main.exe
-            dist/server.exe
+            /dist/main.exe
+            /dist/server.exe
 
   test-exec-linux:
     if: github.event_name == 'pull_request'

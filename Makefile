@@ -10,7 +10,19 @@ help:
 
 build-linux-client:
 	pip install -r requirements.txt
-	pyinstaller --onefile --add-data 'app/Data/*:Data/' --add-data 'app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/' --add-data 'app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/' --add-data 'app/Minesweeper/Images/*:Minesweeper/Images/' --add-data 'app/Parametters/*:Parametters/' --add-data 'app/Pendu/ressources/*:Pendu/ressources/' --add-data 'app/Pong/res/*:Pong/res/' --add-data 'app/Snake/images/*:Snake/images/' --add-data 'app/Tete_chercheuse/image/*:Tete_chercheuse/image/' --add-data 'app/Tetris/Images/*:Tetris/Images/' --add-data 'app/thumbnail/*:thumbnail/'  --hidden-import='PIL._tkinter_finder' --windowed --noconsole app/main.py
+	pyinstaller --onefile \
+			--add-data=app/Data/*:Data/ \
+			--add-data=app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/ \
+			--add-data=app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/ \
+			--add-data=app/Minesweeper/Images/*:Minesweeper/Images/ \
+			--add-data=app/Parametters/*:Parametters/ \
+			--add-data=app/Pendu/ressources/*:Pendu/ressources/ \
+			--add-data=app/Pong/res/*:Pong/res/ \
+			--add-data=app/Snake/images/*:Snake/images/ \
+			--add-data=app/Tete_chercheuse/image/*:Tete_chercheuse/image/ \
+			--add-data=app/Tetris/Images/*:Tetris/Images/ \
+			--add-data=app/thumbnail/*:thumbnail/ \
+			--hidden-import=PIL._tkinter_finder --windowed --noconsole app/main.py
 
 build-linux-server:
 	pip install -r requirements.txt
@@ -21,7 +33,19 @@ build-linux: build-linux-client build-linux-server
 
 build-windows-client:
 	pip install -r requirements.txt
-	pyinstaller --onefile --add-data "app/Data/*;Data/" --add-data "app/Fantome/Ressources/Images/*;Fantome/Ressources/Images/" --add-data "app/Flappy_Bird/Ressources/*;Flappy_Bird/Ressources/" --add-data "app/Minesweeper/Images/*;Minesweeper/Images/" --add-data "app/Parametters/*;Parametters/" --add-data "app/Pendu/ressources/*;Pendu/ressources/" --add-data "app/Pong/res/*;Pong/res/" --add-data "app/Snake/images/*;Snake/images/" --add-data "app/Tete_chercheuse/image/*;Tete_chercheuse/image/" --add-data "app/Tetris/Images/*;Tetris/Images/" --add-data "app/thumbnail/*;thumbnail/"  --hidden-import="PIL._tkinter_finder" --windowed --noconsole app/main.py
+	pyinstaller --onefile \
+	--add-data=app/Data/*:Data/ \
+	--add-data=app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/ \
+	--add-data=app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/ \
+	--add-data=app/Minesweeper/Images/*:Minesweeper/Images/ \
+	--add-data=app/Parametters/*:Parametters/ \
+	--add-data=app/Pendu/ressources/*:Pendu/ressources/ \
+	--add-data=app/Pong/res/*:Pong/res/ \
+	--add-data=app/Snake/images/*:Snake/images/ \
+	--add-data=app/Tete_chercheuse/image/*:Tete_chercheuse/image/ \
+	--add-data=app/Tetris/Images/*:Tetris/Images/ \
+	--add-data=app/thumbnail/*:thumbnail/ \
+	--hidden-import=PIL._tkinter_finder --windowed --noconsole app/main.py
 
 build-windows-server:
 	pip install -r requirements.txt
