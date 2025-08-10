@@ -49,7 +49,7 @@ else:
     # Exécuté sous forme de script Python
     data_directory = Path(__file__).resolve().parent
 
-data_directory.mkdir(exist_ok=True)  # Crée le répertoire s'il n'existe pas
+data_directory.mkdir(parents=True,exist_ok=True)  # Crée le répertoire s'il n'existe pas
 
 data_players_directory = "{}/data_players".format(data_directory)
 #créer le dossier data_players s'il n'existe pas
