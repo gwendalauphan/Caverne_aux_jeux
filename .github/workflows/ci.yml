@@ -30,13 +30,13 @@ jobs:
 
       - name: Run main.py (test run)
         run: |
-          if timeout 5s stdbuf -oL xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
+          if timeout 10s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
             echo "Client output OK"
           else
             echo "Client output missing"
             exit 1
           fi
-          if timeout 5s stdbuf -oL python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 10s python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
@@ -141,13 +141,27 @@ jobs:
         with:
           name: caverne-aux-jeux-linux
           path: dist
+          if-no-files-found: error
+
+      - name: Verify files exist
+        run: |
+          if [ ! -f dist/main ]; then
+            echo "dist/main not found"
+            exit 1
+          fi
+          if [ ! -f dist/server ]; then
+            echo "dist/server not found"
+            exit 1
+          fi
+
       - name: Make executables runnable
         run: chmod +x dist/main dist/server
+
       - name: Install xvfb
         run: sudo apt update && sudo apt install -y xvfb
       - name: Test Linux client executable
         run: |
-          if timeout 5s stdbuf -oL xvfb-run -a ./dist/main  2>&1 | grep -q "The client app is running"; then
+          if timeout 10s xvfb-run -a ./dist/main  2>&1 | grep -q "The client app is running"; then
             echo "Client output OK"
           else
             echo "Client output missing"
@@ -155,7 +169,7 @@ jobs:
           fi
       - name: Test Linux server executable
         run: |
-          if timeout 5s stdbuf -oL ./dist/server  2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 10s ./dist/server  2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
@@ -173,12 +187,40 @@ jobs:
         with:
           name: caverne-aux-jeux-windows
           path: dist
-      - name: Test Windows client executable
+          
+      - name: Verify files exist
+        shell: pwsh
         run: |
-          ./dist/main.exe | findstr /C:"The client app is running"
-      - name: Test Windows server executable
+          if (!(Test-Path "dist/main.exe"))   { throw "dist/main.exe not found" }
+          if (!(Test-Path "dist/server.exe")) { throw "dist/server.exe not found" }
+
+      - name: Test Windows client executable (redirect + timeout)
+        shell: pwsh
         run: |
-          ./dist/server.exe | findstr /C:"Server is listening on port 8000"
+          Remove-Item -ErrorAction SilentlyContinue client.log
+          $p = Start-Process -FilePath ".\dist\main.exe" -NoNewWindow `
+              -RedirectStandardOutput client.log -RedirectStandardError client.log -PassThru
+          Start-Sleep -Seconds 10
+          if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          if (Select-String -Path client.log -Pattern 'The client app is running' -Quiet) {
+            Write-Host "Client output OK"
+          } else {
+            Write-Host "Client output missing"; Get-Content client.log; exit 1
+          }
+
+      - name: Test Windows server executable (redirect + timeout)
+        shell: pwsh
+        run: |
+          Remove-Item -ErrorAction SilentlyContinue server.log
+          $p = Start-Process -FilePath ".\dist\server.exe" -NoNewWindow `
+              -RedirectStandardOutput server.log -RedirectStandardError server.log -PassThru
+          Start-Sleep -Seconds 10
+          if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
+          if (Select-String -Path server.log -Pattern 'Server is listening on port 8000' -Quiet) {
+            Write-Host "Server output OK"
+          } else {
+            Write-Host "Server output missing"; Get-Content server.log; exit 1
+          }
 
 
 
