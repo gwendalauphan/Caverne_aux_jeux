@@ -45,6 +45,8 @@ jobs:
       - uses: actions/checkout@v3
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+      - name: Clean dist directory
+        run: rm -rf dist && mkdir dist
       - name: Build Docker image
         run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
       - name: Build executables (Linux)
@@ -65,6 +67,12 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Clean dist directory
+        run: rm -rf dist && mkdir dist
+      - name: Build Docker image
+        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
       - name: Build executables (Windows)
         run: |
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
