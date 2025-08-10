@@ -139,7 +139,7 @@ jobs:
       - name: Download Linux executables
         uses: actions/download-artifact@v4
         with:
-          name: caverne-aux-jeux-linux
+          name: caverne-aux-jeux-linux-debug
           path: dist
 
       - name: Verify files exist
@@ -187,7 +187,7 @@ jobs:
       - name: Download Windows executables
         uses: actions/download-artifact@v4
         with:
-          name: caverne-aux-jeux-windows
+          name: caverne-aux-jeux-windows-debug
           path: dist
           
       - name: Verify files exist
@@ -349,11 +349,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: [test-exec-linux-debug, test-exec-windows-debug]
     steps:
-      - name: Delete Linux artifact (debug)
-        uses: geekyeggo/delete-artifact@v2
+      - name: Delete artifacts from this run
+        uses: geekyeggo/delete-artifact@v4
         with:
-          name: caverne-aux-jeux-linux-debug
-      - name: Delete Windows artifact (debug)
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: caverne-aux-jeux-windows-debug
+          name: |
+            caverne-aux-jeux-linux
+            caverne-aux-jeux-windows
+          failOnError: false
+
