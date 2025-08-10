@@ -73,10 +73,6 @@ jobs:
 
       - name: List artifacts (debug)
         run: ls -lah dist || true
-      
-      - name: Display server output
-        run: |
-          timeout 10s ./dist/server
 
       - name: Upload Linux executables
         uses: actions/upload-artifact@v4
