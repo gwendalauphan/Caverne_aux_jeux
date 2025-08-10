@@ -141,7 +141,6 @@ jobs:
         with:
           name: caverne-aux-jeux-linux
           path: dist
-          if-no-files-found: error
 
       - name: Verify files exist
         run: |
@@ -159,22 +158,23 @@ jobs:
 
       - name: Install xvfb
         run: sudo apt update && sudo apt install -y xvfb
-      - name: Test Linux client executable
-        run: |
-          if timeout 10s xvfb-run -a ./dist/main  2>&1 | grep -q "The client app is running"; then
-            echo "Client output OK"
-          else
-            echo "Client output missing"
-            exit 1
-          fi
       - name: Test Linux server executable
         run: |
-          if timeout 10s ./dist/server  2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 10s ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
             exit 1
           fi
+      - name: Test Linux client executable
+        run: |
+          if timeout 10s xvfb-run -a ./dist/main 2>&1 | grep -q "The client app is running"; then
+            echo "Client output OK"
+          else
+            echo "Client output missing"
+            exit 1
+          fi
+
 
   test-exec-windows-debug:
     if: github.event_name == 'pull_request'
@@ -197,30 +197,41 @@ jobs:
       - name: Test Windows client executable (redirect + timeout)
         shell: pwsh
         run: |
-          Remove-Item -ErrorAction SilentlyContinue client.log
+          Remove-Item -ErrorAction SilentlyContinue client.out.log, client.err.log
           $p = Start-Process -FilePath ".\dist\main.exe" -NoNewWindow `
-              -RedirectStandardOutput client.log -RedirectStandardError client.log -PassThru
+              -RedirectStandardOutput client.out.log -RedirectStandardError client.err.log -PassThru
           Start-Sleep -Seconds 10
           if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
-          if (Select-String -Path client.log -Pattern 'The client app is running' -Quiet) {
+          if (Select-String -Path @("client.out.log","client.err.log") -Pattern 'The client app is running' -Quiet) {
             Write-Host "Client output OK"
           } else {
-            Write-Host "Client output missing"; Get-Content client.log; exit 1
+            Write-Host "Client output missing"
+            Get-ChildItem *.log | ForEach-Object {
+              Write-Host "----- $($_.Name) -----"
+              Get-Content $_.FullName -ErrorAction SilentlyContinue
+            }
+            exit 1
           }
 
       - name: Test Windows server executable (redirect + timeout)
         shell: pwsh
         run: |
-          Remove-Item -ErrorAction SilentlyContinue server.log
+          Remove-Item -ErrorAction SilentlyContinue server.out.log, server.err.log
           $p = Start-Process -FilePath ".\dist\server.exe" -NoNewWindow `
-              -RedirectStandardOutput server.log -RedirectStandardError server.log -PassThru
+              -RedirectStandardOutput server.out.log -RedirectStandardError server.err.log -PassThru
           Start-Sleep -Seconds 10
           if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
-          if (Select-String -Path server.log -Pattern 'Server is listening on port 8000' -Quiet) {
+          if (Select-String -Path @("server.out.log","server.err.log") -Pattern 'Server is listening on port 8000' -Quiet) {
             Write-Host "Server output OK"
           } else {
-            Write-Host "Server output missing"; Get-Content server.log; exit 1
+            Write-Host "Server output missing"
+            Get-ChildItem *.log | ForEach-Object {
+              Write-Host "----- $($_.Name) -----"
+              Get-Content $_.FullName -ErrorAction SilentlyContinue
+            }
+            exit 1
           }
+
 
 
 
