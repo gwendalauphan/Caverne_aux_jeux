@@ -28,8 +28,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Build Docker image
-        run: docker build -t caverne-aux-jeux .
+        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
       - name: Run Docker container (test)
         run: docker run --rm caverne-aux-jeux --help || true  # Replace with a real test if available
 
@@ -39,23 +41,21 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-      - name: Install dependencies
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Build Docker image
+        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
+      - name: Build executables (Linux)
         run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r requirements.txt
-      - name: Build executable (Linux)
-        run: |
-          pyinstaller --onefile --add-data 'app/Data/*:Data/' --add-data 'app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/' --add-data 'app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/' --add-data 'app/Minesweeper/Images/*:Minesweeper/Images/' --add-data 'app/Parametters/*:Parametters/' --add-data 'app/Pendu/ressources/*:Pendu/ressources/' --add-data 'app/Pong/res/*:Pong/res/' --add-data 'app/Snake/images/*:Snake/images/' --add-data 'app/Tete_chercheuse/image/*:Tete_chercheuse/image/' --add-data 'app/Tetris/Images/*:Tetris/Images/' --add-data 'app/thumbnail/*:thumbnail/'  --hidden-import='PIL._tkinter_finder' --windowed --noconsole app/main.py
-      - name: Upload Linux executable
+          docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
+            make build-linux
+      - name: Upload Linux executables
         uses: actions/upload-artifact@v3
         with:
           name: caverne-aux-jeux-linux
-          path: dist/main
+          path: |
+            dist/main
+            dist/server
 
   build-windows:
     if: github.ref == 'refs/heads/main'
@@ -63,23 +63,45 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v3
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.12'
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r requirements.txt
-      - name: Build executable (Windows)
-        run: |
-          pyinstaller --onefile --add-data "app/Data/*;Data/" --add-data "app/Fantome/Ressources/Images/*;Fantome/Ressources/Images/" --add-data "app/Flappy_Bird/Ressources/*;Flappy_Bird/Ressources/" --add-data "app/Minesweeper/Images/*;Minesweeper/Images/" --add-data "app/Parametters/*;Parametters/" --add-data "app/Pendu/ressources/*;Pendu/ressources/" --add-data "app/Pong/res/*;Pong/res/" --add-data "app/Snake/images/*;Snake/images/" --add-data "app/Tete_chercheuse/image/*;Tete_chercheuse/image/" --add-data "app/Tetris/Images/*;Tetris/Images/" --add-data "app/thumbnail/*;thumbnail/"  --hidden-import="PIL._tkinter_finder" --windowed --noconsole app/main.py
-      - name: Upload Windows executable
+      - name: Build executables (Windows)
+        run: make build-windows
+      - name: Upload Windows executables
         uses: actions/upload-artifact@v3
         with:
           name: caverne-aux-jeux-windows
-          path: dist/main.exe
+          path: |
+            dist/main.exe
+            dist/server.exe
+
+  test-exec-linux:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build-linux]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Linux executables
+        uses: actions/download-artifact@v3
+        with:
+          name: caverne-aux-jeux-linux
+          path: dist
+      - name: Make executables runnable
+        run: chmod +x dist/main dist/server
+      - name: Test Linux executables
+        run: make run-linux
+
+  test-exec-windows:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    needs: [build-windows]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Windows executables
+        uses: actions/download-artifact@v3
+        with:
+          name: caverne-aux-jeux-windows
+          path: dist
+      - name: Test Windows executables
+        run: make run-windows
 
   release-artifacts:
     if: github.event_name == 'release'
@@ -99,4 +121,6 @@ jobs:
         with:
           files: |
             ./linux/main
+            ./linux/server
             ./windows/main.exe
+            ./windows/server.exe
