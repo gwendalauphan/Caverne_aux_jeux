@@ -20,9 +20,11 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      - name: Install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
       - name: Run main.py (test run)
         run: |
-          python app/main.py --help || true  # Replace with a real test if available
+          xvfb-run -a python app/main.py --help || true  # Replace with a real test if available
 
   docker:
     runs-on: ubuntu-latest
@@ -50,7 +52,7 @@ jobs:
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
             make build-linux
       - name: Upload Linux executables
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: |
@@ -66,7 +68,7 @@ jobs:
       - name: Build executables (Windows)
         run: make build-windows
       - name: Upload Windows executables
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: caverne-aux-jeux-windows
           path: |
@@ -80,7 +82,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Download Linux executables
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: dist
@@ -96,7 +98,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
       - name: Download Windows executables
-        uses: actions/download-artifact@v3
+        uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-windows
           path: dist
@@ -108,11 +110,11 @@ jobs:
     needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: ./linux
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-windows
           path: ./windows
