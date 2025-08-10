@@ -78,7 +78,7 @@ class bird:
             self.liste_nombres.append(PhotoImage(file = resource_path('Flappy_Bird/Ressources/u{}.png'.format(p))))
 
         self.ground_image = PhotoImage(file = resource_path('Flappy_Bird/Ressources/ground.png'))
-        self.tap = [PhotoImage(file = resource_path('Flappy_Bird/Ressources/tap_right.png')), 
+        self.tap = [PhotoImage(file = resource_path('Flappy_Bird/Ressources/tap_right.png')),
                     PhotoImage(file = resource_path('Flappy_Bird/Ressources/tap_left.png'))]
         self.hand_image = PhotoImage(file = resource_path('Flappy_Bird/Ressources/hand.png'))
         self.image = PhotoImage(file = resource_path("Flappy_Bird/Ressources/game_over.png"))

@@ -31,7 +31,6 @@ class App_stat:
         self.canvas._tkcanvas.pack(expand=True)
 
     def back_home(self):
-        #print("back home")
         self.canvas.get_tk_widget().destroy()
         self.toolbar.destroy()
         plt.close(self.canvas.figure)
@@ -41,7 +40,6 @@ class App_stat:
 
 class Graph_1_exe(App_stat):
     def __init__(self, master,user_name,x0,y0, x1,title, Legend1, Legend2,name_y_axe):
-        print(x0,y0, x1)
         ind = np.arange(len(x0))  # the x locations for the groups
         width = 0.35  # the width of the bars
 
@@ -70,7 +68,6 @@ class Graph_1_exe(App_stat):
 
 class Graph_2_exe(App_stat):
     def __init__(self, master, user_name, x0, title,Legend1,lequel): #, user_name, grille)
-        print(x0)
 
         grille = np.zeros((20, 20), dtype = int)
         for elt in x0:
@@ -139,7 +136,6 @@ class Graph_5_exe(App_stat):
         x_att3 = []
         mycolors = ['red', 'blue', 'green', 'orange', 'brown', 'grey', 'pink', 'olive', 'deeppink', 'steelblue', 'firebrick', 'mediumseagreen']
         fig = plt.figure(figsize=(16,10), dpi= 75)
-        print(x0)
         for i,score in enumerate(x0):
             x_att = []
             x_att2 = []
