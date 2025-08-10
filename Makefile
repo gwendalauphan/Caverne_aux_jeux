@@ -1,71 +1,105 @@
-.PHONY: help build-linux build-windows run-linux run-windows clean
+.PHONY: help build-linux build-linux-client build-linux-server \
+        build-windows build-windows-client build-windows-server \
+        run-linux run-linux-client run-linux-server \
+        run-windows run-windows-client run-windows-server \
+        clean
+
+# Common flags
+PYI_COMMON = --onefile --clean --noconfirm --distpath dist --workpath build --specpath .
+
+# Linux add-data uses ":" separator
+DATA_LINUX = \
+	--add-data "app/Data/*:Data/" \
+	--add-data "app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/" \
+	--add-data "app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/" \
+	--add-data "app/Minesweeper/Images/*:Minesweeper/Images/" \
+	--add-data "app/Parametters/*:Parametters/" \
+	--add-data "app/Pendu/ressources/*:Pendu/ressources/" \
+	--add-data "app/Pong/res/*:Pong/res/" \
+	--add-data "app/Snake/images/*:Snake/images/" \
+	--add-data "app/Tete_chercheuse/image/*:Tete_chercheuse/image/" \
+	--add-data "app/Tetris/Images/*:Tetris/Images/" \
+	--add-data "app/thumbnail/*:thumbnail/"
+
+# Windows add-data uses ";" separator
+DATA_WIN = \
+	--add-data "app/Data/*;Data/" \
+	--add-data "app/Fantome/Ressources/Images/*;Fantome/Ressources/Images/" \
+	--add-data "app/Flappy_Bird/Ressources/*;Flappy_Bird/Ressources/" \
+	--add-data "app/Minesweeper/Images/*;Minesweeper/Images/" \
+	--add-data "app/Parametters/*;Parametters/" \
+	--add-data "app/Pendu/ressources/*;Pendu/ressources/" \
+	--add-data "app/Pong/res/*;Pong/res/" \
+	--add-data "app/Snake/images/*;Snake/images/" \
+	--add-data "app/Tete_chercheuse/image/*;Tete_chercheuse/image/" \
+	--add-data "app/Tetris/Images/*;Tetris/Images/" \
+	--add-data "app/thumbnail/*;thumbnail/"
 
 help:
 	@echo "Available targets:"
-	@echo "  build-linux    Build Linux executable with PyInstaller"
-	@echo "  build-windows  Build Windows executable with PyInstaller (requires Wine or Windows)"
-	@echo "  run-linux      Run the Linux executable"
-	@echo "  run-windows    Run the Windows executable (requires Wine or Windows)"
-	@echo "  clean          Remove build artifacts"
+	@echo "  build-linux        Build Linux executables with PyInstaller"
+	@echo "  build-windows      Build Windows executables with PyInstaller (run on Windows)"
+	@echo "  run-linux          Run Linux server+client from dist/"
+	@echo "  run-windows        Run Windows server+client from dist/"
+	@echo "  clean              Remove build artifacts"
 
+# ---------- Linux ----------
 build-linux-client:
-	pip install -r requirements.txt
-	pyinstaller --onefile \
-			--add-data=app/Data/*:Data/ \
-			--add-data=app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/ \
-			--add-data=app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/ \
-			--add-data=app/Minesweeper/Images/*:Minesweeper/Images/ \
-			--add-data=app/Parametters/*:Parametters/ \
-			--add-data=app/Pendu/ressources/*:Pendu/ressources/ \
-			--add-data=app/Pong/res/*:Pong/res/ \
-			--add-data=app/Snake/images/*:Snake/images/ \
-			--add-data=app/Tete_chercheuse/image/*:Tete_chercheuse/image/ \
-			--add-data=app/Tetris/Images/*:Tetris/Images/ \
-			--add-data=app/thumbnail/*:thumbnail/ \
-			--hidden-import=PIL._tkinter_finder --windowed --noconsole app/main.py
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) $(DATA_LINUX) \
+		--hidden-import PIL._tkinter_finder --windowed --noconsole \
+		--name main app/main.py
 
 build-linux-server:
-	pip install -r requirements.txt
-	pyinstaller --onefile --windowed --noconsole app/Reseau/server.py
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) \
+		--windowed --noconsole \
+		--name server app/Reseau/server.py
 
 build-linux: build-linux-client build-linux-server
 
+# Debug versions (console mode)
+build-linux-client-debug:
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) $(DATA_LINUX) \
+		--hidden-import PIL._tkinter_finder \
+		--name main app/main.py
 
+build-linux-server-debug:
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) \
+		--name server app/Reseau/server.py
+
+build-linux-debug: build-linux-client-debug build-linux-server-debug
+
+# ---------- Windows ----------
 build-windows-client:
-	pip install -r requirements.txt
-	pyinstaller --onefile \
-	--add-data=app/Data/*:Data/ \
-	--add-data=app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/ \
-	--add-data=app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/ \
-	--add-data=app/Minesweeper/Images/*:Minesweeper/Images/ \
-	--add-data=app/Parametters/*:Parametters/ \
-	--add-data=app/Pendu/ressources/*:Pendu/ressources/ \
-	--add-data=app/Pong/res/*:Pong/res/ \
-	--add-data=app/Snake/images/*:Snake/images/ \
-	--add-data=app/Tete_chercheuse/image/*:Tete_chercheuse/image/ \
-	--add-data=app/Tetris/Images/*:Tetris/Images/ \
-	--add-data=app/thumbnail/*:thumbnail/ \
-	--hidden-import=PIL._tkinter_finder --windowed --noconsole app/main.py
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
+		--hidden-import PIL._tkinter_finder --windowed --noconsole \
+		--name main app/main.py
 
 build-windows-server:
-	pip install -r requirements.txt
-	pyinstaller --onefile --windowed --noconsole app/Reseau/server.py
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) \
+		--windowed --noconsole \
+		--name server app/Reseau/server.py
 
 build-windows: build-windows-client build-windows-server
 
-run-linux-client:
-	./dist/main
+# Debug versions (console mode)
+build-windows-client-debug:
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
+		--hidden-import PIL._tkinter_finder \
+		--name main app/main.py
 
-run-linux-server:
-	./dist/server
+build-windows-server-debug:
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) \
+		--name server app/Reseau/server.py
 
-run-linux:
-	@echo "Starting server and client..."
-	@./dist/server & \
-	SERVER_PID=$$!; \
-	sleep 1; \
-	./dist/main; \
-	kill $$SERVER_PID
+build-windows-debug: build-windows-client-debug build-windows-server-debug
 
 run-windows-client:
 	./dist/main.exe
@@ -77,9 +111,9 @@ run-windows:
 	@echo "Starting server and client..."
 	@./dist/server.exe & \
 	SERVER_PID=$$!; \
-	sleep 1; \
+	powershell -Command "Start-Sleep -Seconds 1" || sleep 1; \
 	./dist/main.exe; \
-	kill $$SERVER_PID
+	kill $$SERVER_PID 2>/dev/null || taskkill //PID $$SERVER_PID //F 2>NUL || true
 
 clean:
-	rm -rf build __pycache__ *.spec
+	rm -rf build dist __pycache__ *.spec
