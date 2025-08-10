@@ -24,7 +24,18 @@ jobs:
         run: sudo apt-get update && sudo apt-get install -y xvfb
       - name: Run main.py (test run)
         run: |
-          xvfb-run -a python app/main.py --help || true  # Replace with a real test if available
+          if timeout 20s xvfb-run -a python app/main.py | grep -q "The client app is running"; then
+            echo "Client output OK"
+          else
+            echo "Client output missing"
+            exit 1
+          fi
+          if timeout 20s python app/Reseau/server.py | grep -q "Server is listening on port 8000"; then
+            echo "Server output OK"
+          else
+            echo "Server output missing"
+            exit 1
+          fi
 
   docker:
     runs-on: ubuntu-latest
@@ -34,8 +45,6 @@ jobs:
         uses: docker/setup-buildx-action@v3
       - name: Build Docker image
         run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
-      - name: Run Docker container (test)
-        run: docker run --rm caverne-aux-jeux --help || true  # Replace with a real test if available
 
   build-linux:
     if: github.ref == 'refs/heads/main'
@@ -88,8 +97,22 @@ jobs:
           path: dist
       - name: Make executables runnable
         run: chmod +x dist/main dist/server
-      - name: Test Linux executables
-        run: make run-linux
+      - name: Test Linux client executable
+        run: |
+          if timeout 20s xvfb-run -a ./dist/main | grep -q "The client app is running"; then
+            echo "Client output OK"
+          else
+            echo "Client output missing"
+            exit 1
+          fi
+      - name: Test Linux server executable
+        run: |
+          if timeout 20s ./dist/server | grep -q "Server is listening on port 8000"; then
+            echo "Server output OK"
+          else
+            echo "Server output missing"
+            exit 1
+          fi
 
   test-exec-windows:
     if: github.ref == 'refs/heads/main'
@@ -102,8 +125,12 @@ jobs:
         with:
           name: caverne-aux-jeux-windows
           path: dist
-      - name: Test Windows executables
-        run: make run-windows
+      - name: Test Windows client executable
+        run: |
+          ./dist/main.exe | findstr /C:"The client app is running"
+      - name: Test Windows server executable
+        run: |
+          ./dist/server.exe | findstr /C:"Server is listening on port 8000"
 
   release-artifacts:
     if: github.event_name == 'release'
@@ -122,7 +149,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./linux/main
-            ./linux/server
-            ./windows/main.exe
-            ./windows/server.exe
+            ./dist/main
+            ./dist/server
+            ./dist/main.exe
+            ./dist/server.exe
