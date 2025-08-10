@@ -12,20 +12,28 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-      - name: Build Docker image
-        run: cd docker && docker build -t caverne-aux-jeux -f docker/Dockerfile .
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
       - name: Run main.py (test run)
         run: |
-          cd docker && docker run --rm caverne-aux-jeux python app/main.py --help || true  # Replace with a real test if available
+          python app/main.py --help || true  # Replace with a real test if available
 
   docker:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Build Docker image
-        run: cd docker && docker build -t caverne-aux-jeux .
+        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
       - name: Run Docker container (test)
-        run: cd docker && docker run --rm caverne-aux-jeux --help || true  # Replace with a real test if available
+        run: docker run --rm caverne-aux-jeux --help || true  # Replace with a real test if available
 
   build-linux:
     if: github.ref == 'refs/heads/main'
@@ -33,17 +41,21 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v3
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
       - name: Build Docker image
-        run: cd docker && docker build -t caverne-aux-jeux -f docker/Dockerfile .
-      - name: Build executable (Linux)
+        run: docker build -t caverne-aux-jeux -f docker/Dockerfile .
+      - name: Build executables (Linux)
         run: |
           docker run --rm -v ${{ github.workspace }}:/workspace -w /workspace caverne-aux-jeux \
             make build-linux
-      - name: Upload Linux executable
+      - name: Upload Linux executables
         uses: actions/upload-artifact@v3
         with:
           name: caverne-aux-jeux-linux
-          path: dist/main
+          path: |
+            dist/main
+            dist/server
 
   build-windows:
     if: github.ref == 'refs/heads/main'
@@ -51,13 +63,45 @@ jobs:
     needs: [test]
     steps:
       - uses: actions/checkout@v3
-      - name: Build executable (Windows)
+      - name: Build executables (Windows)
         run: make build-windows
-      - name: Upload Windows executable
+      - name: Upload Windows executables
         uses: actions/upload-artifact@v3
         with:
           name: caverne-aux-jeux-windows
-          path: dist/main.exe
+          path: |
+            dist/main.exe
+            dist/server.exe
+
+  test-exec-linux:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    needs: [build-linux]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Linux executables
+        uses: actions/download-artifact@v3
+        with:
+          name: caverne-aux-jeux-linux
+          path: dist
+      - name: Make executables runnable
+        run: chmod +x dist/main dist/server
+      - name: Test Linux executables
+        run: make run-linux
+
+  test-exec-windows:
+    if: github.ref == 'refs/heads/main'
+    runs-on: windows-latest
+    needs: [build-windows]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Download Windows executables
+        uses: actions/download-artifact@v3
+        with:
+          name: caverne-aux-jeux-windows
+          path: dist
+      - name: Test Windows executables
+        run: make run-windows
 
   release-artifacts:
     if: github.event_name == 'release'
@@ -77,25 +121,6 @@ jobs:
         with:
           files: |
             ./linux/main
+            ./linux/server
             ./windows/main.exe
-          path: ./linux
-      - uses: actions/download-artifact@v3
-        with:
-          name: caverne-aux-jeux-windows
-          path: ./windows
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ./linux/main
-            ./windows/main.exe
-      - uses: actions/download-artifact@v3
-        with:
-          name: caverne-aux-jeux-windows
-          path: ./windows
-      - name: Upload release assets
-        uses: softprops/action-gh-release@v1
-        with:
-          files: |
-            ./linux/main
-            ./windows/main.exe
+            ./windows/server.exe
