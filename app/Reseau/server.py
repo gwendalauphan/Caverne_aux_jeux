@@ -17,7 +17,6 @@ sys.path.append(str(Path(__file__).resolve().parent.parent))
 
 from Utils.utils import *
 
-
 # Setup logger
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger("CaverneAuxJeuxServer")

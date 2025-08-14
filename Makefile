@@ -79,11 +79,17 @@ build-linux-server-debug:
 
 build-linux-debug: build-linux-client-debug build-linux-server-debug
 
-run-linux-client:
-	./dist/main
+# Debug versions (console mode)
+build-windows-client-debug:
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
+		--hidden-import PIL._tkinter_finder \
+		--name main app/main.py
 
-run-linux-server:
-	./dist/server
+build-windows-server-debug:
+	python -m pip install -r requirements.txt
+	python -m PyInstaller $(PYI_COMMON) \
+		--name server app/Reseau/server.py
 
 run-linux:
 	@echo "Starting server and client..."

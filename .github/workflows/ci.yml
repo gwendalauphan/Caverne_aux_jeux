@@ -334,6 +334,7 @@ jobs:
         with:
           name: caverne-aux-jeux-windows
           path: dist
+
       - name: Download Windows executables
         run: |
           mkdir -p dist/windows
