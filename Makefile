@@ -106,6 +106,7 @@ build-windows-server:
 	python -m PyInstaller $(PYI_COMMON) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
+		--add-data "app/Utils/utils.py;Utils/" \
 		--name server app/Reseau/server.py
 
 build-windows: build-windows-client build-windows-server
@@ -121,6 +122,7 @@ build-windows-server-debug:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
+		--add-data "app/Utils/utils.py;Utils/" \
 		--name server app/Reseau/server.py
 
 build-windows-debug: build-windows-client-debug build-windows-server-debug
