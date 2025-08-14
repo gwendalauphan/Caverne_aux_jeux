@@ -1,4 +1,5 @@
 from tkinter import *
+import tkinter as tk
 from Reseau.client import *
 import signal
 import sys
@@ -13,7 +14,6 @@ from Pendu.pendu import *
 from Tetris.tetris import *
 from Pong.Pong_main import*
 from Flappy_Bird.Flappy_Bird_main import*
-from Stats.Page_selection import*
 from Utils.utils import *
 
 # Setup logger
@@ -332,6 +332,7 @@ class App:
 
     # ---------- Stats ----------
     def execute(self, event=None):
+        from Stats.Page_selection import Stats
         self.root.withdraw()
         app = Stats(self.user_name)  # your Stats class handles its own UI
         self.root.deiconify()

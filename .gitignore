@@ -1,5 +1,6 @@
 *__pycache__
 *.pyc
+*.lock
 app/Reseau/data
 app/Reseau/statistics
 app/Reseau/data_players/

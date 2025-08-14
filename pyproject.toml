@@ -1,0 +1,29 @@
+[tool.black]
+line-length = 140
+
+[project]
+name = "caverne-aux-jeux"
+version = "0.0.1"
+description = "Mini games platform"
+authors = [
+    {name = "gwendalauphan",email = "gwendalauphan@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.12,<3.15"
+dependencies = [
+    "matplotlib (>=3.10.5,<4.0.0)",
+    "tk (>=0.1.0,<0.2.0)"
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.group.dev.dependencies]
+pyinstaller = "^6.15.0"
+black = "^25.1.0"
+flake8 = "^7.3.0"
+pylint = "^3.3.8"
+mypy = "^1.17.1"
+pytest = "^8.4.1"
+pdflatex = "^0.1.3"
