@@ -36,7 +36,7 @@ jobs:
             echo "Client output missing"
             exit 1
           fi
-          if timeout 10s python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 10s xvfb-run -a python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
@@ -170,7 +170,7 @@ jobs:
 
       - name: Test Linux server executable
         run: |
-          if timeout 10s ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 10s xvfb-run -a ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
