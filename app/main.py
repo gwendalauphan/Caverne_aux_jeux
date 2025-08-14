@@ -23,7 +23,6 @@ logger = logging.getLogger("CaverneAuxJeuxClient")
 logger.info("The client app is running.")
 
 
-
 class BoutonS: #classe pour gérer les boutons interactifs
     def __init__(self, x, y, jeux, run, name): # a besoin de ligne, colone, ne nom du jeux et la commande our executer le jeu
         self.image = PhotoImage(file = resource_path("thumbnail/" + jeux + ".png")) #on charge l'immage correspondante au jeu
@@ -94,13 +93,63 @@ def execute(event = None):
     app = Stats(User_name)
     root_main.deiconify()
 
-        
-    
-    
+
 
 def leave_para(playground):
     playground.destroy()
     Button_para.config(image = gearImg, command = para)
+
+
+# --- add these helper functions somewhere above your UI creation (e.g., before root_main = Tk()) ---
+
+def init_ranking_rows(parent):
+    """Create 10 reusable rows (labels) in the ranking frame."""
+    rows_pseudo = []
+    rows_score = []
+
+    # header line (you already create one — keep either yours or this)
+    # Label(parent, text="Rang" + " "*8 + "Nom" + " "*24 + "Score", ...).place(x=2, y=50)
+
+    # fixed 10 rows so we can update in place
+    for i in range(10):
+        lp = Label(parent,
+                   text=f"#{i+1} :",
+                   bg='#111111', foreground='#00e600', font=("Helvetica", 8))
+        lp.place(x=4, y=75 + i*20)
+        ls = Label(parent,
+                   text="",
+                   bg='#111111', foreground='#00e600', font=("Helvetica", 8))
+        ls.place(x=160, y=75 + i*20)
+
+        rows_pseudo.append(lp)
+        rows_score.append(ls)
+
+    return rows_pseudo, rows_score
+
+
+def refresh_ranking():
+    """Fetch the latest scores and update the 10 rows in place."""
+    try:
+        scores = get_score_list()  # list like [(name, score), ...]
+    except Exception as e:
+        # Optional: show an alert if fetching failed
+        # You can also log e or display a toast/Label somewhere
+        return
+
+    # Update up to 10 rows; clear the rest
+    for i in range(10):
+        if i < len(scores):
+            name, pts = scores[i][0], scores[i][1]
+            label_pseudo[i].config(text=f"#{i+1} :       {name}")
+            try:
+                pts_int = int(pts)
+            except Exception:
+                pts_int = pts
+            label_score[i].config(text=f"{pts_int}")
+        else:
+            label_pseudo[i].config(text=f"#{i+1} :")
+            label_score[i].config(text="")
+
 
 root_user = Tk()
 root_user.geometry("300x120")
@@ -174,21 +223,26 @@ Title_ranking.place(x = 27, y = 5)
 
 ################---------Création du Classement-----------------------------################################
 Label(Frame_ranking, text = "Rang" + " "*8 + "Nom" + " "*24 + "Score  " ,font = ("Helvetica",9), bg = '#111111', foreground = '#00e600', relief = GROOVE).place(x = 2, y = 50) #légende
-label_pseudo = []
-label_score = []
-for i in range(len(score)): #pour chaque éléments de la liste recue, on affiche le pseudo et le score
-    label_pseudo.append(Label(Frame_ranking,text = "#{} :       {}".format(i+1, score[i][0]),bg = '#111111', foreground = '#00e600',font = ("Helvetica", 8)))
-    label_pseudo[-1].place(x = 4, y = 75 +i*20)
-    label_score.append(Label(Frame_ranking, text = "{}".format(str(int(score[i][1]))),bg = '#111111', foreground = '#00e600',font = ("Helvetica", 8)))
-    label_score[-1].place(x = 160, y = 75 +i*20)
+# Create fixed rows once, then fill them
+label_pseudo, label_score = init_ranking_rows(Frame_ranking)
 
-for i in range(10-len(score)): #si jamais la liste est plus petite que 10, on affiche des emplacements vides
-    label_pseudo.append(Label(Frame_ranking,text = "#{} :".format(i+1+len(score)),bg = '#111111', foreground = '#00e600',font = ("Helvetica", 8)))
-    label_pseudo[-1].place(x = 4, y = 75 + 20*len(score) +i*20)
+# Fill with the initial data
+for i in range(10):
+    if i < len(score):
+        name, pts = score[i][0], score[i][1]
+        label_pseudo[i].config(text=f"#{i+1} :       {name}")
+        label_score[i].config(text=f"{int(pts)}")
+    else:
+        label_pseudo[i].config(text=f"#{i+1} :")
+        label_score[i].config(text="")
 
-for i in range(9):
-    Frame_main.rowconfigure(i, minsize = 30, pad = 20)
-    Frame_main.columnconfigure(i, minsize = 25, pad = 10)
+# Add the Refresh button below the table
+Button(Frame_left,
+       text="Rafraîchir",
+       cursor='hand2',
+       command=refresh_ranking,
+       bg="#1e1e1e", fg="#00e600",
+       relief=GROOVE).place(x=65, y=350)
 
 #############----------Création du tableau et des Labels du Frame_main--------------#################################
 
