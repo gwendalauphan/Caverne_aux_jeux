@@ -5,6 +5,12 @@ from Stats.Page_stat import *
 from Reseau.client import *
 from Utils.utils import *
 
+# Font size variables
+TITLE_FONT_SIZE = 28
+LABEL_FONT_SIZE = 14
+LISTBOX_FONT_SIZE = 11
+FONT_FAMILY = "Berlin Sans FB"
+
 class Stats:
     def __init__(self, user):
         self.user = user
@@ -23,24 +29,31 @@ class Stats:
         self.Canvas_stat = Canvas(self.root, width = 1000, height = 600)
         self.Canvas_stat.place(x = 0, y = 0)
         self.Canvas_stat.create_image(500, 300, image = self.image_fond)
-        self.Canvas_stat.create_text(500,30, text = "Statistiques", fill  = 'white',font= ("Berlin Sans FB", 44))
+        self.Canvas_stat.create_text(500,30, text = "Statistiques", fill  = 'white',
+                                    font= (FONT_FAMILY, TITLE_FONT_SIZE))
 
-        self.Canvas_stat.create_text(100,350, text = "Graph_1", fill  = 'white',font= ("Berlin Sans FB", 21))
+        self.Canvas_stat.create_text(100,350, text = "Graph_1", fill  = 'white',
+                                    font= (FONT_FAMILY, LABEL_FONT_SIZE))
         self.Canvas_stat.create_image(100, 475, image = self.graph1)
 
-        self.Canvas_stat.create_text(300,350, text = "Graph_2", fill  = 'white',font= ("Berlin Sans FB", 21))
+        self.Canvas_stat.create_text(300,350, text = "Graph_2", fill  = 'white',
+                                    font= (FONT_FAMILY, LABEL_FONT_SIZE))
         self.Canvas_stat.create_image(300, 475, image = self.graph2)
 
-        self.Canvas_stat.create_text(500,350, text = "Graph_3", fill  = 'white',font= ("Berlin Sans FB", 21))
+        self.Canvas_stat.create_text(500,350, text = "Graph_3", fill  = 'white',
+                                    font= (FONT_FAMILY, LABEL_FONT_SIZE))
         self.Canvas_stat.create_image(500, 475, image = self.graph3)
 
-        self.Canvas_stat.create_text(700,350, text = "Graph_4", fill  = 'white',font= ("Berlin Sans FB", 21))
+        self.Canvas_stat.create_text(700,350, text = "Graph_4", fill  = 'white',
+                                    font= (FONT_FAMILY, LABEL_FONT_SIZE))
         self.Canvas_stat.create_image(700, 475, image = self.graph4)
 
-        self.Canvas_stat.create_text(900,350, text = "Graph_5", fill  = 'white',font= ("Berlin Sans FB", 21))
+        self.Canvas_stat.create_text(900,350, text = "Graph_5", fill  = 'white',
+                                    font= (FONT_FAMILY, LABEL_FONT_SIZE))
         self.Canvas_stat.create_image(900, 475, image = self.graph5)
 
-        self.listbox_1 = Listbox(self.Canvas_stat, width = 16, height = 9, font = ("Berlin Sans FB", 15))
+        self.listbox_1 = Listbox(self.Canvas_stat, width = 22, height = 9,
+                                 font = (FONT_FAMILY, LISTBOX_FONT_SIZE))
         self.listbox_1.place(x = 50, y = 90)
         self.listbox_1.insert(END, "Statistiques sur toi")
         self.listbox_1.insert(END, "Statistiques globales")
@@ -93,7 +106,8 @@ class Stats:
         self.Select_mode0()
 
     def Select_mode0(self, event = None):
-        self.listbox_2 = Listbox(self.Canvas_stat, width = 19, height = 9, font = ("Berlin Sans FB", 15))
+        self.listbox_2 = Listbox(self.Canvas_stat, width = 28, height = 9,
+                                 font = (FONT_FAMILY, LISTBOX_FONT_SIZE))
         self.listbox_2.place(x = 270, y = 90)
         self.listbox_2.insert(END, "Statistiques sur Application")
         self.listbox_2.insert(END, "Statistiques sur jeu")
@@ -108,8 +122,9 @@ class Stats:
             self.listbox_4.destroy()
         except: pass
         if self.selected_mode2 == "Statistiques sur Application":
-            self.listbox_3 = Listbox(self.Canvas_stat, width = 15, height = 9, font = ("Berlin Sans FB", 15))
-            self.listbox_3.place(x = 500, y = 90)
+            self.listbox_3 = Listbox(self.Canvas_stat, width = 15, height = 9,
+                                     font = (FONT_FAMILY, LISTBOX_FONT_SIZE))
+            self.listbox_3.place(x = 540, y = 90)
             if self.selected_mode == "Statistiques sur toi":
                 self.listbox_3.insert(END, "Parties")
                 self.listbox_3.insert(END, "Score max")
@@ -122,7 +137,8 @@ class Stats:
                 self.listbox_3.insert(END, "Temps")
             self.listbox_3.bind("<ButtonRelease-1>", self.get_variable_2)
         else:
-            self.listbox_3 = Listbox(self.Canvas_stat, width = 15, height = 9, font = ("Berlin Sans FB", 15))
+            self.listbox_3 = Listbox(self.Canvas_stat, width = 15, height = 9,
+                                     font = (FONT_FAMILY, LISTBOX_FONT_SIZE))
             self.listbox_3.place(x = 520, y = 90)
             self.listbox_3.insert(END, "tous les jeux")
             for elt in self.games:
@@ -138,7 +154,8 @@ class Stats:
         self.Select_graphType()
 
     def Select_graphType(self, event = None):
-        self.listbox_4 = Listbox(self.Canvas_stat, width = 15, height = 9, font = ("Berlin Sans FB", 15))
+        self.listbox_4 = Listbox(self.Canvas_stat, width = 15, height = 9,
+                                 font = (FONT_FAMILY, LISTBOX_FONT_SIZE))
         self.listbox_4.place(x = 720, y = 90)
         if self.selected_mode2 == "Statistiques sur jeu":
             for z in range(len(self.select_graph_liste_game[0][0])):

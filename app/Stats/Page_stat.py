@@ -3,11 +3,8 @@ from tkinter import *
 import tkinter as tk
 import matplotlib
 matplotlib.use("TkAgg")
-import matplotlib.colors as mcolors
 import matplotlib.pyplot as plt
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-from matplotlib.figure import Figure
-from matplotlib.pyplot import imshow, show, colorbar
 import numpy as np
 
 
