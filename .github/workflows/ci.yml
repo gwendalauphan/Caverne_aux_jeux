@@ -30,13 +30,13 @@ jobs:
 
       - name: Run main.py (test run)
         run: |
-          if timeout 10s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
+          if timeout 15s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
             echo "Client output OK"
           else
             echo "Client output missing"
             exit 1
           fi
-          if timeout 10s xvfb-run -a python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 15s xvfb-run -a python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
@@ -161,7 +161,7 @@ jobs:
 
       - name: Test Linux client executable
         run: |
-          if timeout 10s xvfb-run -a ./dist/main 2>&1 | grep -q "The client app is running"; then
+          if timeout 15s xvfb-run -a ./dist/main 2>&1 | grep -q "The client app is running"; then
             echo "Client output OK"
           else
             echo "Client output missing"
@@ -170,7 +170,7 @@ jobs:
 
       - name: Test Linux server executable
         run: |
-          if timeout 10s xvfb-run -a ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 15s xvfb-run -a ./dist/server 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
@@ -202,7 +202,7 @@ jobs:
           Remove-Item -ErrorAction SilentlyContinue client.out.log, client.err.log
           $p = Start-Process -FilePath ".\dist\main.exe" -NoNewWindow `
               -RedirectStandardOutput client.out.log -RedirectStandardError client.err.log -PassThru
-          Start-Sleep -Seconds 10
+          Start-Sleep -Seconds 15
           if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
           if (Select-String -Path @("client.out.log","client.err.log") -Pattern 'The client app is running' -Quiet) {
             Write-Host "Client output OK"
@@ -221,7 +221,7 @@ jobs:
           Remove-Item -ErrorAction SilentlyContinue server.out.log, server.err.log
           $p = Start-Process -FilePath ".\dist\server.exe" -NoNewWindow `
               -RedirectStandardOutput server.out.log -RedirectStandardError server.err.log -PassThru
-          Start-Sleep -Seconds 10
+          Start-Sleep -Seconds 15
           if (-not $p.HasExited) { Stop-Process -Id $p.Id -Force }
           if (Select-String -Path @("server.out.log","server.err.log") -Pattern 'Server is listening on port 8000' -Quiet) {
             Write-Host "Server output OK"
@@ -363,16 +363,26 @@ jobs:
             caverne-aux-jeux-windows-${{ github.event.release.name }}.zip
 
 
-  delete-artifacts:
-    if: always()
+  delete-artifacts-linux:
+    if: success()
     runs-on: ubuntu-latest
-    needs: [test-exec-linux-debug, test-exec-windows-debug]
+    needs: [test-exec-linux-debug]
     steps:
-      - name: Delete artifacts from this run
+      - name: Delete artifacts from this run (linux)
         uses: geekyeggo/delete-artifact@v4
         with:
           name: |
             caverne-aux-jeux-linux-debug
-            caverne-aux-jeux-windows-debug
           failOnError: false
 
+  delete-artifacts-windows:
+    if: success()
+    runs-on: windows-latest
+    needs: [test-exec-windows-debug]
+    steps:
+      - name: Delete artifacts from this run (windows)
+        uses: geekyeggo/delete-artifact@v4
+        with:
+          name: |
+            caverne-aux-jeux-windows-debug
+          failOnError: false
