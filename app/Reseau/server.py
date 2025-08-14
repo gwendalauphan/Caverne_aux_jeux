@@ -12,6 +12,11 @@ from tkinter import scrolledtext
 
 from pathlib import Path
 
+# Add the parent directory to sys.path
+sys.path.append(str(Path(__file__).resolve().parent.parent))
+
+from Utils.utils import *
+
 
 # Setup logger
 logging.basicConfig(level=logging.INFO)
@@ -19,18 +24,6 @@ logger = logging.getLogger("CaverneAuxJeuxServer")
 
 logger.info("The server app is running.")
 
-def resource_path(relative_path):
-    try:
-        # Support pour les applications empaquetées avec PyInstaller
-        base_path = Path(sys._MEIPASS)
-    except Exception:
-        # Utilisation du chemin du répertoire du script main.py pour les exécutions non empaquetées
-        base_path = Path(__file__).resolve().parent.parent
-
-    # Construction du chemin complet
-    full_path = base_path / relative_path
-
-    return str(full_path)
 
 
 
@@ -485,6 +478,8 @@ def start_server(host, port, stop_event=None):
         logger.info("Server socket closed.")
 
 if __name__ == '__main__':
+    # Acquire the singleton guard *before* creating your UI
+    _guard_socket = acquire_single_instance(port=54322, logger=logger)  # pick a fixed port for your app
     import argparse
     parser = argparse.ArgumentParser(description="Caverne Aux Jeux Server")
     parser.add_argument('--no-gui', action='store_true', help='Run server without GUI')

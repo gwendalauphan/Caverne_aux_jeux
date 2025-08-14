@@ -38,7 +38,9 @@ DATA_WIN = \
 help:
 	@echo "Available targets:"
 	@echo "  build-linux        Build Linux executables with PyInstaller"
+	@echo "  build-linux-debug  Build Linux executables with PyInstaller (debug mode)"
 	@echo "  build-windows      Build Windows executables with PyInstaller (run on Windows)"
+	@echo "  build-windows-debug  Build Windows executables with PyInstaller (debug mode)"
 	@echo "  run-linux          Run Linux server+client from dist/"
 	@echo "  run-windows        Run Windows server+client from dist/"
 	@echo "  clean              Remove build artifacts"
@@ -47,13 +49,16 @@ help:
 build-linux-client:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) $(DATA_LINUX) \
-		--hidden-import PIL._tkinter_finder --windowed --noconsole \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
+		--windowed --noconsole \
 		--name main app/main.py
 
 build-linux-server:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
+		--add-data "app/Utils/utils.py:Utils/" \
 		--name server app/Reseau/server.py
 
 build-linux: build-linux-client build-linux-server
@@ -62,26 +67,44 @@ build-linux: build-linux-client build-linux-server
 build-linux-client-debug:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) $(DATA_LINUX) \
-		--hidden-import PIL._tkinter_finder \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--name main app/main.py
 
 build-linux-server-debug:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
+		--add-data "app/Utils/utils.py:Utils/" \
 		--name server app/Reseau/server.py
 
 build-linux-debug: build-linux-client-debug build-linux-server-debug
+
+run-linux-client:
+	./dist/main
+
+run-linux-server:
+	./dist/server
+
+run-linux:
+	@echo "Starting server and client..."
+	@./dist/server & \
+	SERVER_PID=$$!; \
+	sleep 1; \
+	./dist/main; \
+	kill $$SERVER_PID 2>/dev/null || true
 
 # ---------- Windows ----------
 build-windows-client:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
-		--hidden-import PIL._tkinter_finder --windowed --noconsole \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
+		--windowed --noconsole \
 		--name main app/main.py
 
 build-windows-server:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
 		--name server app/Reseau/server.py
 
@@ -91,12 +114,13 @@ build-windows: build-windows-client build-windows-server
 build-windows-client-debug:
 	python -m pip install -r requirements.txt
 	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
-		--hidden-import PIL._tkinter_finder \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--name main app/main.py
 
 build-windows-server-debug:
 	python -m pip install -r requirements.txt
-	python -m PyInstaller $(PYI_COMMON) \
+	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
+		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--name server app/Reseau/server.py
 
 build-windows-debug: build-windows-client-debug build-windows-server-debug
