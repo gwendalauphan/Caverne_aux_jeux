@@ -334,14 +334,32 @@ jobs:
         with:
           name: caverne-aux-jeux-windows
           path: dist
-      - name: Upload release assets
+      - name: Download Windows executables
+        run: |
+          mkdir -p dist/windows
+          mv dist/main.exe dist/windows/
+          mv dist/server.exe dist/windows/
+      - name: Download Linux executables
+        run: |
+          mkdir -p dist/linux
+          mv dist/main dist/linux/
+          mv dist/server dist/linux/
+      - name: Copy user guide to dist folders
+        run: |
+          cp docs/user_guide.pdf dist/linux/
+          cp docs/user_guide.pdf dist/windows/
+      - name: Zip Linux release
+        run: |
+          zip -j "caverne-aux-jeux-linux-${{ github.event.release.name }}.zip" dist/linux/*
+      - name: Zip Windows release
+        run: |
+          zip -j "caverne-aux-jeux-windows-${{ github.event.release.name }}.zip" dist/windows/*
+      - name: Upload release assets (zips only)
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            ./dist/main
-            ./dist/server
-            ./dist/main.exe
-            ./dist/server.exe
+            caverne-aux-jeux-linux-${{ github.event.release.name }}.zip
+            caverne-aux-jeux-windows-${{ github.event.release.name }}.zip
 
 
   delete-artifacts:
@@ -353,7 +371,7 @@ jobs:
         uses: geekyeggo/delete-artifact@v4
         with:
           name: |
-            caverne-aux-jeux-linux
-            caverne-aux-jeux-windows
+            caverne-aux-jeux-linux-debug
+            caverne-aux-jeux-windows-debug
           failOnError: false
 

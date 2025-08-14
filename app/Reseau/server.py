@@ -6,6 +6,9 @@ import socket
 import sys
 import os
 import logging
+import threading
+import tkinter as tk
+from tkinter import scrolledtext
 
 from pathlib import Path
 
@@ -231,7 +234,73 @@ if hasattr(signal, "SIGBREAK"):
 if hasattr(signal, "SIGTSTP"):
     signal.signal(signal.SIGTSTP, handle_sigtstp)
 
-def start_server(host, port):
+class TkLogHandler(logging.Handler):
+    def __init__(self, text_widget):
+        super().__init__()
+        self.text_widget = text_widget
+
+    def emit(self, record):
+        msg = self.format(record)
+        self.text_widget.after(0, self.text_widget_insert, msg)
+
+    def text_widget_insert(self, msg):
+        self.text_widget.insert(tk.END, msg + '\n')
+        self.text_widget.see(tk.END)
+
+class ServerApp:
+    def __init__(self, master):
+        self.master = master
+        master.title("Caverne Aux Jeux Server")
+        master.geometry("600x400")
+
+        self.is_running = False
+        self.server_thread = None
+        self.stop_event = threading.Event()
+
+        self.toggle_btn = tk.Button(master, text="Start Server", command=self.toggle_server, width=20)
+        self.toggle_btn.pack(pady=10)
+
+        self.log_text = scrolledtext.ScrolledText(master, state='normal', height=20)
+        self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=10)
+
+        # Add custom log handler
+        self.tk_handler = TkLogHandler(self.log_text)
+        self.tk_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        logger.addHandler(self.tk_handler)
+
+        # Show initial message
+        self.log_text.insert(tk.END, "Server GUI ready.\n")
+        self.log_text.see(tk.END)
+
+        master.protocol("WM_DELETE_WINDOW", self.on_close)
+
+    def toggle_server(self):
+        if not self.is_running:
+            self.stop_event.clear()
+            self.server_thread = threading.Thread(target=self.run_server, daemon=True)
+            self.server_thread.start()
+            self.is_running = True
+            self.toggle_btn.config(text="Stop Server")
+        else:
+            self.stop_event.set()
+            self.is_running = False
+            self.toggle_btn.config(text="Start Server")
+
+    def run_server(self):
+        try:
+            start_server(HOST, PORT, self.stop_event)
+        except Exception as e:
+            logger.error(f"Server error: {e}")
+        finally:
+            self.is_running = False
+            self.toggle_btn.config(text="Start Server")
+
+    def on_close(self):
+        self.stop_event.set()
+        save()
+        self.master.destroy()
+
+def start_server(host, port, stop_event=None):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     s.bind((host, port))
@@ -239,10 +308,10 @@ def start_server(host, port):
     logger.info(f"Server is listening on port {port}")
 
     launched = True
-    client_list = []  # liste des clients connectés
+    client_list = []
 
     try:
-        while launched:
+        while launched and (stop_event is None or not stop_event.is_set()):
             # Gérer les demandes de nouvelles connexions
             connection_asked, wlist, xlist = select.select([s], [], [], 0.05)
 
@@ -277,6 +346,16 @@ def start_server(host, port):
         logger.info("Server socket closed.")
 
 if __name__ == '__main__':
-    start_server(HOST, PORT)
+    import argparse
+    parser = argparse.ArgumentParser(description="Caverne Aux Jeux Server")
+    parser.add_argument('--no-gui', action='store_true', help='Run server without GUI')
+    args = parser.parse_args()
 
-save()
+    if args.no_gui:
+        start_server(HOST, PORT)
+        save()
+    else:
+        root = tk.Tk()
+        app = ServerApp(root)
+        root.mainloop()
+        save()
