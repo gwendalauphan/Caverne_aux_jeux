@@ -2,6 +2,13 @@
 
 ### 👉 [🇫🇷 Version française](README_fr.md)
 
+Video
+[![Caverne aux Jeux - Trailer](docs/CaverneAuxJeux.png)](https://github.com/user-attachments/assets/0a5b37ea-5928-44da-a21e-fda9c0c20f7d)
+
+Video
+[![Caverne aux Jeux - Trailer](docs/CaverneAuxJeux.png)](docs/CaverneAuxJeux.mp4)
+
+
 docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex --output=docs/user_guide.pdf docs/user_guide.md
 
 ## CI/CD

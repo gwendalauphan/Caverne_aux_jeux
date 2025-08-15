@@ -43,7 +43,7 @@ Futur jeux potentiels:
 - morpion
 
 Video
-[!Caverne aux Jeux - Trailer](https://github.com/user-attachments/assets/0a5b37ea-5928-44da-a21e-fda9c0c20f7d)
+[![Caverne aux Jeux - Trailer](docs/CaverneAuxJeux.png)](https://github.com/user-attachments/assets/0a5b37ea-5928-44da-a21e-fda9c0c20f7d)
 
 Lancement du jeu
 Il y a plusieurs manières de lancer le jeu :
