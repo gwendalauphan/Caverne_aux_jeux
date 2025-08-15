@@ -346,6 +346,7 @@ jobs:
           mkdir -p dist/linux
           mv dist/main dist/linux/
           mv dist/server dist/linux/
+          chmod +x dist/linux/main dist/linux/server
       - name: Copy user guide to dist folders
         run: |
           cp docs/user_guide.pdf dist/linux/

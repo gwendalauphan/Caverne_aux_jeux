@@ -1,3 +1,6 @@
+Permettre à l'utilisateur de pouvoir changer le hostname et le port du serveur (soit dans les settings,
+soit dans l'interface principale)
+
 interfaces: Tetris, Pendu, Flappy
 
 opti Tetris
