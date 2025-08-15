@@ -327,10 +327,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: dist
+
       - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-windows
@@ -341,28 +343,42 @@ jobs:
           mkdir -p dist/windows
           mv dist/main.exe dist/windows/
           mv dist/server.exe dist/windows/
+          chmod +x dist/windows/main.exe dist/windows/server.exe
+
       - name: Download Linux executables
         run: |
           mkdir -p dist/linux
           mv dist/main dist/linux/
           mv dist/server dist/linux/
           chmod +x dist/linux/main dist/linux/server
+
+      - name: Generate user_guide documentation
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >
+            --output=docs/user_guide.pdf
+            docs/user_guide.md
+
       - name: Copy user guide to dist folders
         run: |
           cp docs/user_guide.pdf dist/linux/
           cp docs/user_guide.pdf dist/windows/
+
       - name: Zip Linux release
         run: |
           zip -j "caverne-aux-jeux-linux-${{ github.event.release.name }}.zip" dist/linux/*
+
       - name: Zip Windows release
         run: |
           zip -j "caverne-aux-jeux-windows-${{ github.event.release.name }}.zip" dist/windows/*
+
       - name: Upload release assets (zips only)
         uses: softprops/action-gh-release@v1
         with:
           files: |
             caverne-aux-jeux-linux-${{ github.event.release.name }}.zip
             caverne-aux-jeux-windows-${{ github.event.release.name }}.zip
+
 
 
   delete-artifacts-linux:
