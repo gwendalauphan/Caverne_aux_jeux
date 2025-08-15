@@ -81,19 +81,15 @@ jobs:
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
 
-      - name: Display output
-        run: |
-          timeout 15s xvfb-run -a python app/main.py
-
       - name: Run main.py (test run)
         run: |
-          if timeout 15s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
+          if timeout 15s xvfb-run -a python -m app.main 2>&1 | grep -q "The client app is running"; then
             echo "Client output OK"
           else
             echo "Client output missing"
             exit 1
           fi
-          if timeout 15s xvfb-run -a python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 15s xvfb-run -a python -m app.Reseau.server 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
