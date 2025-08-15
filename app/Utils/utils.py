@@ -1,6 +1,7 @@
 import socket, sys, platform, os
 from pathlib import Path
 
+
 def resource_path(relative_path):
     try:
         # Support pour les applications empaquetées avec PyInstaller
@@ -13,6 +14,7 @@ def resource_path(relative_path):
     full_path = base_path / relative_path
 
     return str(full_path)
+
 
 # --- single-instance guard (TCP localhost) ------------------------------------
 
@@ -46,10 +48,10 @@ def acquire_single_instance(port=54321, logger=None):
         try:
             import tkinter as tk
             from tkinter import messagebox
-            r = tk.Tk(); r.withdraw()
-            messagebox.showinfo("Already running",
-                                "The application is already running.\n"
-                                "Close the other window to start a new one.")
+
+            r = tk.Tk()
+            r.withdraw()
+            messagebox.showinfo("Already running", "The application is already running.\n" "Close the other window to start a new one.")
             r.destroy()
         except Exception as e:
             logger.error(f"Failed to run Tkinter message box: {e}")
@@ -59,4 +61,6 @@ def acquire_single_instance(port=54321, logger=None):
         logger.error(f"Failed to acquire port: {e}")
 
     return s
+
+
 # ------------------------------------------------------------------------------
