@@ -81,6 +81,10 @@ jobs:
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
 
+      - name: Display output
+        run: |
+          timeout 15s xvfb-run -a python app/main.py
+
       - name: Run main.py (test run)
         run: |
           if timeout 15s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
@@ -368,7 +372,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install -r requirements.txt
           pip install -r build_requirements.txt
-          
+
       - name: Install GNU Make
         run: choco install make --no-progress -y
 

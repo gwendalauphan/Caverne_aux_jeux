@@ -6,8 +6,10 @@ from math import sqrt  # Only import sqrt explicitly
 from app.Scoreboard.scoreboard import Scoreboard
 from app.Fantome.Ressources.data.map_ghost import level_map
 from app.Utils.utils import resource_path
-#from main import logger
+
+# from main import logger
 import logging
+
 logger = logging.getLogger(__name__)
 
 
