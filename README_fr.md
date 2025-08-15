@@ -48,7 +48,9 @@ poetry run mypy .
 poetry run pytest tests/
 
 poetry export -f requirements.txt --output requirements.txt --without-hashes
-poetry export -f requirements.txt --output tests/requirements.txt --without-hashes --all-groups
+poetry export -f requirements.txt --output build_requirements.txt --only build --without-hashes
+poetry export -f requirements.txt --output test_requirements.txt --only test --without-hashes
+
 ```
 
 Répertoire avec le projet d'ISN de fin d'année

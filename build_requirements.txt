@@ -1,0 +1,8 @@
+altgraph==0.17.4 ; python_version >= "3.12" and python_version < "3.15"
+macholib==1.16.3 ; python_version >= "3.12" and python_version < "3.15" and sys_platform == "darwin"
+packaging==25.0 ; python_version >= "3.12" and python_version < "3.15"
+pefile==2023.2.7 ; python_version >= "3.12" and python_version < "3.15" and sys_platform == "win32"
+pyinstaller-hooks-contrib==2025.8 ; python_version >= "3.12" and python_version < "3.15"
+pyinstaller==6.15.0 ; python_version >= "3.12" and python_version < "3.15"
+pywin32-ctypes==0.2.3 ; python_version >= "3.12" and python_version < "3.15" and sys_platform == "win32"
+setuptools==80.9.0 ; python_version >= "3.12" and python_version < "3.15"

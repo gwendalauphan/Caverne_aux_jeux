@@ -8,6 +8,50 @@ on:
     types: [published]
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            test_requirements.txt
+
+      - name: Black
+        run: |
+          echo "Running Black"
+          black --check .
+
+      - name: Flake8
+        continue-on-error: true
+        run: |
+          echo "Running Flake8"
+          flake8 .
+
+      - name: Pylint
+        continue-on-error: true
+        run: |
+          echo "Running Pylint"
+          pylint .
+
+      - name: MyPy
+        continue-on-error: true
+        run: |
+          echo "Running MyPy"
+          mypy .
+
+      - name: Pytest
+        continue-on-error: true
+        run: |
+          echo "Running Pytest"
+          pytest tests
+
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -17,13 +61,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'                          # <-- enable pip cache
-          cache-dependency-path: requirements.txt
-
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            test_requirements.txt
 
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
@@ -57,7 +98,9 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
 
       - name: Install system packages (make, patchelf, tk, etc.)
         run: |
@@ -95,13 +138,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
 
       - name: Install GNU Make
         run: choco install make --no-progress -y
@@ -248,7 +288,9 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
 
       - name: Install system packages (make, patchelf, tk, etc.)
         run: |
@@ -286,13 +328,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
 
       - name: Install GNU Make
         run: choco install make --no-progress -y
