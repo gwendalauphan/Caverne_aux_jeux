@@ -21,6 +21,12 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             test_requirements.txt
+        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r test_requirements.txt
 
       - name: Black
         run: |
@@ -65,6 +71,12 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             test_requirements.txt
+        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r test_requirements.txt
 
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
@@ -101,6 +113,12 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             build_requirements.txt
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
 
       - name: Install system packages (make, patchelf, tk, etc.)
         run: |
@@ -142,6 +160,12 @@ jobs:
           cache-dependency-path: |
             requirements.txt
             build_requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
 
       - name: Install GNU Make
         run: choco install make --no-progress -y
@@ -292,6 +316,12 @@ jobs:
             requirements.txt
             build_requirements.txt
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
+
       - name: Install system packages (make, patchelf, tk, etc.)
         run: |
           sudo apt-get update
@@ -333,6 +363,12 @@ jobs:
             requirements.txt
             build_requirements.txt
 
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
+          
       - name: Install GNU Make
         run: choco install make --no-progress -y
 
