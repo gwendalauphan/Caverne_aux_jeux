@@ -4,13 +4,13 @@ from tkinter.messagebox import *
 from time import sleep, time
 
 sys.path.append("../Reseau")
-from Reseau.client import *
+from app.Reseau.client import *
 
 sys.path.append("../Scoreboard")
-from Scoreboard.scoreboard import *
+from app.Scoreboard.scoreboard import *
 from random import choice
 from tkinter.font import Font
-from Utils.utils import *
+from app.Utils.utils import *
 
 # difficulté: nombre de lettres différentes par mot: facile: <= 4, moyen: 4 < x < 8, difficile: >= 8
 find = lambda mot, lettre: [i for i, car in enumerate(mot) if car == lettre]

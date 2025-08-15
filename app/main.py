@@ -1,21 +1,21 @@
 from tkinter import *
 import tkinter as tk
-from Reseau.client import *
+from app.Reseau.client import *
 import signal
 import sys
 import logging
 
 sys.path.append("../")
 
-from Tete_chercheuse.tete_chercheuse import *
-from Snake.Snake_main import *
-from Caverne_aux_jeux.app.Fantome.fantome_main import *
-from Minesweeper.minesweeper import *
-from Pendu.pendu import *
-from Tetris.tetris import *
-from Pong.Pong_main import *
-from Caverne_aux_jeux.app.Flappy_Bird.flappy_bird_main import *
-from Utils.utils import *
+from app.Tete_chercheuse.tete_chercheuse import *
+from app.Snake.Snake_main import *
+from app.Fantome.fantome_main import *
+from app.Minesweeper.minesweeper import *
+from app.Pendu.pendu import *
+from app.Tetris.tetris import *
+from app.Pong.Pong_main import *
+from app.flappy_bird.flappy_bird_main import launch_flappy_bird
+from app.Utils.utils import *
 
 # Setup logger
 logging.basicConfig(level=logging.INFO)
@@ -294,7 +294,7 @@ class App:
         BoutonS(self, self.Frame_main, 2, 5, "Pendu", Pendu, "Pendu")
         BoutonS(self, self.Frame_main, 5, 1, "Tetris", Tetris, "Tetris")
         BoutonS(self, self.Frame_main, 5, 7, "Pong", Pong, "Pong")
-        BoutonS(self, self.Frame_main, 2, 7, "Flappy", Flappy_Bird, "Flappy")
+        BoutonS(self, self.Frame_main, 2, 7, "Flappy", launch_flappy_bird, "Flappy")
 
         # Friendly footer
         Label(

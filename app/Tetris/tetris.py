@@ -2,19 +2,19 @@ from tkinter import *  # @UnusedWildImport
 import sys
 from tkinter.messagebox import *
 from tkinter.font import Font
-from time import sleep, time
+from time import time
 
 sys.path.append("../Reseau")
-from Reseau.client import *
+from app.Reseau.client import *
 
 sys.path.append("../Scoreboard")
-from Scoreboard.scoreboard import *
+from app.Scoreboard.scoreboard import *
 
 sys.path.append("../Vectors")
-from Vectors.vector import *
-from Tetris.tiles import *
-from random import choice, randint
-from Utils.utils import *
+from app.Vectors.vector import *
+from app.Tetris.tiles import *
+from random import choice
+from app.Utils.utils import *
 
 
 class Tile:  # classe utilisée pour gérer les formes géométrique

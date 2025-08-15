@@ -2,7 +2,7 @@ import sys
 from tkinter import *
 
 sys.path.append("../")
-from Reseau.client import *
+from app.Reseau.client import *
 
 
 class Scoreboard:

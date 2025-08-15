@@ -4,17 +4,17 @@ from tkinter.messagebox import *
 from time import sleep, time
 
 sys.path.append("../Reseau")
-from Reseau.client import *
+from app.Reseau.client import *
 
 sys.path.append("../Scoreboard")
-from Scoreboard.scoreboard import *
+from app.Scoreboard.scoreboard import *
 
 sys.path.append("../Vectors")
-from Vectors.vector import *
+from app.Vectors.vector import *
 from random import randrange
-from Fantome.Ressources.data.map_ghost import *
+from app.Fantome.Ressources.data.map_ghost import *
 from math import pi
-from Utils.utils import *
+from app.Utils.utils import *
 
 
 class pong:

@@ -3,10 +3,12 @@ from time import time
 from typing import Any, Tuple
 from math import sqrt  # Only import sqrt explicitly
 
-from Scoreboard.scoreboard import Scoreboard
-from Fantome.Ressources.data.map_ghost import level_map
-from Utils.utils import resource_path
-from main import logger
+from app.Scoreboard.scoreboard import Scoreboard
+from app.Fantome.Ressources.data.map_ghost import level_map
+from app.Utils.utils import resource_path
+#from main import logger
+import logging
+logger = logging.getLogger(__name__)
 
 
 class ghost:

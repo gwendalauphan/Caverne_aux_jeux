@@ -4,12 +4,12 @@ from tkinter.messagebox import *
 from time import sleep, time
 
 sys.path.append("../Reseau")
-from Reseau.client import *
+from app.Reseau.client import *
 
 sys.path.append("../Scoreboard")
-from Scoreboard.scoreboard import *
+from app.Scoreboard.scoreboard import *
 from random import randint
-from Utils.utils import *
+from app.Utils.utils import *
 
 # difficultés: 9x9: 10, 16x16: 40, 16x30: 99
 

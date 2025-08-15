@@ -1,19 +1,19 @@
 import sys
 from tkinter import *  # @UnusedWildImport
 from tkinter.messagebox import *
-from Tete_chercheuse.data import *
+from app.Tete_chercheuse.data import *
 from time import sleep, time
 
 sys.path.append("../Reseau")
-from Reseau.client import *
+from app.Reseau.client import *
 
 sys.path.append("../Scoreboard")
-from Scoreboard.scoreboard import *
+from app.Scoreboard.scoreboard import *
 
 sys.path.append("../Vectors")
-from Vectors.vector import *
+from app.Vectors.vector import *
 from math import pi
-from Utils.utils import *
+from app.Utils.utils import *
 
 ##################----------Variables------------######################################
 #'0' correpond à une case vide
