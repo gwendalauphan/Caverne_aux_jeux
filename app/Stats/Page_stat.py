@@ -10,7 +10,7 @@ import numpy as np
 
 
 sys.path.append("../Reseau")
-from Reseau.client import *
+from app.Reseau.client import *
 
 
 class App_stat:

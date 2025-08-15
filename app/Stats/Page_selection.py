@@ -2,9 +2,9 @@ from tkinter import *
 import sys
 
 sys.path.append("../Reseau")
-from Stats.Page_stat import *
-from Reseau.client import *
-from Utils.utils import *
+from app.Stats.Page_stat import *
+from app.Reseau.client import *
+from app.Utils.utils import *
 
 # Font size variables
 TITLE_FONT_SIZE = 28
