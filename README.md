@@ -4,6 +4,10 @@
 
 docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex --output=docs/user_guide.pdf docs/user_guide.md
 
+
+https://github.com/user-attachments/assets/0a5b37ea-5928-44da-a21e-fda9c0c20f7d
+
+
 ## CI/CD
 
 This project uses GitHub Actions for continuous integration:
