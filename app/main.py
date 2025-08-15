@@ -335,7 +335,7 @@ class App:
 
     # ---------- Stats ----------
     def execute(self, event=None):
-        from Stats.Page_selection import Stats
+        from app.Stats.Page_selection import Stats
 
         self.root.withdraw()
         app = Stats(self.user_name)  # your Stats class handles its own UI
