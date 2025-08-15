@@ -8,6 +8,56 @@ on:
     types: [published]
 
 jobs:
+  quality:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            test_requirements.txt
+        
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r test_requirements.txt
+
+      - name: Black
+        run: |
+          echo "Running Black"
+          black --check .
+
+      - name: Flake8
+        continue-on-error: true
+        run: |
+          echo "Running Flake8"
+          flake8 .
+
+      - name: Pylint
+        continue-on-error: true
+        run: |
+          echo "Running Pylint"
+          pylint .
+
+      - name: MyPy
+        continue-on-error: true
+        run: |
+          echo "Running MyPy"
+          mypy .
+
+      - name: Pytest
+        continue-on-error: true
+        run: |
+          echo "Running Pytest"
+          pytest tests
+
+
   test:
     runs-on: ubuntu-latest
     steps:
@@ -17,26 +67,29 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: '3.12'
-          cache: 'pip'                          # <-- enable pip cache
-          cache-dependency-path: requirements.txt
-
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            test_requirements.txt
+        
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+          pip install -r test_requirements.txt
 
       - name: Install xvfb
         run: sudo apt-get update && sudo apt-get install -y --no-install-recommends xvfb
 
       - name: Run main.py (test run)
         run: |
-          if timeout 15s xvfb-run -a python app/main.py 2>&1 | grep -q "The client app is running"; then
+          if timeout 15s xvfb-run -a python -m app.main 2>&1 | grep -q "The client app is running"; then
             echo "Client output OK"
           else
             echo "Client output missing"
             exit 1
           fi
-          if timeout 15s xvfb-run -a python app/Reseau/server.py 2>&1 | grep -q "Server is listening on port 8000"; then
+          if timeout 15s xvfb-run -a python -m app.Reseau.server 2>&1 | grep -q "Server is listening on port 8000"; then
             echo "Server output OK"
           else
             echo "Server output missing"
@@ -57,7 +110,15 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
 
       - name: Install system packages (make, patchelf, tk, etc.)
         run: |
@@ -95,13 +156,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
 
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
 
       - name: Install GNU Make
         run: choco install make --no-progress -y
@@ -248,7 +312,15 @@ jobs:
         with:
           python-version: '3.12'
           cache: 'pip'
-          cache-dependency-path: requirements.txt
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
 
       - name: Install system packages (make, patchelf, tk, etc.)
         run: |
@@ -286,13 +358,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
+          cache: 'pip'
+          cache-dependency-path: |
+            requirements.txt
+            build_requirements.txt
 
-      - name: Cache pip
-        uses: actions/cache@v4
-        with:
-          path: ~\AppData\Local\pip\Cache
-          key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}
-          restore-keys: ${{ runner.os }}-pip-
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install -r build_requirements.txt
 
       - name: Install GNU Make
         run: choco install make --no-progress -y
@@ -327,10 +402,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
       - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-linux
           path: dist
+
       - uses: actions/download-artifact@v4
         with:
           name: caverne-aux-jeux-windows
@@ -341,27 +418,42 @@ jobs:
           mkdir -p dist/windows
           mv dist/main.exe dist/windows/
           mv dist/server.exe dist/windows/
+          chmod +x dist/windows/main.exe dist/windows/server.exe
+
       - name: Download Linux executables
         run: |
           mkdir -p dist/linux
           mv dist/main dist/linux/
           mv dist/server dist/linux/
+          chmod +x dist/linux/main dist/linux/server
+
+      - name: Generate user_guide documentation
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >
+            --output=docs/user_guide.pdf
+            docs/user_guide.md
+
       - name: Copy user guide to dist folders
         run: |
           cp docs/user_guide.pdf dist/linux/
           cp docs/user_guide.pdf dist/windows/
+
       - name: Zip Linux release
         run: |
           zip -j "caverne-aux-jeux-linux-${{ github.event.release.name }}.zip" dist/linux/*
+
       - name: Zip Windows release
         run: |
           zip -j "caverne-aux-jeux-windows-${{ github.event.release.name }}.zip" dist/windows/*
+
       - name: Upload release assets (zips only)
         uses: softprops/action-gh-release@v1
         with:
           files: |
             caverne-aux-jeux-linux-${{ github.event.release.name }}.zip
             caverne-aux-jeux-windows-${{ github.event.release.name }}.zip
+
 
 
   delete-artifacts-linux:

@@ -7,7 +7,7 @@ services:
       dockerfile: docker/Dockerfile
     image: caverne-aux-jeux
 
-    entrypoint: python main.py
+    entrypoint: python -m main
     container_name: app-caverne-aux-jeux
     environment:
       - DISPLAY=${DISPLAY}
@@ -22,7 +22,7 @@ services:
     image: caverne-aux-jeux
     container_name: server-caverne-aux-jeux
 
-    entrypoint: python Reseau/server.py
+    entrypoint: python -m Reseau.server
     ports:
     - "8000:8000"
 

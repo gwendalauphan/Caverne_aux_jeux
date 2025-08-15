@@ -1,4 +1,4 @@
-import socket #imports
+import socket  # imports
 import select
 import pickle
 import signal
@@ -24,31 +24,29 @@ logger = logging.getLogger("CaverneAuxJeuxServer")
 logger.info("The server app is running.")
 
 
-
-
 ###################--------------Initialisation du serveur---------------###################################
-#Host = "192.168.1.30" #ip locale sinon "90.91.3.228"
+# Host = "192.168.1.30" #ip locale sinon "90.91.3.228"
 
-HOST = '0.0.0.0'
+HOST = "0.0.0.0"
 PORT = 8000
 
 app_name = "Game_Caverne"
 
-if getattr(sys, 'frozen', False):
+if getattr(sys, "frozen", False):
     # Exécuté sous forme de bundle PyInstaller
-    if os.name == "nt": # Windows
+    if os.name == "nt":  # Windows
         data_directory = Path.home() / "AppData" / "Local" / app_name
-    elif os.name == "posix": # Linux
+    elif os.name == "posix":  # Linux
         data_directory = Path.home() / ".local" / "share" / app_name
 
 else:
     # Exécuté sous forme de script Python
     data_directory = Path(__file__).resolve().parent
 
-data_directory.mkdir(parents=True,exist_ok=True)  # Crée le répertoire s'il n'existe pas
+data_directory.mkdir(parents=True, exist_ok=True)  # Crée le répertoire s'il n'existe pas
 
 data_players_directory = "{}/data_players".format(data_directory)
-#créer le dossier data_players s'il n'existe pas
+# créer le dossier data_players s'il n'existe pas
 if not os.path.isdir(resource_path(data_players_directory)):
     os.mkdir(resource_path(data_players_directory))
 
@@ -63,21 +61,40 @@ if os.path.isfile(data_file_path):
     with open(data_file_path, "rb") as f:
         players = pickle.load(f)
 else:
-    players = {} #dictionnaire des joueurs
+    players = {}  # dictionnaire des joueurs
 
-if os.path.isfile(statistics_file_path): #si le fichier est créé, on charge ce qu'il y a dessus
+if os.path.isfile(statistics_file_path):  # si le fichier est créé, on charge ce qu'il y a dessus
     with open(statistics_file_path, "rb") as f:
         statistics = pickle.load(f)
 else:
-    statistics = [{"Tete": {"moyenne":[0, 0], "player_count":{}}, "Snake": {"moyenne":[0, 0], "player_count":{}}, "Ghost": {"moyenne":[0, 0], "player_count":{}}, "Minesweeper": {"moyenne":[0, 0], "player_count":{}},\
-         "Tetris": {"moyenne":[0, 0], "player_count":{}}, "Pendu": {"moyenne":[0, 0], "player_count":{}}, "Pong": {"moyenne":[0, 0], "player_count": {}},  "Flappy": {"moyenne":[0, 0], "player_count":{}} }, \
-         {"Snake": {}, "Minesweeper": {}, "Flappy": {}, "Pong": {}}, \
-         {"Tete": {"moyenne": 0, "player_count":{}}, "Snake": {"moyenne":0, "player_count":{}}, "Ghost": {"moyenne":0, "player_count":{}}, "Minesweeper": {"moyenne":0, "player_count":{}},\
-         "Tetris": {"moyenne":0, "player_count":{}}, "Pendu": {"moyenne":0, "player_count":{}}, "Pong": {"moyenne":0, "player_count": {}}, "Flappy": {"moyenne":0, "player_count":{}} }]
-    #scores, nombre de parties / emplacements de mort / temps joué
+    statistics = [
+        {
+            "Tete": {"moyenne": [0, 0], "player_count": {}},
+            "Snake": {"moyenne": [0, 0], "player_count": {}},
+            "Ghost": {"moyenne": [0, 0], "player_count": {}},
+            "Minesweeper": {"moyenne": [0, 0], "player_count": {}},
+            "Tetris": {"moyenne": [0, 0], "player_count": {}},
+            "Pendu": {"moyenne": [0, 0], "player_count": {}},
+            "Pong": {"moyenne": [0, 0], "player_count": {}},
+            "Flappy": {"moyenne": [0, 0], "player_count": {}},
+        },
+        {"Snake": {}, "Minesweeper": {}, "Flappy": {}, "Pong": {}},
+        {
+            "Tete": {"moyenne": 0, "player_count": {}},
+            "Snake": {"moyenne": 0, "player_count": {}},
+            "Ghost": {"moyenne": 0, "player_count": {}},
+            "Minesweeper": {"moyenne": 0, "player_count": {}},
+            "Tetris": {"moyenne": 0, "player_count": {}},
+            "Pendu": {"moyenne": 0, "player_count": {}},
+            "Pong": {"moyenne": 0, "player_count": {}},
+            "Flappy": {"moyenne": 0, "player_count": {}},
+        },
+    ]
+    # scores, nombre de parties / emplacements de mort / temps joué
+
 
 #########################-----------Fonction Save-------------------####################################
-def save(): #fonction pour sauvegarder les scores des joueurs dans le fichier
+def save():  # fonction pour sauvegarder les scores des joueurs dans le fichier
     with open(data_file_path, "wb") as f:
         pickle.dump(players, f)
     with open(statistics_file_path, "wb") as f:
@@ -86,21 +103,22 @@ def save(): #fonction pour sauvegarder les scores des joueurs dans le fichier
 
 ####################----------------Fonction Process--------------------------###################################
 
-def process(msg): #fonction pour décider de ce qu'il faut retourner au client
+
+def process(msg):  # fonction pour décider de ce qu'il faut retourner au client
     global players, statistics
-    list = msg.split(" ") #on split
-    command = list[0] #la commande est le premier mot, on le stocke pour plus de simplicité
+    list = msg.split(" ")  # on split
+    command = list[0]  # la commande est le premier mot, on le stocke pour plus de simplicité
 
     """################--------------Condition pour l'ajout du nouveau meilleur score----------#############################"""
     ##########################
-    #list[1] = nom du joueur
-    #list[3] = score du joueur
-    #list[2] = jeu auquel le joueur joue
+    # list[1] = nom du joueur
+    # list[3] = score du joueur
+    # list[2] = jeu auquel le joueur joue
     #########################
 
     """################--------------Condition pour l'ajout du nouveau meilleur score----------#############################"""
 
-    if command == "add":     #si la commande est add, on ajoute le score
+    if command == "add":  # si la commande est add, on ajoute le score
         player = list[1]
         jeu = list[2]
         score_max = float(list[3])
@@ -108,50 +126,53 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
         count = int(list[5])
         time = float(list[6])
 
-        #allo Snake 160      100.0    2              9.517096400260925 [(9, 19), (17, 19)]
-        #nom jeu score max  moyen   nb parties             time
+        # allo Snake 160      100.0    2              9.517096400260925 [(9, 19), (17, 19)]
+        # nom jeu score max  moyen   nb parties             time
 
         logger.debug("player {} scored {} in {} with {} parties".format(player, score_max, jeu, count))
 
-        if players[player][jeu] < score_max: #si le score marqué est plus grand que le précédent, on le retiends
+        if players[player][jeu] < score_max:  # si le score marqué est plus grand que le précédent, on le retiends
             players[player][jeu] = score_max
 
-        #players[player] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #
+        # players[player] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #
 
-
-        #incrémentation du nombre de parties jouées par joueur dans un jeu
-        #la moyenne du joueur = nb_parties*moyenne + score
+        # incrémentation du nombre de parties jouées par joueur dans un jeu
+        # la moyenne du joueur = nb_parties*moyenne + score
 
         statistics[0][jeu]["player_count"][player][0] += count
         statistics[0][jeu]["moyenne"][1] += count
 
-
         if statistics[0][jeu]["player_count"][player][0] != 0:
-            #moyenne de scorer du joueur
-            statistics[0][jeu]["player_count"][player][1] = ((statistics[0][jeu]["player_count"][player][0]-count) * statistics[0][jeu]["player_count"][player][1] + score*count) / (statistics[0][jeu]["player_count"][player][0])
+            # moyenne de scorer du joueur
+            statistics[0][jeu]["player_count"][player][1] = (
+                (statistics[0][jeu]["player_count"][player][0] - count) * statistics[0][jeu]["player_count"][player][1] + score * count
+            ) / (statistics[0][jeu]["player_count"][player][0])
 
-            #temps moyen du joueur
-            statistics[2][jeu]["player_count"][player] = (statistics[2][jeu]["player_count"][player]*(statistics[0][jeu]["player_count"][player][0]-count) + time)/(statistics[0][jeu]["player_count"][player][0])
+            # temps moyen du joueur
+            statistics[2][jeu]["player_count"][player] = (
+                statistics[2][jeu]["player_count"][player] * (statistics[0][jeu]["player_count"][player][0] - count) + time
+            ) / (statistics[0][jeu]["player_count"][player][0])
 
+        if statistics[0][jeu]["moyenne"][1] + count != 0:
+            # calcul de la nouvelle moyenne et du nouveau compte total
+            statistics[0][jeu]["moyenne"][0] = (
+                statistics[0][jeu]["moyenne"][0] * (statistics[0][jeu]["moyenne"][1] - count) + score * count
+            ) / (statistics[0][jeu]["moyenne"][1])
 
+            # Temps en moyenne par partie
+            statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"] * (statistics[0][jeu]["moyenne"][1] - count) + time) / (
+                statistics[0][jeu]["moyenne"][1]
+            )
 
-        if statistics[0][jeu]["moyenne"][1]+count != 0:
-            #calcul de la nouvelle moyenne et du nouveau compte total
-            statistics[0][jeu]["moyenne"][0] = (statistics[0][jeu]["moyenne"][0] * (statistics[0][jeu]["moyenne"][1]-count) + score*count)/(statistics[0][jeu]["moyenne"][1])
+        # nombre de parties par jeu
 
-            #Temps en moyenne par partie
-            statistics[2][jeu]["moyenne"] = (statistics[2][jeu]["moyenne"]*(statistics[0][jeu]["moyenne"][1]-count) + time)/(statistics[0][jeu]["moyenne"][1])
-
-        #nombre de parties par jeu
-
-
-
-        if jeu in ["Snake", "Pong", "Minesweeper", "Flappy"]: #compte des emplacements de mort dans le jeu Snake
+        if jeu in ["Snake", "Pong", "Minesweeper", "Flappy"]:  # compte des emplacements de mort dans le jeu Snake
             pos = eval("".join(list[7:]))
 
             try:
                 statistics[1][jeu][player]
-            except: statistics[1][jeu][player] = {}
+            except:
+                statistics[1][jeu][player] = {}
 
             for place in pos:
                 try:
@@ -160,27 +181,27 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
                     statistics[1][jeu][player][place] = 1
 
         save()
-        return b"ok" #le retour n'est pas important
+        return b"ok"  # le retour n'est pas important
 
         """################--------------Condition pour l'ajout du Classement Total----------#############################"""
 
-    elif command == "list": #si c'est la liste, on sérialise le dictionnaire et on l'envois
+    elif command == "list":  # si c'est la liste, on sérialise le dictionnaire et on l'envois
         total_score = []
-        for player in players.keys(): #pour chaque joueur, on calcule son score total et on l'ajoute dans une liste
+        for player in players.keys():  # pour chaque joueur, on calcule son score total et on l'ajoute dans une liste
             sum = 0
             for jeu in players[player].values():
                 sum += jeu
             total_score.append((player, sum))
-        total_score.sort(key = lambda list: list[1], reverse = True) #on trie la liste et on renvois les 10 premiers éléments
+        total_score.sort(key=lambda list: list[1], reverse=True)  # on trie la liste et on renvois les 10 premiers éléments
         return pickle.dumps(total_score[:10])
 
         """################--------------Condition pour l'ajout du Classement du jeu----------#############################"""
 
-    elif command == "game_list": #si c'est la liste, on sérialise le dictionnaire et on l'envois
+    elif command == "game_list":  # si c'est la liste, on sérialise le dictionnaire et on l'envois
         total_score = []
-        for player in players.keys(): #pour chaque joueur, on calcule son score total et on l'ajoute dans une liste
+        for player in players.keys():  # pour chaque joueur, on calcule son score total et on l'ajoute dans une liste
             total_score.append((player, players[player][list[1]]))
-        total_score.sort(key = lambda list: list[1], reverse = True) #on trie la liste et on renvois les 10 premiers éléments
+        total_score.sort(key=lambda list: list[1], reverse=True)  # on trie la liste et on renvois les 10 premiers éléments
         return pickle.dumps(total_score[:10])
 
         """##################----------------Envois du score d'un joueur------------------------#############################"""
@@ -190,28 +211,38 @@ def process(msg): #fonction pour décider de ce qu'il faut retourner au client
     elif command == "statistics_get":
         return pickle.dumps(statistics)
 
-
         """##################----------------Ajout d'un nouveau joueur------------------------#############################"""
     elif command == "check_new_player":
-        if (list[1] not in players):
-            players[list[1]] = {"Tete": 0, "Snake": 0, "Ghost": 0, "Minesweeper": 0, "Tetris": 0, "Pendu": 0, "Pong": 0, "Flappy": 0} #création d'un nouveau joueur
+        if list[1] not in players:
+            players[list[1]] = {
+                "Tete": 0,
+                "Snake": 0,
+                "Ghost": 0,
+                "Minesweeper": 0,
+                "Tetris": 0,
+                "Pendu": 0,
+                "Pong": 0,
+                "Flappy": 0,
+            }  # création d'un nouveau joueur
             for mode in range(len(statistics)):
                 for jeu in statistics[mode]:
                     if mode == 0:
-                        statistics[mode][jeu]['player_count'][list[1]] = [0 , 0]
+                        statistics[mode][jeu]["player_count"][list[1]] = [0, 0]
                     if mode == 2:
-                        statistics[mode][jeu]['player_count'][list[1]] = 0
+                        statistics[mode][jeu]["player_count"][list[1]] = 0
 
 
 def handle_sigint(sig, frame):
-    logger.info('Interrupt signal received. Shutting down the server...')
+    logger.info("Interrupt signal received. Shutting down the server...")
     save()
     sys.exit(0)
 
+
 def handle_sigtstp(sig, frame):
-    logger.info('Stop signal received (Ctrl+Z). Shutting down the server...')
+    logger.info("Stop signal received (Ctrl+Z). Shutting down the server...")
     save()
     sys.exit(0)
+
 
 # Configurer les gestionnaires de signaux
 signal.signal(signal.SIGINT, handle_sigint)  # Ctrl+C everywhere
@@ -227,6 +258,7 @@ if hasattr(signal, "SIGBREAK"):
 if hasattr(signal, "SIGTSTP"):
     signal.signal(signal.SIGTSTP, handle_sigtstp)
 
+
 class TkLogHandler(logging.Handler):
     def __init__(self, text_widget):
         super().__init__()
@@ -237,19 +269,31 @@ class TkLogHandler(logging.Handler):
         self.text_widget.after(0, self.text_widget_insert, msg)
 
     def text_widget_insert(self, msg):
-        self.text_widget.insert(tk.END, msg + '\n')
+        self.text_widget.insert(tk.END, msg + "\n")
         self.text_widget.see(tk.END)
+
 
 # --- Fixed Apple-style ToggleSwitch with ON/OFF visible ---
 class ToggleSwitch(tk.Canvas):
-    def __init__(self, master, width=60, height=34, padding=2,
-                 on_color="#34C759", off_color="#E5E5EA", knob_color="#FFFFFF",
-                 text_on="ON", text_off="OFF", initial=False, command=None, **kwargs):
-        super().__init__(master, width=width, height=height, highlightthickness=0,
-                         bg=master.cget("bg"), **kwargs)
+    def __init__(
+        self,
+        master,
+        width=60,
+        height=34,
+        padding=2,
+        on_color="#34C759",
+        off_color="#E5E5EA",
+        knob_color="#FFFFFF",
+        text_on="ON",
+        text_off="OFF",
+        initial=False,
+        command=None,
+        **kwargs,
+    ):
+        super().__init__(master, width=width, height=height, highlightthickness=0, bg=master.cget("bg"), **kwargs)
         self.w = width
         self.h = height
-        self.r = (height - 2*padding) // 2
+        self.r = (height - 2 * padding) // 2
         self.pad = padding
         self.on_color = on_color
         self.off_color = off_color
@@ -260,15 +304,17 @@ class ToggleSwitch(tk.Canvas):
         self._state = bool(initial)
 
         # track parts
-        self.track_left = self.create_oval(0,0,0,0, outline="", fill="")
-        self.track_rect = self.create_rectangle(0,0,0,0, outline="", fill="")
-        self.track_right = self.create_oval(0,0,0,0, outline="", fill="")
+        self.track_left = self.create_oval(0, 0, 0, 0, outline="", fill="")
+        self.track_rect = self.create_rectangle(0, 0, 0, 0, outline="", fill="")
+        self.track_right = self.create_oval(0, 0, 0, 0, outline="", fill="")
 
         # text labels INSIDE the switch
-        self.label_on = self.create_text(self.w*0.28, self.h/2, text=self.text_on,
-                                         fill="white", font=("Arial", int(self.h/2.9), "bold"))
-        self.label_off = self.create_text(self.w*0.72, self.h/2, text=self.text_off,
-                                          fill="white", font=("Arial", int(self.h/2.9), "bold"))
+        self.label_on = self.create_text(
+            self.w * 0.28, self.h / 2, text=self.text_on, fill="white", font=("Arial", int(self.h / 2.9), "bold")
+        )
+        self.label_off = self.create_text(
+            self.w * 0.72, self.h / 2, text=self.text_off, fill="white", font=("Arial", int(self.h / 2.9), "bold")
+        )
 
         # knob on top
         self.knob = self.create_oval(0, 0, 0, 0, outline="", fill=self.knob_color)
@@ -298,9 +344,9 @@ class ToggleSwitch(tk.Canvas):
             self.itemconfig(item, fill=color)
 
         p, r, w, h = self.pad, self.r, self.w, self.h
-        self.coords(self.track_left, p, p, p+2*r, p+2*r)
-        self.coords(self.track_rect, p+r, p, w-p-r, h-p)
-        self.coords(self.track_right, w-p-2*r, p, w-p, p+2*r)
+        self.coords(self.track_left, p, p, p + 2 * r, p + 2 * r)
+        self.coords(self.track_rect, p + r, p, w - p - r, h - p)
+        self.coords(self.track_right, w - p - 2 * r, p, w - p, p + 2 * r)
 
         # knob position
         if self._state:
@@ -313,8 +359,9 @@ class ToggleSwitch(tk.Canvas):
             self.itemconfig(self.label_off, state="normal")
 
         cy = p + r
-        self.coords(self.knob, cx-r, cy-r, cx+r, cy+r)
+        self.coords(self.knob, cx - r, cy - r, cx + r, cy + r)
         self.itemconfig(self.knob, fill=self.knob_color)
+
 
 # --- Updated ServerApp layout ---
 class ServerApp:
@@ -332,7 +379,7 @@ class ServerApp:
         top.pack(fill=tk.X, pady=10, padx=10)
 
         # Label + toggle aligned on left
-        tk.Label(top, text="Start/Stop Server").pack(side=tk.LEFT, padx=(0,8))
+        tk.Label(top, text="Start/Stop Server").pack(side=tk.LEFT, padx=(0, 8))
         self.toggle = ToggleSwitch(top, initial=False, command=self.on_toggle)
         self.toggle.pack(side=tk.LEFT)
 
@@ -341,11 +388,11 @@ class ServerApp:
         self.quit_btn.pack(side=tk.RIGHT)
 
         # Logs
-        self.log_text = scrolledtext.ScrolledText(master, state='normal', height=20)
-        self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0,10))
+        self.log_text = scrolledtext.ScrolledText(master, state="normal", height=20)
+        self.log_text.pack(fill=tk.BOTH, expand=True, padx=10, pady=(0, 10))
 
         self.tk_handler = TkLogHandler(self.log_text)
-        self.tk_handler.setFormatter(logging.Formatter('%(asctime)s - %(levelname)s - %(message)s'))
+        self.tk_handler.setFormatter(logging.Formatter("%(asctime)s - %(levelname)s - %(message)s"))
         logger.addHandler(self.tk_handler)
 
         self.log_text.insert(tk.END, "Server GUI ready.\n")
@@ -424,6 +471,7 @@ class ServerApp:
         self.log_text.insert(tk.END, msg + "\n")
         self.log_text.see(tk.END)
 
+
 def start_server(host, port, stop_event=None):
     s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     s.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
@@ -452,9 +500,9 @@ def start_server(host, port, stop_event=None):
                 pass
             else:
                 for client in clients_to_read:
-                    #try: #on essaye de décoder le message
+                    # try: #on essaye de décoder le message
                     msg = client.recv(1024).decode("utf-8")
-                    answer = process(msg) #on créé la réponse suivant la demande
+                    answer = process(msg)  # on créé la réponse suivant la demande
                     if type(answer) == type(None):
                         client_list.remove(client)
                         client.close()
@@ -467,8 +515,8 @@ def start_server(host, port, stop_event=None):
                         logger.info(f"Client {ip} from Port {port} disconnected - Answer sent to client")
                     if msg == "end":
                         launched = False
-                #except: client_list.remove(client)#si on ne peut pas lire le message, c'est que le socket n'est pas valide donc le client est déconnecté, on le supprime de la liste
-                #si on a une erreur, cela veut dire que le client s'est déconnecté, on le supprime
+                # except: client_list.remove(client)#si on ne peut pas lire le message, c'est que le socket n'est pas valide donc le client est déconnecté, on le supprime de la liste
+                # si on a une erreur, cela veut dire que le client s'est déconnecté, on le supprime
 
     finally:
         for client in client_list:
@@ -476,12 +524,14 @@ def start_server(host, port, stop_event=None):
         s.close()
         logger.info("Server socket closed.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     # Acquire the singleton guard *before* creating your UI
     _guard_socket = acquire_single_instance(port=54322, logger=logger)  # pick a fixed port for your app
     import argparse
+
     parser = argparse.ArgumentParser(description="Caverne Aux Jeux Server")
-    parser.add_argument('--no-gui', action='store_true', help='Run server without GUI')
+    parser.add_argument("--no-gui", action="store_true", help="Run server without GUI")
     args = parser.parse_args()
 
     if args.no_gui:

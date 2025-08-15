@@ -11,7 +11,7 @@ PYI_COMMON = --onefile --clean --noconfirm --distpath dist --workpath build --sp
 DATA_LINUX = \
 	--add-data "app/Data/*:Data/" \
 	--add-data "app/Fantome/Ressources/Images/*:Fantome/Ressources/Images/" \
-	--add-data "app/Flappy_Bird/Ressources/*:Flappy_Bird/Ressources/" \
+	--add-data "app/flappy_bird/Ressources/*:flappy_bird/Ressources/" \
 	--add-data "app/Minesweeper/Images/*:Minesweeper/Images/" \
 	--add-data "app/Parametters/*:Parametters/" \
 	--add-data "app/Pendu/ressources/*:Pendu/ressources/" \
@@ -25,7 +25,7 @@ DATA_LINUX = \
 DATA_WIN = \
 	--add-data "app/Data/*;Data/" \
 	--add-data "app/Fantome/Ressources/Images/*;Fantome/Ressources/Images/" \
-	--add-data "app/Flappy_Bird/Ressources/*;Flappy_Bird/Ressources/" \
+	--add-data "app/flappy_bird/Ressources/*;flappy_bird/Ressources/" \
 	--add-data "app/Minesweeper/Images/*;Minesweeper/Images/" \
 	--add-data "app/Parametters/*;Parametters/" \
 	--add-data "app/Pendu/ressources/*;Pendu/ressources/" \
