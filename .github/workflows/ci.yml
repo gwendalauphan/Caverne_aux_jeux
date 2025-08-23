@@ -428,17 +428,54 @@ jobs:
           mv dist/server dist/linux/
           chmod +x dist/linux/main dist/linux/server
 
-      - name: Generate user_guide documentation
+      - name: Generate user_guide english documentation
         uses: docker://pandoc/latex:latest
         with:
           args: >
             --output=docs/user_guide.pdf
             docs/user_guide.md
 
-      - name: Copy user guide to dist folders
+      - name: Generate user_guide french documentation
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >
+            --output=docs/user_guide_fr.pdf
+            docs/user_guide_fr.md
+
+      - name: Generate developer_guide english documentation
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >
+            --output=docs/developer_guide.pdf
+            docs/developer_guide.md
+
+      - name: Generate developer_guide french documentation
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >
+            --output=docs/developer_guide_fr.pdf
+            docs/developer_guide_fr.md
+
+      - name: Generate Changelog documentation
+        uses: docker://pandoc/latex:latest
+        with:
+          args: >
+            --output=docs/Changelog.pdf
+            docs/Changelog.md
+
+      - name: Copy guides to dist folders
         run: |
           cp docs/user_guide.pdf dist/linux/
           cp docs/user_guide.pdf dist/windows/
+          cp docs/user_guide_fr.pdf dist/linux/
+          cp docs/user_guide_fr.pdf dist/windows/
+          cp docs/developer_guide.pdf dist/linux/
+          cp docs/developer_guide.pdf dist/windows/
+          cp docs/developer_guide_fr.pdf dist/linux/
+          cp docs/developer_guide_fr.pdf dist/windows/
+
+          cp docs/Changelog.pdf dist/linux/
+          cp docs/Changelog.pdf dist/windows/
 
       - name: Zip Linux release
         run: |
