@@ -84,6 +84,8 @@ The project is based on a simple architecture:
 
 # Requirements and Installation
 
+> **Note :** Under **Linux** and **macOS**, the installation procedure is identical. Under macOS, you can use Homebrew to install the necessary packages.
+
 ## Poetry
 
 The project uses **Poetry** to manage dependencies and packaging configuration.
@@ -94,12 +96,15 @@ The project uses **Poetry** to manage dependencies and packaging configuration.
 
 ## Installing Dependencies
 
-On Linux:
+On Linux and macOS:
 
 ```bash
 sudo apt update
 sudo apt install python3 python3-tk make docker.io docker-compose
+# macOS : brew install python3 tk make
 ```
+For launching with Docker, ensure that Docker and Docker Compose are installed and configured correctly.
+
 
 Check if `python3-tk` is installable:
 
@@ -143,6 +148,8 @@ poetry run pytest tests/
 ---
 
 # Build and Execution
+
+> **Note :** Under **Linux** and **macOS**, the build and execution commands are identical.
 
 ## Makefile
 
@@ -222,8 +229,11 @@ Documentation is available in the `docs/` folder:
 To **convert** Markdown documentation to PDF:
 
 ```bash
-docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex \
-  --output=docs/user_guide.pdf docs/user_guide.md
+docker run --rm -v "$(pwd)":/data \
+-w /data/docs   -u $(id -u):$(id -g) \
+fpod/pandoc-weasyprint   --from=markdown   --to=html5 \
+--pdf-engine=weasyprint   --metadata author="Gwendal Auphan" \
+--metadata lang=fr-FR   -c style.css   -o user_guide.pdf user_guide.md
 ```
 
 ---
