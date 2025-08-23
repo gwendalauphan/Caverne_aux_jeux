@@ -9,7 +9,7 @@ app/Reseau/data_players/
 game_env/
 
 .venv/
-
+.make_venv/
 build/
 dist/
 

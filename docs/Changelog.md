@@ -1,3 +1,8 @@
+## Samedi 23 août 2025:
+Ajout des guides utilisateurs et développeurs
+Mise à jour de la documentation
+Ajout du virtual environment dans le Makefile
+
 ## Jeudi 14 août 2025:
 Mise à jour du projet
 Fix des bugs
