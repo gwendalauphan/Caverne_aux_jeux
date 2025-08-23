@@ -11,37 +11,37 @@
 
 - [Developer Guide – Caverne aux Jeux](#developer-guide--caverne-aux-jeux)
 - [Table of Contents](#table-of-contents)
-  - [Introduction](#introduction)
-  - [Clone and Contribute](#clone-and-contribute)
-    - [Contribute to the Project](#contribute-to-the-project)
-  - [Technical Architecture](#technical-architecture)
-    - [Main Technologies](#main-technologies)
-  - [Requirements and Installation](#requirements-and-installation)
-    - [Poetry](#poetry)
-      - [Recommended Plugin](#recommended-plugin)
-    - [Installing Dependencies](#installing-dependencies)
-  - [Development and Contribution](#development-and-contribution)
-    - [Useful Commands](#useful-commands)
-  - [Build and Execution](#build-and-execution)
-    - [Makefile](#makefile)
-    - [Docker Compose](#docker-compose)
-    - [Running with Python](#running-with-python)
-  - [CI/CD](#cicd)
-    - [On each push and pull request](#on-each-push-and-pull-request)
-    - [On each release](#on-each-release)
-  - [Documentation](#documentation)
-  - [Additional Resources](#additional-resources)
+- [Introduction](#introduction)
+- [Clone and Contribute](#clone-and-contribute)
+  - [Contribute to the Project](#contribute-to-the-project)
+- [Technical Architecture](#technical-architecture)
+  - [Main Technologies](#main-technologies)
+- [Requirements and Installation](#requirements-and-installation)
+  - [Poetry](#poetry)
+  - [Recommended Plugin](#recommended-plugin)
+  - [Installing Dependencies](#installing-dependencies)
+- [Development and Contribution](#development-and-contribution)
+  - [Useful Commands](#useful-commands)
+- [Build and Execution](#build-and-execution)
+  - [Makefile](#makefile)
+  - [Docker Compose](#docker-compose)
+  - [Running with Python](#running-with-python)
+- [CI/CD](#cicd)
+  - [On each push and pull request](#on-each-push-and-pull-request)
+  - [On each release](#on-each-release)
+- [Documentation](#documentation)
+- [Additional Resources](#additional-resources)
 
 ---
 
-## Introduction
+# Introduction
 
 This document is intended for developers who want to contribute to the **Caverne aux Jeux** project.
 It describes the technical architecture, the technologies used, as well as the development practices (build, tests, CI/CD).
 
 ---
 
-## Clone and Contribute
+# Clone and Contribute
 
 To clone the project locally:
 
@@ -50,7 +50,7 @@ git clone https://github.com/gwendalauphan/Caverne_aux_jeux.git
 cd Caverne_aux_jeux
 ```
 
-### Contribute to the Project
+## Contribute to the Project
 
 You can contribute in several ways:
 
@@ -61,14 +61,14 @@ All contributions (code, documentation, tests, ideas) are welcome.
 
 ---
 
-## Technical Architecture
+# Technical Architecture
 
 The project is based on a simple architecture:
 
 * **Client (`client.exe`)**: graphical interface allowing the user to log in with a simple *username* and play the available games.
 * **Server (`server.exe`)**: application that centralizes and stores game data for multiple users via **TCP sockets**.
 
-### Main Technologies
+## Main Technologies
 
 * **Python 3**
 * **Tkinter** (UI)
@@ -82,17 +82,17 @@ The project is based on a simple architecture:
 
 ---
 
-## Requirements and Installation
+# Requirements and Installation
 
-### Poetry
+## Poetry
 
 The project uses **Poetry** to manage dependencies and packaging configuration.
 
-#### Recommended Plugin
+## Recommended Plugin
 
 * [poetry-plugin-export](https://pypi.org/project/poetry-plugin-export/)
 
-### Installing Dependencies
+## Installing Dependencies
 
 On Linux:
 
@@ -116,9 +116,9 @@ poetry install
 
 ---
 
-## Development and Contribution
+# Development and Contribution
 
-### Useful Commands
+## Useful Commands
 
 Before contributing or committing changes:
 
@@ -142,9 +142,9 @@ poetry run pytest tests/
 
 ---
 
-## Build and Execution
+# Build and Execution
 
-### Makefile
+## Makefile
 
 Main targets are:
 
@@ -168,7 +168,7 @@ make build-linux
 make run-linux
 ```
 
-### Docker Compose
+## Docker Compose
 
 ```bash
 xhost +local:docker    # Allow X11 access
@@ -177,7 +177,7 @@ docker compose up -d
 xhost -local:docker    # Revoke X11 access
 ```
 
-### Running with Python
+## Running with Python
 
 ```bash
 python3 -m venv .venv
@@ -193,24 +193,24 @@ python -m app.main
 
 ---
 
-## CI/CD
+# CI/CD
 
 The project uses **GitHub Actions** to automate builds and tests:
 
-### On each push and pull request
+## On each push and pull request
 
 * Install dependencies
 * Run tests (unit + linting)
 * Build and test the Docker container
 * Build Linux and Windows executables
 
-### On each release
+## On each release
 
 * Automatically upload Linux and Windows executables as **release artifacts**
 
 ---
 
-## Documentation
+# Documentation
 
 Documentation is available in the `docs/` folder:
 
@@ -228,7 +228,7 @@ docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex \
 
 ---
 
-## Additional Resources
+# Additional Resources
 
 * Official repository: [Caverne aux Jeux](https://github.com/gwendalauphan/Caverne_aux_jeux)
 * Python Docs: [https://docs.python.org/3/](https://docs.python.org/3/)

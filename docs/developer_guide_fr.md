@@ -11,37 +11,37 @@
 
 - [Guide du Développeur – Caverne aux Jeux](#guide-du-développeur--caverne-aux-jeux)
 - [Table des matières](#table-des-matières)
-  - [Introduction](#introduction)
-  - [Cloner et contribuer](#cloner-et-contribuer)
-    - [Contribuer au projet](#contribuer-au-projet)
-  - [Architecture technique](#architecture-technique)
-    - [Technologies principales](#technologies-principales)
-  - [Prérequis et installation](#prérequis-et-installation)
-    - [Poetry](#poetry)
-      - [Plugin recommandé](#plugin-recommandé)
-    - [Installation des dépendances](#installation-des-dépendances)
-  - [Développement et contribution](#développement-et-contribution)
-    - [Commandes utiles](#commandes-utiles)
-  - [Compilation et exécution](#compilation-et-exécution)
-    - [Makefile](#makefile)
-    - [Docker Compose](#docker-compose)
-    - [Exécution en Python](#exécution-en-python)
-  - [CI/CD](#cicd)
-    - [Sur chaque push et pull request](#sur-chaque-push-et-pull-request)
-    - [Sur chaque release](#sur-chaque-release)
-  - [Documentation](#documentation)
-  - [Ressources supplémentaires](#ressources-supplémentaires)
+- [Introduction](#introduction)
+- [Cloner et contribuer](#cloner-et-contribuer)
+  - [Contribuer au projet](#contribuer-au-projet)
+- [Architecture technique](#architecture-technique)
+  - [Technologies principales](#technologies-principales)
+- [Prérequis et installation](#prérequis-et-installation)
+  - [Poetry](#poetry)
+  - [Plugin recommandé](#plugin-recommandé)
+  - [Installation des dépendances](#installation-des-dépendances)
+- [Développement et contribution](#développement-et-contribution)
+  - [Commandes utiles](#commandes-utiles)
+- [Compilation et exécution](#compilation-et-exécution)
+  - [Makefile](#makefile)
+  - [Docker Compose](#docker-compose)
+  - [Exécution en Python](#exécution-en-python)
+- [CI/CD](#cicd)
+  - [Sur chaque push et pull request](#sur-chaque-push-et-pull-request)
+  - [Sur chaque release](#sur-chaque-release)
+- [Documentation](#documentation)
+- [Ressources supplémentaires](#ressources-supplémentaires)
 
 ---
 
-## Introduction
+# Introduction
 
 Ce document est destiné aux développeurs qui souhaitent contribuer au projet **Caverne aux Jeux**.
 Il présente l’architecture technique, les technologies utilisées, ainsi que les pratiques de développement (build, tests, CI/CD).
 
 ---
 
-## Cloner et contribuer
+# Cloner et contribuer
 
 Pour récupérer le projet localement :
 
@@ -50,7 +50,7 @@ git clone https://github.com/gwendalauphan/Caverne_aux_jeux.git
 cd Caverne_aux_jeux
 ```
 
-### Contribuer au projet
+## Contribuer au projet
 
 Vous pouvez contribuer de plusieurs manières :
 
@@ -61,14 +61,14 @@ Toutes les contributions (code, documentation, tests, idées) sont les bienvenue
 
 ---
 
-## Architecture technique
+# Architecture technique
 
 Le projet repose sur une architecture simple :
 
 * **Client (`client.exe`)** : interface graphique permettant à l’utilisateur de se connecter avec un simple *username* et de jouer aux différents jeux.
 * **Serveur (`server.exe`)** : application qui centralise et stocke les données de jeu de plusieurs utilisateurs via des **sockets TCP**.
 
-### Technologies principales
+## Technologies principales
 
 * **Python 3**
 * **Tkinter** (UI)
@@ -82,17 +82,17 @@ Le projet repose sur une architecture simple :
 
 ---
 
-## Prérequis et installation
+# Prérequis et installation
 
-### Poetry
+## Poetry
 
 Le projet utilise **Poetry** pour gérer les dépendances et la configuration du packaging.
 
-#### Plugin recommandé
+## Plugin recommandé
 
 * [poetry-plugin-export](https://pypi.org/project/poetry-plugin-export/)
 
-### Installation des dépendances
+## Installation des dépendances
 
 Sous Linux :
 
@@ -116,9 +116,9 @@ poetry install
 
 ---
 
-## Développement et contribution
+# Développement et contribution
 
-### Commandes utiles
+## Commandes utiles
 
 Avant de contribuer ou de committer des modifications :
 
@@ -142,9 +142,9 @@ poetry run pytest tests/
 
 ---
 
-## Compilation et exécution
+# Compilation et exécution
 
-### Makefile
+## Makefile
 
 Les cibles principales sont :
 
@@ -168,7 +168,7 @@ make build-linux
 make run-linux
 ```
 
-### Docker Compose
+## Docker Compose
 
 ```bash
 xhost +local:docker    # Autoriser l’accès X11
@@ -177,7 +177,7 @@ docker compose up -d
 xhost -local:docker    # Retirer l’accès X11
 ```
 
-### Exécution en Python
+## Exécution en Python
 
 ```bash
 python3 -m venv .venv
@@ -193,24 +193,24 @@ python -m app.main
 
 ---
 
-## CI/CD
+# CI/CD
 
 Le projet utilise **GitHub Actions** pour automatiser les builds et tests :
 
-### Sur chaque push et pull request
+## Sur chaque push et pull request
 
 * Installation des dépendances
 * Lancement des tests (unitaires + linting)
 * Build et test du conteneur Docker
 * Build des exécutables Linux et Windows
 
-### Sur chaque release
+## Sur chaque release
 
 * Upload automatique des exécutables Linux et Windows dans les **artifacts de release**.
 
 ---
 
-## Documentation
+# Documentation
 
 La documentation est disponible dans le dossier `docs/` :
 
@@ -228,7 +228,7 @@ docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex \
 
 ---
 
-## Ressources supplémentaires
+# Ressources supplémentaires
 
 * Dépôt officiel : [Caverne aux Jeux](https://github.com/gwendalauphan/Caverne_aux_jeux)
 * Documentation Python : [https://docs.python.org/3/](https://docs.python.org/3/)
