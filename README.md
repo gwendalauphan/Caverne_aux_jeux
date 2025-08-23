@@ -34,7 +34,7 @@ After being abandoned for several years, I decided to modernize it and add some 
     - [Run with Python](#run-with-python)
     - [Build with Makefile](#build-with-makefile)
     - [Docker Compose](#docker-compose)
-  - [4. Dependencies](#4-dependencies)
+  - [4. Dependencies (Linux)](#4-dependencies-linux)
 - [👩‍💻 Developer Guide](#-developer-guide)
   - [Clone and contribute](#clone-and-contribute)
   - [Requirements](#requirements)
@@ -91,7 +91,6 @@ Choose the version for your operating system:
 
 * **Windows**
 * **Linux**
-* **macOS** (use the Linux binary, launching is the same as Linux)
 
 After downloading, you will have two executables:
 
@@ -102,13 +101,10 @@ After downloading, you will have two executables:
 
 ## 2. Run the game
 
-> **Note :** Under **Linux** and **macOS**, the launch procedure is identical. The commands to run the game are the same.
-
 ### Simple mode (client only)
 
 ```bash
-./client # (under Linux and macOS)
-./client.exe # (under Windows)
+./client.exe
 ```
 
 * Enter a **username**.
@@ -119,14 +115,12 @@ After downloading, you will have two executables:
 1. Start the server:
 
    ```bash
-   ./server # (under Linux and macOS)
-   ./server.exe # (under Windows)
+   ./server.exe
    ```
 2. Then start the client:
 
    ```bash
-   ./client # (under Linux and macOS)
-   ./client.exe # (under Windows)
+   ./client.exe
    ```
 
 * Game data will then be stored server-side.
@@ -135,8 +129,6 @@ After downloading, you will have two executables:
 
 ## 3. Advanced method (developers)
 
-> **Note :** Under **Linux** and **macOS**, the launch procedure is identical. The commands to run the game are the same.
->
 ### Clone the repository
 
 ```bash
@@ -172,15 +164,12 @@ xhost -local:docker
 
 ---
 
-## 4. Dependencies
+## 4. Dependencies (Linux)
 
-> **Note :** Under **macOS**, you can use Homebrew to install the necessary packages. (`brew install python3-tk make`).
-> T
 ```bash
 sudo apt update
-sudo apt install python3 python3-tk make
+sudo apt install python3 python3-tk make docker.io docker-compose
 ```
-For launching with Docker, ensure that Docker and Docker Compose are installed and configured correctly.
 
 👉 For more details, check the [User Guide](./docs/user_guide.md).
 

@@ -509,7 +509,7 @@ jobs:
 
       - name: Zip Linux release
         run: |
-          zip -j "caverne-aux-jeux-linux-macos-${{ github.event.release.name }}.zip" dist/linux/*
+          zip -j "caverne-aux-jeux-linux-${{ github.event.release.name }}.zip" dist/linux/*
 
       - name: Zip Windows release
         run: |

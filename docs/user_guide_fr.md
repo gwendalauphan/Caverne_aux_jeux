@@ -33,8 +33,6 @@ Ce guide vous explique comment **télécharger**, **installer** et **lancer le j
 
 # Téléchargement et installation
 
-> **Note :** Sous **Linux** et **macOS**, la procédure d'installation et de lancement est identique. Sous macOS, utilisez Homebrew pour installer les dépendances système.
-
 ## Méthode simple : Télécharger les releases
 
 1. Rendez-vous sur la page des **releases** du Jeu: [Caverne aux Jeux Releases](https://github.com/gwendalauphan/Caverne_aux_jeux/releases)
@@ -117,11 +115,9 @@ python -m app.main # Lancer le jeu
 
 # Lancer le jeu
 
-> **Note :** Sous **Linux** et **macOS**, la procédure de lancement est identique.
-
 ## Mode client
 
-* Exécutez le fichier `client.exe` (sous Windows) ou `./client` (sous Linux/macOS).
+* Exécutez le fichier `client.exe`.
 * Le jeu vous demandera un **login (username uniquement)**.
 * Une fois connecté, vous pouvez accéder aux différents jeux.
 * Chaque jeu a son propre mécanisme de score et rapporte des points au classement général.
@@ -129,8 +125,8 @@ python -m app.main # Lancer le jeu
 
 ## Mode client-serveur
 
-* Lancez d’abord le serveur avec `server.exe` ou `./server` (sous Linux/macOS).
-* Ensuite, lancez le client avec `client.exe` ou `./client` (sous Linux/macOS).
+* Lancez d’abord le serveur avec `server.exe`.
+* Ensuite, lancez le client avec `client.exe`.
 * Le serveur permet de stocker les données de jeu pour plusieurs utilisateurs.
 * Il permet ainsi à d'autres utilisateurs de se connecter au serveur en indiquant l'adresse IP et le port du serveur. **(Feature à venir)**
 
@@ -180,12 +176,11 @@ Vous pouvez décider d'activer ou désactiver le serveur en temps réel via une 
 
 
 ## Installation des dépendances
-Afin d'executer le projet localement sous linux **ou macOS**, il est nécessaire d'installer des dépendances système. Vous pouvez le faire en exécutant la commande suivante :
+Afin d'executer le projet localement sous linux, il est nécessaire d'installer des dépendances système. Vous pouvez le faire en exécutant la commande suivante :
 
 ```bash
 sudo apt update
 sudo apt install python3 python3-tk
-# macOS : brew install python3 tk
 ```
 
 Si python3-tk n’est pas trouvé, cela signifie que les sources APT ne sont pas correctement configurées.

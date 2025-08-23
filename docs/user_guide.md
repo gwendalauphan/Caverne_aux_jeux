@@ -35,8 +35,6 @@ This guide explains how to **download**, **install**, and **run the game**, as w
 
 # Download and Installation
 
-> **Note :** Under **Linux** and **macOS**, the installation procedure is identical. Under macOS, you can use Homebrew to install the necessary packages.
-
 ## Simple method: Download releases
 
 1. Go to the official **releases** page: [Caverne aux Jeux Releases](https://github.com/gwendalauphan/Caverne_aux_jeux/releases)
@@ -124,11 +122,9 @@ python -m app.main # Start the game
 
 # Running the Game
 
-> **Note :** Under **Linux** and **macOS**, the installation procedure is identical.
-
 ## Client mode
 
-* Run the file `client.exe` (under Windows) or `./client` (under Linux/macOS).
+* Run the file `client.exe`.
 * The game will ask you for a **login (username only)**.
 * Once connected, you can access the available mini-games.
 * Each game has its own scoring mechanism and contributes to the global leaderboard.
@@ -136,8 +132,8 @@ python -m app.main # Start the game
 
 ## Client-server mode
 
-* Start the server with `server.exe` (under Windows) or `./server` (under Linux/macOS).
-* Then launch the client with `client.exe` (under Windows) or `./client` (under Linux/macOS).
+* Start the server with `server.exe`.
+* Then launch the client with `client.exe`.
 * The server stores game data for multiple users.
 * This will eventually allow other players to connect to the server using its IP address and port. **(Feature coming soon)**
 
@@ -190,12 +186,11 @@ You can enable or disable the server in real time through a graphical interface.
 
 ## Installing dependencies
 
-To run the project locally on Linux or **macOS**, system dependencies must be installed. Run:
+To run the project locally on Linux, system dependencies must be installed. Run:
 
 ```bash
 sudo apt update
 sudo apt install python3 python3-tk
-# macOS : brew install python3-tk
 ```
 
 If `python3-tk` is not found, your APT sources may not be configured correctly.
