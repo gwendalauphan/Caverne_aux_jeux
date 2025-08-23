@@ -31,7 +31,7 @@ Caverne aux Jeux est une plateforme de mini‑jeux que j'ai réalisée avec mon 
     - [Exécuter avec Python](#exécuter-avec-python)
     - [Build avec Makefile](#build-avec-makefile)
     - [Docker Compose](#docker-compose)
-  - [4. Dépendances (Linux)](#4-dépendances-linux)
+  - [4. Dépendances](#4-dépendances)
 - [👩‍💻 Guide Développeur](#-guide-développeur)
   - [Cloner et contribuer](#cloner-et-contribuer)
   - [Prérequis](#prérequis)
@@ -85,6 +85,7 @@ Choisissez la version correspondant à votre système d’exploitation :
 
 * **Windows**
 * **Linux**
+* **macOS** (utilisez le binaire Linux, le lancement est identique à Linux)
 
 Une fois téléchargé, vous aurez deux exécutables :
 
@@ -95,10 +96,13 @@ Une fois téléchargé, vous aurez deux exécutables :
 
 ## 2. Lancer le jeu
 
+> **Note :** Sous **Linux** et **macOS**, la procédure de lancement est identique. Les commandes et dépendances sont les mêmes.
+
 ### Mode simple (client seul)
 
 ```bash
-./client.exe
+./client # (sous Linux et macOS)
+./client.exe # (sous Windows)
 ```
 
 * Entrez un **username**.
@@ -109,12 +113,14 @@ Une fois téléchargé, vous aurez deux exécutables :
 1. Lancez le serveur :
 
    ```bash
-   ./server.exe
+   ./server # (sous Linux et macOS)
+   ./server.exe # (sous Windows)
    ```
 2. Lancez ensuite le client :
 
    ```bash
-   ./client.exe
+   ./client # (sous Linux et macOS)
+   ./client.exe # (sous Windows)
    ```
 
 * Les données de jeu sont alors stockées côté serveur.
@@ -122,6 +128,8 @@ Une fois téléchargé, vous aurez deux exécutables :
 ---
 
 ## 3. Méthode avancée (développeurs)
+
+> **Note :** Sous **Linux** et **macOS**, la procédure d'installation et d'exécution est la même.
 
 ### Cloner le dépôt
 
@@ -158,12 +166,15 @@ xhost -local:docker
 
 ---
 
-## 4. Dépendances (Linux)
+## 4. Dépendances
+
+> **Note :** Sous **macOS**, installez les dépendances via Homebrew (`brew install python3-tk make`).
 
 ```bash
 sudo apt update
-sudo apt install python3 python3-tk make docker.io docker-compose
+sudo apt install python3 python3-tk make
 ```
+Pour le lancement avec Docker, assurez-vous que Docker et Docker Compose sont installés et configurés correctement.
 
 
 👉 Pour plus de détails, consultez la [documentation utilisateur](./docs/user_guide_fr.md).

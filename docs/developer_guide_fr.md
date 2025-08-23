@@ -84,6 +84,8 @@ Le projet repose sur une architecture simple :
 
 # Prérequis et installation
 
+> **Note :** Sous **Linux** et **macOS**, la procédure d'installation et de lancement est identique. Sous macOS, utilisez Homebrew pour installer les dépendances système.
+
 ## Poetry
 
 Le projet utilise **Poetry** pour gérer les dépendances et la configuration du packaging.
@@ -94,12 +96,14 @@ Le projet utilise **Poetry** pour gérer les dépendances et la configuration du
 
 ## Installation des dépendances
 
-Sous Linux :
+Sous Linux **et macOS** :
 
 ```bash
 sudo apt update
-sudo apt install python3 python3-tk make docker.io docker-compose
+sudo apt install python3 python3-tk make
+# macOS : brew install python3 tk make
 ```
+Pour le lancement avec Docker, assurez-vous que Docker et Docker Compose sont installés et configurés correctement.
 
 Vérifiez que `python3-tk` est installable :
 
@@ -143,6 +147,8 @@ poetry run pytest tests/
 ---
 
 # Compilation et exécution
+
+> **Note :** Sous **Linux** et **macOS**, les commandes de compilation et d'exécution sont identiques.
 
 ## Makefile
 
@@ -222,8 +228,11 @@ La documentation est disponible dans le dossier `docs/` :
 Pour **convertir** la documentation Markdown en PDF :
 
 ```bash
-docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex \
-  --output=docs/user_guide.pdf docs/user_guide.md
+docker run --rm -v "$(pwd)":/data \
+-w /data/docs   -u $(id -u):$(id -g) \
+fpod/pandoc-weasyprint   --from=markdown   --to=html5 \
+--pdf-engine=weasyprint   --metadata author="Gwendal Auphan" \
+--metadata lang=fr-FR   -c style.css   -o user_guide.pdf user_guide.md
 ```
 
 ---
