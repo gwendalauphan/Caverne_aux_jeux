@@ -49,7 +49,11 @@ define VENV_SETUP
 	@if [ ! -d ".make_venv" ]; then \
 		python3 -m venv .make_venv; \
 	fi
-	. .make_venv/bin/activate; \
+	if [ "$$(uname -s | grep -i 'mingw\|cygwin\|windows')" ]; then \
+		. .make_venv/Scripts/activate; \
+	else \
+		. .make_venv/bin/activate; \
+	fi; \
 	python -m pip install -r build_requirements.txt -r requirements.txt;
 endef
 
