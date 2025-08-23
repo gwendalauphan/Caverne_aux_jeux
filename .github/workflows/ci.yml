@@ -428,39 +428,69 @@ jobs:
           mv dist/server dist/linux/
           chmod +x dist/linux/main dist/linux/server
 
-      - name: Generate user_guide english documentation
-        uses: docker://pandoc/latex:latest
+      - name: Generate user_guide (EN)
+        uses: docker://fpod/pandoc-weasyprint:latest
         with:
           args: >
-            --output=docs/user_guide.pdf
+            --from=markdown
+            --to=html5
+            --pdf-engine=weasyprint
+            -c docs/style.css
+            --metadata=lang=en-US
+            --resource-path=docs:assets
+            -o docs/user_guide.pdf
             docs/user_guide.md
 
-      - name: Generate user_guide french documentation
-        uses: docker://pandoc/latex:latest
+      - name: Generate user_guide (FR)
+        uses: docker://fpod/pandoc-weasyprint:latest
         with:
           args: >
-            --output=docs/user_guide_fr.pdf
+            --from=markdown
+            --to=html5
+            --pdf-engine=weasyprint
+            -c docs/style.css
+            --metadata=lang=fr-FR
+            --resource-path=docs:assets
+            -o docs/user_guide_fr.pdf
             docs/user_guide_fr.md
 
-      - name: Generate developer_guide english documentation
-        uses: docker://pandoc/latex:latest
+      - name: Generate developer_guide (EN)
+        uses: docker://fpod/pandoc-weasyprint:latest
         with:
           args: >
-            --output=docs/developer_guide.pdf
+            --from=markdown
+            --to=html5
+            --pdf-engine=weasyprint
+            -c docs/style.css
+            --metadata=lang=en-US
+            --resource-path=docs:assets
+            -o docs/developer_guide.pdf
             docs/developer_guide.md
 
-      - name: Generate developer_guide french documentation
-        uses: docker://pandoc/latex:latest
+      - name: Generate developer_guide (FR)
+        uses: docker://fpod/pandoc-weasyprint:latest
         with:
           args: >
-            --output=docs/developer_guide_fr.pdf
+            --from=markdown
+            --to=html5
+            --pdf-engine=weasyprint
+            -c docs/style.css
+            --metadata=lang=fr-FR
+            --resource-path=docs:assets
+            -o docs/developer_guide_fr.pdf
             docs/developer_guide_fr.md
 
-      - name: Generate Changelog documentation
-        uses: docker://pandoc/latex:latest
+      - name: Generate Changelog
+        uses: docker://fpod/pandoc-weasyprint:latest
         with:
           args: >
-            --output=docs/Changelog.pdf
+            --from=markdown
+            --to=html5
+            --pdf-engine=weasyprint
+            -c docs/style.css
+            --metadata=lang=fr-FR
+            --resource-path=docs:assets
+            -o docs/Changelog.pdf
             docs/Changelog.md
 
       - name: Copy guides to dist folders

@@ -5,7 +5,7 @@
 ## Auteurs
 
 * [Gwendal Auphan](https://github.com/gwendalauphan)
-* [Dorian Gaspar](hhttps://github.com/dogasp)
+* [Dorian Gaspar](https://github.com/dogasp)
 
 Caverne aux Jeux est une plateforme de mini‑jeux que j'ai réalisée avec mon ami [Dorian Gaspar](https://github.com/dogasp). Elle dispose d'un mode serveur qui permet aux joueurs d'enregistrer leurs scores et de consulter les classements. À la base, il s'agissait du projet de fin d'année pour le bac, mais, poussés par la passion du code, nous avons porté le projet plus loin. Laissé à l'abandon pendant plusieurs années, j'ai décidé de le remettre au goût du jour et d'ajouter des fonctionnalités orientées développeur.
 

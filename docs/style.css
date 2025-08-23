@@ -1,0 +1,232 @@
+/* ========== Page & Typography ========== */
+@page {
+  size: A4;
+  margin: 2cm;
+  @top-left { content: string(doc-title); font-size: 10pt; color: #666; }
+  @bottom-right { content: "Page " counter(page) " / " counter(pages); font-size: 10pt; color: #666; }
+}
+
+html {
+  font-size: 11pt;
+}
+
+html, body {
+  font-family: "Helvetica Neue", Arial, sans-serif;
+  line-height: 1.54;
+  color: #2e2e2e;
+  -weasy-hyphens: auto; /* legacy alias */
+  hyphens: auto;
+  orphans: 3;
+  widows: 3;
+}
+
+body {
+  /* limit line length for readability */
+  max-width: 46rem;
+  margin: 0 auto;
+}
+
+/* Running header: take <h1> as document title */
+h1:first-of-type { string-set: doc-title content(); }
+
+/* ========== Headings ========== */
+h1, h2, h3, h4, h5, h6 {
+  color: #111;
+  border-bottom: 1px solid #e5e7eb;
+  padding-bottom: .25rem;
+  page-break-after: avoid;
+  break-after: avoid;
+  /* prevent heading at bottom of page */
+}
+
+h1 { font-size: 1.9rem; margin: 0 0 1rem; }
+h2 { font-size: 1.5rem; margin: 1.6rem 0 .8rem; }
+h3 { font-size: 1.25rem; margin: 1.2rem 0 .6rem; }
+h4 { font-size: 1.1rem; margin: 1rem 0 .5rem; }
+h5 { font-size: 1rem; margin: .9rem 0 .4rem; }
+h6 { font-size: .95rem; margin: .8rem 0 .3rem; color: #444; }
+
+h1 { page-break-before: always; }
+h1:first-of-type { page-break-before: auto; }
+
+/* Keep content tight to heading */
+h1 + *, h2 + *, h3 + *, h4 + *, h5 + *, h6 + * {
+  margin-top: .4rem;
+}
+
+/* ========== Paragraphs & Lists ========== */
+p, ul, ol { margin: 0 0 .9rem; }
+ul, ol { padding-left: 1.25rem; }
+li > ul, li > ol { margin-top: .4rem; }
+
+/* ========== Links ========== */
+a { text-decoration: none; }
+a[href] { color: #0b63b6; }
+
+/* Show URL after links when printing: toggle by uncommenting */
+/*
+a[href^="http"]:after {
+  content: " <" attr(href) ">";
+  font-size: 9pt;
+  color: #666;
+}
+*/
+
+/* ========== Code ========== */
+code {
+  background: #f6f8fa;
+  padding: 0 .25em;
+  border-radius: 4px;
+}
+
+pre {
+  background: #f6f8fa;
+  padding: .9rem;
+  border-radius: 6px;
+  overflow: auto;          /* allow horizontal scroll if needed */
+  white-space: pre-wrap;   /* wrap long lines */
+  word-break: break-word;
+  page-break-inside: avoid;
+  border: 1px solid #e5e7eb;
+}
+
+pre, code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace;
+  font-size: 10pt;
+  line-height: 1.45;
+}
+
+/* Optional: line numbers for code blocks (enable by adding class="numbered" to <pre>) */
+pre.numbered {
+  counter-reset: line;
+}
+pre.numbered code { display: block; }
+pre.numbered code > span {
+  display: block;
+  counter-increment: line;
+}
+pre.numbered code > span::before {
+  content: counter(line);
+  display: inline-block;
+  min-width: 2ch;
+  margin-right: 1ch;
+  color: #9aa3af;
+}
+
+/* Pygments/Highlight.js fallbacks (common class names) */
+code .k { font-weight: 600; } /* keyword */
+code .s { color: #0c7a43; }   /* string */
+code .c { color: #6b7280; }   /* comment */
+
+/* ========== Tables ========== */
+table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+  margin: 0 0 1rem;
+}
+
+th, td {
+  border: 1px solid #e5e7eb;
+  padding: .55rem;
+  vertical-align: top;
+}
+
+th {
+  background: #f3f4f6;
+  text-align: left;
+}
+
+/* Avoid breaking header from table */
+thead { display: table-header-group; }
+tfoot { display: table-footer-group; }
+
+/* ========== Blockquotes ========== */
+blockquote {
+  margin: 0 0 1rem;
+  padding: .6rem .9rem;
+  border-left: 3px solid #0b63b6;
+  background: #f8fafc;
+  color: #374151;
+}
+
+/* ========== Images & Figures ========== */
+img, svg, video {
+  max-width: 100%;
+  height: auto;
+}
+
+figure {
+  margin: 0 0 1rem;
+  page-break-inside: avoid;
+}
+
+figcaption {
+  font-size: 9.5pt;
+  color: #6b7280;
+  text-align: center;
+  margin-top: .4rem;
+}
+
+/* ========== TOC (Pandoc: nav#TOC) ========== */
+nav#TOC {
+  page-break-after: always;
+  margin: 0 0 1.2rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  background: #f9fafb;
+  padding: .8rem 1rem;
+}
+
+nav#TOC > h1, nav#TOC > h2 {
+  border: 0;
+  padding: 0;
+  margin: 0 0 .6rem;
+  font-size: 1.1rem;
+}
+
+nav#TOC ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+nav#TOC li { margin: .2rem 0; }
+nav#TOC a { text-decoration: none; }
+
+/* ========== Utility Layout ========== */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 1.2rem;
+  row-gap: 1rem;
+}
+
+.flex { display: flex; flex-wrap: wrap; }
+.flex > * + * { margin-left: 1rem; }
+
+.section { page-break-inside: avoid; }
+
+/* ========== Print Tweaks ========== */
+hr {
+  border: 0;
+  height: 1px;
+  background: #e5e7eb;
+  margin: 1rem 0;
+}
+
+/* Avoid huge gaps before/after code or lists near page breaks */
+pre, table, blockquote, ul, ol, figure {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+@font-face {
+  font-family: "Inter";
+  src: url("../assets/fonts/Inter-VariableFont_slnt,wght.ttf") format("truetype");
+  font-weight: 100 900;
+  font-style: normal;
+  font-display: swap;
+}
+html, body { font-family: "Inter", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif; }
+
