@@ -7,12 +7,12 @@
 * [Gwendal Auphan](https://github.com/gwendalauphan)
 * [Dorian Gaspar](https://github.com/dogasp)
 
-**Games Cavern** is a mini-games platform I developed with my friend [Dorian Gaspar](https://github.com/dogasp).
-It features a server mode that allows players to save their scores and view leaderboards.
-Originally, it was our high-school final year project, but driven by our passion for coding, we took it further.
-After being left aside for several years, I decided to modernize it and add developer-oriented features.
+**Caverne aux Jeux** is a mini-games platform that I built together with my friend [Dorian Gaspar](https://github.com/dogasp).
+It includes a server mode that allows players to save their scores and check leaderboards.
+Originally, this was our **final high school project**, but driven by our passion for coding, we decided to push it further.
+After being abandoned for several years, I decided to modernize it and add some developer-oriented features.
 
-![Games Cavern - Intro](docs/assets/CaverneAuxJeux_0.png)
+![Caverne aux Jeux - Intro](docs/assets/CaverneAuxJeux_0.png)
 
 ## Table of Contents
 
@@ -24,180 +24,200 @@ After being left aside for several years, I decided to modernize it and add deve
     - [Available mini-games](#available-mini-games)
     - [Potential future games](#potential-future-games)
   - [Video](#video)
-  - [Running the game](#running-the-game)
+- [🚀 Quick Start – Caverne aux Jeux](#-quick-start--caverne-aux-jeux)
+  - [1. Download the game](#1-download-the-game)
+  - [2. Run the game](#2-run-the-game)
+    - [Simple mode (client only)](#simple-mode-client-only)
+    - [Client-server mode (multiplayer and score saving)](#client-server-mode-multiplayer-and-score-saving)
+  - [3. Advanced method (developers)](#3-advanced-method-developers)
+    - [Clone the repository](#clone-the-repository)
     - [Run with Python](#run-with-python)
-    - [Run with Docker](#run-with-docker)
-    - [Run via executables](#run-via-executables)
-      - [Linux](#linux)
-      - [Windows](#windows)
-  - [User Guide](#user-guide)
-  - [Developer Guide](#developer-guide)
-  - [How to contribute](#how-to-contribute)
-    - [Poetry](#poetry)
-      - [Plugins](#plugins)
-      - [Useful commands](#useful-commands)
-  - [Technical Notes](#technical-notes)
-    - [CI/CD](#cicd)
+    - [Build with Makefile](#build-with-makefile)
+    - [Docker Compose](#docker-compose)
+  - [4. Dependencies (Linux)](#4-dependencies-linux)
+- [👩‍💻 Developer Guide](#-developer-guide)
+  - [Clone and contribute](#clone-and-contribute)
+  - [Requirements](#requirements)
+  - [CI/CD](#cicd)
   - [Documentation](#documentation)
-  - [Troubleshooting](#troubleshooting)
-  - [FAQ](#faq)
 
----
 
 ## Description
 
-The goal of the application is to gather several mini-games with a competitive aspect.
-Each game has its own scoring system, and scores are saved on a server.
-Players can enjoy the games, check their own scores, and view global leaderboards.
+The idea behind the app is to bring together several mini-games, with a **competitive twist**.
+Each mini-game has its own scoring system, and scores are stored on a server.
+Users can play, view their own scores, and check the global leaderboards.
 
-The server part is quite interesting because it’s unconventional — honestly, not at the same level as the application itself.
-We have to remember: at the time, we were just beginners.
-The server communicates directly via sockets with the client application and stores data in plain files.
+The server side is quite interesting, though not very conventional. To be honest, it’s not really at the same level as the client app — but keep in mind we were just beginners at the time.
+The server communicates directly via sockets with the client and saves data in plain files.
 
-The game was originally created in French and there is no English version.
+The game was originally created in **French only**, and there is no English in-game translation.
 
 ### Available mini-games
 
-* Ghost (Fantome)
+* Fantome
 * Flappy Bird
 * Minesweeper
-* Hangman (Pendu)
+* Hangman
 * Pong
 * Snake
-* Homing Head (Tête Chercheuse)
+* Seeker Head
 * Tetris
 
 ### Potential future games
 
-* Connect Four (Puissance 4)
+* Connect Four
 * Pac-Man
-* Guess Who? (Qui-est-ce ?)
+* Guess Who?
 * Space Invaders
-* Tic-Tac-Toe (Morpion)
+* Tic-Tac-Toe
 
 ---
 
 ## Video
 
-[![Games Cavern - Trailer](docs/assets/CaverneAuxJeux_1.png)](https://github.com/user-attachments/assets/0a5b37ea-5928-44da-a21e-fda9c0c20f7d)
+[![Caverne aux Jeux - Trailer](docs/assets/CaverneAuxJeux_1.png)](https://github.com/user-attachments/assets/0a5b37ea-5928-44da-a21e-fda9c0c20f7d)
 
 ---
 
-## Running the game
+# 🚀 Quick Start – Caverne aux Jeux
 
-There are several ways to run the game:
+## 1. Download the game
 
-* with Python
-* with Docker
-* with a standalone executable
+The easiest way to install the game is to download a **release**:
+👉 [Caverne aux Jeux Releases](https://github.com/gwendalauphan/Caverne_aux_jeux/releases)
 
-Each method has its own specificities and may require different configurations.
-Python is best for development and testing, Docker can be used to create isolated and reproducible environments, and the executable allows running the game without external dependencies.
+Choose the version for your operating system:
+
+* **Windows**
+* **Linux**
+
+After downloading, you will have two executables:
+
+* `client.exe` → the game
+* `server.exe` → the server (optional)
+
+---
+
+## 2. Run the game
+
+### Simple mode (client only)
+
+```bash
+./client.exe
+```
+
+* Enter a **username**.
+* Select a game and start playing.
+
+### Client-server mode (multiplayer and score saving)
+
+1. Start the server:
+
+   ```bash
+   ./server.exe
+   ```
+2. Then start the client:
+
+   ```bash
+   ./client.exe
+   ```
+
+* Game data will then be stored server-side.
+
+---
+
+## 3. Advanced method (developers)
+
+### Clone the repository
+
+```bash
+git clone https://github.com/gwendalauphan/Caverne_aux_jeux.git
+cd Caverne_aux_jeux
+```
 
 ### Run with Python
 
-To run the game with Python:
-
-* Create a virtual environment
-* Install dependencies
-* Launch both the server and the client
-
 ```bash
-python -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
-python -m app.main
-python -m app.Reseau.server
+python -m app.Reseau.server   # server
+python -m app.main            # client
 ```
 
-### Run with Docker
+### Build with Makefile
 
-With Docker, simply allow X11 display access and run the containers with Docker Compose:
+```bash
+make build-linux
+make run-linux
+```
+
+### Docker Compose
 
 ```bash
 xhost +local:docker
 cd docker
-docker compose up
-docker compose down
+docker compose up -d
 xhost -local:docker
 ```
 
-### Run via executables
+---
 
-Finally, you can use the standalone executables.
-Make sure to allow execution (especially on Windows).
-
-#### Linux
-
-Use the Makefile:
+## 4. Dependencies (Linux)
 
 ```bash
-make run-linux
+sudo apt update
+sudo apt install python3 python3-tk make docker.io docker-compose
 ```
 
-#### Windows
-
-Allow execution of `.exe` files and disable security rules blocking them.
-Then run them by double-clicking: first `server.exe`, then `main.exe`.
+👉 For more details, check the [User Guide](./docs/user_guide.md).
 
 ---
 
-## User Guide
+# 👩‍💻 Developer Guide
 
-*User Guide (link)*
+## Clone and contribute
 
-* See **docs/user\_guide.md** (Markdown version).
-* A PDF version can be generated (see *Technical Notes* section).
+```bash
+git clone https://github.com/gwendalauphan/Caverne_aux_jeux.git
+cd Caverne_aux_jeux
+```
+
+You can contribute by:
+
+* **Forking** the repository and opening a **Pull Request**.
+* **Reporting bugs or ideas** via **issues**.
 
 ---
 
-## Developer Guide
+## Requirements
 
-To be done.
+Development requires:
 
----
+* **Python 3** and **tkinter**
+* **make**, **docker**, **docker compose**
+* **Poetry** (dependency management)
 
-## How to contribute
-
-When adding a package to the requirements, first add it using **Poetry**:
-
-```bash
-cd backend
-poetry add <package_name>
-# or for test dependencies
-poetry add --dev <package_name>
-```
-
-Then export dependencies:
+Install dependencies:
 
 ```bash
-poetry export -f requirements.txt --output requirements.txt --without-hashes
-# or for tests
-poetry export -f requirements.txt --output tests/requirements.txt --without-hashes --all-groups
-```
-
-### Poetry
-
-#### Plugins
-
-* [https://pypi.org/project/poetry-plugin-export/](https://pypi.org/project/poetry-plugin-export/)
-
-#### Useful commands
-
-Run these before committing changes or contributing to the project:
-
-```bash
-cd backend
-
-# Install all packages listed in pyproject.toml
 poetry install
+```
 
-poetry run black .
-poetry run flake8 .
-poetry run pylint .
-poetry run mypy .
-poetry run pytest tests/
+Useful commands before committing:
 
+```bash
+poetry run black .     # formatting
+poetry run flake8 .    # linting
+poetry run pylint .    # static analysis
+poetry run mypy .      # type checking
+poetry run pytest tests/  # unit tests
+```
+
+Export dependencies:
+
+```bash
 poetry export -f requirements.txt --output requirements.txt --without-hashes
 poetry export -f requirements.txt --output build_requirements.txt --only build --without-hashes
 poetry export -f requirements.txt --output test_requirements.txt --only test --without-hashes
@@ -205,54 +225,32 @@ poetry export -f requirements.txt --output test_requirements.txt --only test --w
 
 ---
 
-## Technical Notes
+## CI/CD
 
-The project uses:
+The project uses **GitHub Actions** for code quality:
 
-* Python, PyInstaller, Tkinter, Matplotlib, Sockets, Docker, Poetry, GitHub Actions, Makefile.
-
-To convert documentation to PDF:
-
-```bash
-docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex --output=docs/user_guide.pdf docs/user_guide.md
-```
-
-### CI/CD
-
-This project uses GitHub Actions for continuous integration:
-
-* On every push and pull request, the workflow:
-
-  * Installs dependencies and runs a test command to ensure the project starts without errors.
-  * Builds and tests the Docker container.
-  * Builds standalone executables for Linux and Windows using PyInstaller.
-
-* On release, the workflow:
-
-  * Uploads the built executables as release artifacts for both Linux and Windows.
+* **On each push/pull request**: dependency installation, linting, tests, Docker build, Linux/Windows executables build.
+* **On each release**: automatic publishing of Linux and Windows executables as artifacts.
 
 ---
 
 ## Documentation
 
-You can find more information in the project’s documentation, available in the `docs/` folder:
+Full documentation is available in the `docs/` folder:
 
+* [User Guide](docs/user_guide.md)
+* [Developer Guide](docs/developer_guide.md)
 * [Project Report](docs/Rapport_Caverne_aux_jeux.pdf)
 * [Project Presentation](docs/Prez_Caverne_aux_jeux.pdf)
+* [Changelog](docs/Changelog.md)
+
+To **convert** Markdown documentation to PDF:
+
+```bash
+docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex \
+  --output=docs/user_guide.pdf docs/user_guide.md
+```
 
 ---
 
-## Troubleshooting
-
-On Windows, make sure to proceed despite security warnings when running `.exe` files.
-If an `.exe` file disappears and is flagged as a trojan, check your security settings.
-
----
-
-## FAQ
-
-To be done.
-
----
-
-If you’d like, I can now also **proofread and adapt this English version so it sounds fully native and polished for GitHub**. That would make it read more smoothly and feel professional. Would you like me to do that next?
+👉 Full guide: [Developer Guide](./docs/developer_guide.md)

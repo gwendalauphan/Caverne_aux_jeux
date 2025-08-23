@@ -41,41 +41,57 @@ help:
 	@echo "  build-linux-debug  Build Linux executables with PyInstaller (debug mode)"
 	@echo "  build-windows      Build Windows executables with PyInstaller (run on Windows)"
 	@echo "  build-windows-debug  Build Windows executables with PyInstaller (debug mode)"
-	@echo "  run-linux          Run Linux server+client from dist/"
-	@echo "  run-windows        Run Windows server+client from dist/"
+	@echo "  run-linux          Run Linux server+client"
+	@echo "  run-windows        Run Windows server+client"
 	@echo "  clean              Remove build artifacts"
+
+define VENV_SETUP
+	@if [ ! -d ".make_venv" ]; then \
+		python3 -m venv .make_venv; \
+	fi
+	if [ "$$(uname -s | grep -i 'mingw\|cygwin\|windows')" ]; then \
+		. .make_venv/Scripts/activate; \
+	else \
+		. .make_venv/bin/activate; \
+	fi; \
+	python -m pip install -r build_requirements.txt -r requirements.txt;
+endef
 
 # ---------- Linux ----------
 build-linux-client:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) $(DATA_LINUX) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
-		--name main app/main.py
+		--name main app/main.py; \
+	deactivate
 
 build-linux-server:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
 		--add-data "app/Utils/utils.py:Utils/" \
-		--name server app/Reseau/server.py
+		--name server app/Reseau/server.py; \
+	deactivate
 
 build-linux: build-linux-client build-linux-server
 
 # Debug versions (console mode)
 build-linux-client-debug:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) $(DATA_LINUX) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
-		--name main app/main.py
+		--name main app/main.py; \
+	deactivate
 
 build-linux-server-debug:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--add-data "app/Utils/utils.py:Utils/" \
-		--name server app/Reseau/server.py
+		--name server app/Reseau/server.py; \
+	deactivate
 
 build-linux-debug: build-linux-client-debug build-linux-server-debug
 
@@ -95,36 +111,40 @@ run-linux:
 
 # ---------- Windows ----------
 build-windows-client:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
-		--name main app/main.py
+		--name main app/main.py; \
+	deactivate
 
 build-windows-server:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--windowed --noconsole \
 		--add-data "app/Utils/utils.py;Utils/" \
-		--name server app/Reseau/server.py
+		--name server app/Reseau/server.py; \
+	deactivate
 
 build-windows: build-windows-client build-windows-server
 
 # Debug versions (console mode)
 build-windows-client-debug:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
-		--name main app/main.py
+		--name main app/main.py; \
+	deactivate
 
 build-windows-server-debug:
-	python -m pip install -r requirements.txt
+	$(VENV_SETUP) \
 	python -m PyInstaller $(PYI_COMMON) $(DATA_WIN) \
 		--hidden-import PIL._tkinter_finder --hidden-import platform --hidden-import tkinter.messagebox \
 		--add-data "app/Utils/utils.py;Utils/" \
-		--name server app/Reseau/server.py
-
+		--name server app/Reseau/server.py; \
+	deactivate
+	
 build-windows-debug: build-windows-client-debug build-windows-server-debug
 
 run-windows-client:
@@ -142,4 +162,4 @@ run-windows:
 	kill $$SERVER_PID 2>/dev/null || taskkill //PID $$SERVER_PID //F 2>NUL || true
 
 clean:
-	rm -rf build dist __pycache__ *.spec
+	rm -rf build dist __pycache__ *.spec .make_venv

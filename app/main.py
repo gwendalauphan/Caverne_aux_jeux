@@ -264,7 +264,7 @@ class App:
             self.Frame_top, text="La Caverne Aux Jeux", font=("Berlin Sans FB", 45), bg="#111111", foreground="#00e600", relief=GROOVE
         ).place(x=205, y=10)
 
-        Label(self.Frame_ranking, text="Classements", font=("Berlin Sans FB", 20), bg="#111111", foreground="#00e600", relief=GROOVE).place(
+        Label(self.Frame_ranking, text="Classement", font=("Berlin Sans FB", 20), bg="#111111", foreground="#00e600", relief=GROOVE).place(
             x=27, y=5
         )
 
