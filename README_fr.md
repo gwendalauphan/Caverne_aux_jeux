@@ -242,8 +242,11 @@ La documentation complète est disponible dans le dossier `docs/` :
 Pour **convertir** la documentation Markdown en PDF :
 
 ```bash
-docker run --rm -v "$(pwd)":/data -u $(id -u):$(id -g) pandoc/latex \
-  --output=docs/user_guide.pdf docs/user_guide.md
+docker run --rm -v "$(pwd)":/data \
+-w /data/docs   -u $(id -u):$(id -g) \
+fpod/pandoc-weasyprint   --from=markdown   --to=html5 \
+--pdf-engine=weasyprint   --metadata author="Gwendal Auphan" \
+--metadata lang=fr-FR   -c style.css   -o user_guide.pdf user_guide.md
 ```
 
 ---
