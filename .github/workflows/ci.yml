@@ -519,7 +519,7 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            caverne-aux-jeux-linux-macos${{ github.event.release.name }}.zip
+            caverne-aux-jeux-linux-macos-${{ github.event.release.name }}.zip
             caverne-aux-jeux-windows-${{ github.event.release.name }}.zip
 
 
