@@ -23,6 +23,7 @@
   - [Common errors](#common-errors)
 - [Additional Resources](#additional-resources)
   - [Installing dependencies](#installing-dependencies)
+- [License](#license)
 
 ---
 
@@ -210,3 +211,10 @@ To verify that `python3-tk` is available:
 ```bash
 apt-cache policy python3-tk
 ```
+
+# License
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
+
+© 2025 Auphan Gwendal & Dorian Gaspar.
+You must provide attribution to the original authors when using or sharing this project.
+Commercial use is prohibited unless explicit permission is obtained.

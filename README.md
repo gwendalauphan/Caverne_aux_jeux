@@ -1,5 +1,9 @@
 # Caverne aux Jeux
 
+[![License](https://img.shields.io/badge/License-CC%20BY--NC%204.0-lightgrey?style=for-the-badge)](https://creativecommons.org/licenses/by-nc/4.0/) [![GitHub stars](https://img.shields.io/github/stars/gwendalauphan/Caverne_aux_jeux?style=for-the-badge)](https://github.com/gwendalauphan/Caverne_aux_jeux/stargazers) [![GitHub release](https://img.shields.io/github/v/release/gwendalauphan/Caverne_aux_jeux?style=for-the-badge)](https://github.com/gwendalAuphan/game-platform/releases) [![GitHub last commit](https://img.shields.io/github/last-commit/gwendalauphan/Caverne_aux_jeux?style=for-the-badge)](https://github.com/gwendalauphan/Caverne_aux_jeux/commits/main)
+
+
+
 ### 👉 [🇫🇷 Version française](README_fr.md)
 
 ## Authors
@@ -40,6 +44,7 @@ After being abandoned for several years, I decided to modernize it and add some 
   - [Requirements](#requirements)
   - [CI/CD](#cicd)
   - [Documentation](#documentation)
+- [License](#license)
 
 
 ## Description
@@ -268,3 +273,11 @@ fpod/pandoc-weasyprint   --from=markdown   --to=html5 \
 ---
 
 👉 Full guide: [Developer Guide](./docs/developer_guide.md)
+
+# License
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
+
+© 2025 Auphan Gwendal & Dorian Gaspar.
+You must provide attribution to the original authors when using or sharing this project.
+Commercial use is prohibited unless explicit permission is obtained.
+

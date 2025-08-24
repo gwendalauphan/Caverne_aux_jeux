@@ -23,6 +23,7 @@
   - [Erreurs courantes](#erreurs-courantes)
 - [Ressources supplémentaires](#ressources-supplémentaires)
   - [Installation des dépendances](#installation-des-dépendances)
+- [Licence](#licence)
 
 # Introduction
 
@@ -199,3 +200,10 @@ Pour s'assurer que python3-tk est retrouvable, vous pouvez exécuter la commande
 ```bash
 apt-cache policy python3-tk
 ```
+
+# Licence
+Ce projet est sous licence Creative Commons Attribution - Pas d’Utilisation Commerciale 4.0 International (CC BY-NC 4.0).
+
+© 2025 Auphan Gwendal & Dorian Gaspar.
+Vous devez mentionner les auteurs originaux lors de l’utilisation ou du partage de ce projet.
+L’utilisation commerciale est interdite sauf autorisation expresse des auteurs.
