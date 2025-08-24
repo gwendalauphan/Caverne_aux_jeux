@@ -31,6 +31,7 @@
   - [On each release](#on-each-release)
 - [Documentation](#documentation)
 - [Additional Resources](#additional-resources)
+- [License](#license)
 
 ---
 
@@ -245,3 +246,10 @@ fpod/pandoc-weasyprint   --from=markdown   --to=html5 \
 * Poetry: [https://python-poetry.org/](https://python-poetry.org/)
 * PyInstaller: [https://pyinstaller.org/](https://pyinstaller.org/)
 * Tkinter: [https://docs.python.org/3/library/tkinter.html](https://docs.python.org/3/library/tkinter.html)
+
+# License
+This project is licensed under the Creative Commons Attribution-NonCommercial 4.0 International License (CC BY-NC 4.0).
+
+© 2025 Auphan Gwendal & Dorian Gaspar.
+You must provide attribution to the original authors when using or sharing this project.
+Commercial use is prohibited unless explicit permission is obtained.
