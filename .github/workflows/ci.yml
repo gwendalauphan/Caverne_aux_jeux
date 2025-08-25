@@ -507,6 +507,9 @@ jobs:
           cp docs/Changelog.pdf dist/linux/
           cp docs/Changelog.pdf dist/windows/
 
+          cp LICENSE dist/linux/
+          cp LICENSE dist/windows/
+
       - name: Zip Linux release
         run: |
           zip -j "caverne-aux-jeux-linux-macos-${{ github.event.release.name }}.zip" dist/linux/*
