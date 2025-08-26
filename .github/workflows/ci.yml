@@ -437,7 +437,7 @@ jobs:
             --pdf-engine=weasyprint
             -c docs/style.css
             --metadata=lang=en-US
-            -w /data/docs
+            --resource-path=.:docs
             -o docs/user_guide.pdf
             docs/user_guide.md
 
@@ -450,7 +450,7 @@ jobs:
             --pdf-engine=weasyprint
             -c docs/style.css
             --metadata=lang=fr-FR
-            -w /data/docs
+            --resource-path=.:docs
             -o docs/user_guide_fr.pdf
             docs/user_guide_fr.md
 
@@ -463,7 +463,7 @@ jobs:
             --pdf-engine=weasyprint
             -c docs/style.css
             --metadata=lang=en-US
-            -w /data/docs
+            --resource-path=.:docs
             -o docs/developer_guide.pdf
             docs/developer_guide.md
 
@@ -476,7 +476,7 @@ jobs:
             --pdf-engine=weasyprint
             -c docs/style.css
             --metadata=lang=fr-FR
-            -w /data/docs
+            --resource-path=.:docs
             -o docs/developer_guide_fr.pdf
             docs/developer_guide_fr.md
 
@@ -489,7 +489,7 @@ jobs:
             --pdf-engine=weasyprint
             -c docs/style.css
             --metadata=lang=fr-FR
-            -w /data/docs
+            --resource-path=.:docs
             -o docs/Changelog.pdf
             docs/Changelog.md
 
